@@ -122,6 +122,7 @@ def parse_summary(gcode):
 STUDIO = Path("/Applications/BambuStudio.app")
 BINARY = STUDIO / "Contents/MacOS/BambuStudio"
 PROFILES = STUDIO / "Contents/Resources/profiles/BBL"
+TIMEOUT_S = 600
 
 
 def studio_version():
@@ -177,22 +178,35 @@ def run_studio(stls, presets, target, work):
         str(target),
         *map(str, stls),
     ]
-    result = subprocess.run(
-        command, cwd=work, capture_output=True, text=True, timeout=600
-    )
+    try:
+        result = subprocess.run(
+            command, cwd=work, capture_output=True, text=True, timeout=TIMEOUT_S
+        )
+    except subprocess.TimeoutExpired:
+        raise SliceError(f"Bambu Studio did not finish within {TIMEOUT_S} s") from None
     if result.returncode != 0:
-        detail = work / "result.json"
-        message = (
-            json.loads(detail.read_text()).get("error_string")
-            if detail.exists()
-            else result.stderr.strip()[-500:]
+        raise SliceError(
+            f"Bambu Studio exited {result.returncode}: {failure_message(work, result)}"
         )
-        raise SliceError(f"Bambu Studio exited {result.returncode}: {message}")
-    with zipfile.ZipFile(target) as project:
-        return (
-            project.read("Metadata/plate_1.gcode").decode(),
-            json.loads(project.read("Metadata/project_settings.config")),
-        )
+    try:
+        with zipfile.ZipFile(target) as project:
+            return (
+                project.read("Metadata/plate_1.gcode").decode(),
+                json.loads(project.read("Metadata/project_settings.config")),
+            )
+    except (OSError, KeyError, zipfile.BadZipFile, json.JSONDecodeError) as error:
+        raise SliceError(
+            f"Bambu Studio produced no readable project: {error!r}"
+        ) from None
+
+
+def failure_message(work, result):
+    """Studio's own error_string from result.json, else the tail of stderr."""
+    try:
+        message = json.loads((work / "result.json").read_text()).get("error_string")
+    except (OSError, ValueError, AttributeError):
+        message = None
+    return message or result.stderr.strip()[-500:]
 
 
 def slice_plate(stls, settings, target, work):

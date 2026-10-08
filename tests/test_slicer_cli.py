@@ -66,3 +66,34 @@ def test_slice_without_studio_names_install_command(tmp_path, monkeypatch):
     monkeypatch.setattr(slicer, "BINARY", tmp_path / "missing" / "BambuStudio")
     with pytest.raises(SliceError, match="brew install --cask bambu-studio"):
         slicer.slice_model(object(), tmp_path)
+
+
+def fake_studio(tmp_path, monkeypatch, script):
+    fake = tmp_path / "BambuStudio"
+    fake.write_text(f"#!/bin/sh\n{script}\n")
+    fake.chmod(fake.stat().st_mode | stat.S_IEXEC)
+    monkeypatch.setattr(slicer, "BINARY", fake)
+    work = tmp_path / "work"
+    work.mkdir()
+    return work
+
+
+def test_run_studio_timeout_is_a_slice_error(tmp_path, monkeypatch):
+    work = fake_studio(tmp_path, monkeypatch, "exec sleep 5")
+    monkeypatch.setattr(slicer, "TIMEOUT_S", 1)
+    with pytest.raises(SliceError, match="did not finish"):
+        slicer.run_studio([tmp_path / "a.stl"], tmp_path, tmp_path / "out.3mf", work)
+
+
+def test_run_studio_without_project_is_a_slice_error(tmp_path, monkeypatch):
+    work = fake_studio(tmp_path, monkeypatch, "exit 0")
+    with pytest.raises(SliceError, match="no readable project"):
+        slicer.run_studio([tmp_path / "a.stl"], tmp_path, tmp_path / "out.3mf", work)
+
+
+def test_run_studio_survives_malformed_result_json(tmp_path, monkeypatch):
+    work = fake_studio(
+        tmp_path, monkeypatch, "echo '{not json' > result.json\necho boom >&2\nexit 3"
+    )
+    with pytest.raises(SliceError, match="exited 3: boom"):
+        slicer.run_studio([tmp_path / "a.stl"], tmp_path, tmp_path / "out.3mf", work)
