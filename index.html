@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1c1e20">
 <title>Bàn in</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23232527'/%3E%3Cpath d='m16 5 10 6v11l-10 5-10-5V11zM6 11l10 6 10-6M16 17v10' fill='none' stroke='%23b7cebf' stroke-width='1.5'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="viewer/style.css?v=4986e52b1ebb">
+<link rel="stylesheet" href="viewer/style.css?v=67c5f06e0248">
 </head>
 <body>
 <section id="gallery" class="gallery">
@@ -15,7 +15,7 @@
 <div id="cards" class="cards"></div>
 <p id="empty" class="empty" hidden>Không tìm thấy model.</p>
 </section>
-<div id="workspace" hidden>
+<div id="workspace" class="workspace" hidden>
 <aside aria-label="Điều khiển">
 <div class="sidebar-header"><a href="#" class="back-link" aria-label="Về danh sách" title="Về danh sách"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12"/></svg></a><h1 id="modelTitle"></h1></div>
 <div class="sidebar-body" id="sidebarBody">
@@ -35,20 +35,27 @@
 </div></details>
 <details class="menu" id="measureMenu"><summary><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m3 15 12-12 6 6-12 12Z M12 6l3 3 M9 9l2 2 M6 12l3 3"/></svg>Đo</summary><div class="panel" id="measurementControls">
 </div></details>
-<details class="menu" id="printMenu" hidden><summary><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6 M6 18H4v-7h16v7h-2 M8 14h8v7H8Z"/></svg>Mô phỏng in</summary><div class="panel">
-<label><input id="printPreview" type="checkbox">Xem đường in theo lớp</label>
-<div class="print-playback">
-<button id="printPlay" disabled aria-label="Phát" aria-pressed="false" title="Phát"><svg class="icon play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z" fill="currentColor" stroke="none"/></svg><svg class="icon pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke-width="3"/></svg></button>
-<input class="timeline" id="printLayer" type="range" min="1" max="1" value="1" disabled aria-label="Lớp in">
 </div>
-<p class="print-layer" id="printLayerLabel"></p>
-<div id="printTypes"></div>
-<p class="print-stats" id="printStats"></p>
-</div></details>
-</div>
-<div class="sidebar-footer"><button id="openPrint"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4 M4 16v5h16v-5"/></svg>In & tải</button></div>
+<div class="sidebar-footer"><a class="screen-link" id="printLink" title="Mô phỏng in" hidden><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6 M6 18H4v-7h16v7h-2 M8 14h8v7H8Z"/></svg>Mô phỏng in</a><button id="openPrint"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4 M4 16v5h16v-5"/></svg>In & tải</button></div>
 </aside>
 <main aria-label="Mô hình 3D"><div class="canvas-wrap" id="stage"><canvas class="scene" id="canvas" tabindex="0" aria-label="Mô hình 3D. Kéo chi tiết để tháo; kéo nền để xoay."></canvas><div id="partTip" class="part-tip" hidden></div><div id="loading">Đang tải…</div><div id="error" role="alert"></div></div>
+</main>
+</div>
+<div id="printScreen" class="workspace" hidden>
+<aside aria-label="Điều khiển mô phỏng in">
+<div class="sidebar-header"><a href="#" class="back-link" aria-label="Về danh sách" title="Về danh sách"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12"/></svg></a><h1 id="printModelTitle"></h1></div>
+<div class="sidebar-body" id="printControls" hidden>
+<div class="print-playback">
+<button id="printPlay" aria-label="Phát" aria-pressed="false" title="Phát"><svg class="icon play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z" fill="currentColor" stroke="none"/></svg><svg class="icon pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke-width="3"/></svg></button>
+<input class="timeline" id="printLayer" type="range" min="1" max="1" value="1" aria-label="Lớp in">
+</div>
+<p class="print-layer" id="printLayerLabel"></p>
+<div class="panel" id="printTypes"></div>
+<div class="print-info" id="printStats"></div>
+</div>
+<div class="sidebar-footer"><a class="screen-link" id="modelLink" title="Xem mô hình 3D"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7Z M3 7l9 5 9-5 M12 12v10"/></svg>Xem mô hình 3D</a></div>
+</aside>
+<main aria-label="Mô phỏng in"><div class="canvas-wrap" id="printStage"><canvas class="scene" id="printCanvas" tabindex="0" aria-label="Đường in trên bàn in. Kéo để xoay."></canvas><p class="stage-status" id="printStatus" hidden></p></div>
 </main>
 </div>
 <dialog id="printDialog" aria-labelledby="printTitle"><div class="dialog-header"><h2 id="printTitle">In 3D</h2><button id="closePrint" aria-label="Đóng"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12 M6 18 18 6"/></svg></button></div>
@@ -59,7 +66,7 @@
 <div class="print-info"><p class="material-total" id="printSummary"></p><div id="printSections"></div></div></dialog>
 
 <p id="appError" role="alert" hidden></p>
-<script type="importmap">{"imports":{"./viewer/vendor/three.module.min.js":"./viewer/vendor/three.module.min.js?v=4986e52b1ebb","./viewer/vendor/OrbitControls.js":"./viewer/vendor/OrbitControls.js?v=4986e52b1ebb","./viewer/resources.js":"./viewer/resources.js?v=4986e52b1ebb","./viewer/model-core.js":"./viewer/model-core.js?v=4986e52b1ebb","./viewer/print-preview.js":"./viewer/print-preview.js?v=4986e52b1ebb","./viewer/part-drag.js":"./viewer/part-drag.js?v=4986e52b1ebb","./viewer/dimensions.js":"./viewer/dimensions.js?v=4986e52b1ebb","./viewer/renderer.js":"./viewer/renderer.js?v=4986e52b1ebb","./viewer/app.js":"./viewer/app.js?v=4986e52b1ebb"}}</script>
-<script type="module" src="viewer/app.js?v=4986e52b1ebb"></script>
+<script type="importmap">{"imports":{"./viewer/vendor/three.module.min.js":"./viewer/vendor/three.module.min.js?v=67c5f06e0248","./viewer/vendor/OrbitControls.js":"./viewer/vendor/OrbitControls.js?v=67c5f06e0248","./viewer/dom.js":"./viewer/dom.js?v=67c5f06e0248","./viewer/resources.js":"./viewer/resources.js?v=67c5f06e0248","./viewer/model-core.js":"./viewer/model-core.js?v=67c5f06e0248","./viewer/scene.js":"./viewer/scene.js?v=67c5f06e0248","./viewer/print-preview.js":"./viewer/print-preview.js?v=67c5f06e0248","./viewer/part-drag.js":"./viewer/part-drag.js?v=67c5f06e0248","./viewer/dimensions.js":"./viewer/dimensions.js?v=67c5f06e0248","./viewer/renderer.js":"./viewer/renderer.js?v=67c5f06e0248","./viewer/model-screen.js":"./viewer/model-screen.js?v=67c5f06e0248","./viewer/print-screen.js":"./viewer/print-screen.js?v=67c5f06e0248","./viewer/app.js":"./viewer/app.js?v=67c5f06e0248"}}</script>
+<script type="module" src="viewer/app.js?v=67c5f06e0248"></script>
 </body>
 </html>

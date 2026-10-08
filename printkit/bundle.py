@@ -11,12 +11,16 @@ from printkit.catalog import ROOT, load_catalog, local_file
 MODULES = [
     "viewer/vendor/three.module.min.js",
     "viewer/vendor/OrbitControls.js",
+    "viewer/dom.js",
     "viewer/resources.js",
     "viewer/model-core.js",
+    "viewer/scene.js",
     "viewer/print-preview.js",
     "viewer/part-drag.js",
     "viewer/dimensions.js",
     "viewer/renderer.js",
+    "viewer/model-screen.js",
+    "viewer/print-screen.js",
     "viewer/app.js",
 ]
 

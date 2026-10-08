@@ -1,9 +1,10 @@
 import re
+import posixpath
 from pathlib import Path
 from unittest.mock import patch
 
-from printkit.bundle import offline_html, version_assets
-from printkit.catalog import load_catalog
+from printkit.bundle import MODULES, offline_html, version_assets
+from printkit.catalog import ROOT, load_catalog
 
 
 def test_transitive_changes_update_import_map_and_entry_together(tmp_path: Path):
@@ -40,3 +41,17 @@ def test_offline_export_embeds_versioned_entry_and_styles():
     assert 'src="viewer/app.js' not in html
     assert 'href="viewer/style.css' not in html
     assert "window.offlineAssets=" in html
+
+
+def test_every_viewer_module_is_bundled():
+    viewer = {path.relative_to(ROOT).as_posix() for path in (ROOT / "viewer").rglob("*.js")}
+    assert set(MODULES) == viewer
+
+
+def test_modules_are_bundled_after_their_dependencies():
+    seen = set()
+    for name in MODULES:
+        for specifier in re.findall(r"from ['\"](\.[^'\"]+)['\"]", (ROOT / name).read_text()):
+            dependency = posixpath.normpath(posixpath.join(posixpath.dirname(name), specifier))
+            assert dependency in seen, f"{name} imports {dependency} before it is bundled"
+        seen.add(name)

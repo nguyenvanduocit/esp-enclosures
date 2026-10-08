@@ -1,9 +1,9 @@
 import * as THREE from './vendor/three.module.min.js';
-import {OrbitControls} from './vendor/OrbitControls.js';
 import {createPartDrag} from './part-drag.js';
 import {createDimensions} from './dimensions.js';
 import {clamp, sampleAnimation} from './model-core.js';
 import {readBuffer} from './resources.js';
+import {createScene} from './scene.js';
 
 function stlGeometry(buffer) {
   const data = new DataView(buffer);
@@ -23,20 +23,8 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
   const sources = [...new Set(model.parts.flatMap(part => part.meshes.flatMap(mesh => mesh.src ? [mesh.src] : [])))];
   const buffers = Object.fromEntries(await Promise.all(sources.map(async src => [src, await readBuffer(folder + src)])));
   signal.throwIfAborted();
-  const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.setClearColor(0x1c1e20);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(36, 1, .1, 2000);
-  camera.up.set(0, 0, 1);
-  camera.position.set(...model.camera.position);
-  const controls = new OrbitControls(camera, canvas);
-  controls.target.set(...model.camera.target);
-  controls.enableDamping = true;
-  controls.minDistance = model.camera.minDistance;
-  controls.maxDistance = model.camera.maxDistance;
-  controls.listenToKeyEvents(canvas);
+  const sceneView = createScene({canvas, stage, camera: model.camera});
+  const {scene, camera, controls} = sceneView;
   scene.add(new THREE.HemisphereLight(0xffffff, 0x344751, 2.5));
   for (const [position, intensity] of [[[30, -60, 100], 3], [[-60, -15, 30], 1.5]]) {
     const light = new THREE.DirectionalLight(0xffffff, intensity);
@@ -66,7 +54,6 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
   const dimensions = createDimensions(scene, model, parts);
   let animation = model.animations[0], time = 0, playing = false, opened = false, manualPose = false;
   let measureProgress = 1, selectedMeasurements = new Set(), cameraOffset = new THREE.Vector3();
-  let lastTime = 0, frameId;
   const state = () => ({playing, time, opened, animation: animation.id, manualPose});
   const notify = () => onState(state());
   const partDrag = createPartDrag({THREE, scene, camera, controls, canvas, tooltip,
@@ -113,56 +100,16 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
     notify();
   }
   function setWireframe(value) { for (const part of Object.values(parts)) part.traverse(mesh => { if (mesh.isMesh) mesh.material.wireframe = value; }); }
-  let preview = null, saved = null;
-  function setPrintPreview(next) {
-    if (preview) scene.remove(preview.group);
-    if (next && !preview) {
-      playing = false;
-      saved = {visible: Object.fromEntries(Object.entries(parts).map(([id, part]) => [id, part.visible])),
-               position: camera.position.clone(), target: controls.target.clone(), maxDistance: controls.maxDistance};
-      for (const part of Object.values(parts)) part.visible = false;   // hidden parts are not draggable (part-drag.js:33)
-      grid.visible = false;
-      controls.maxDistance = Math.max(controls.maxDistance, 900);
-      camera.position.set(170, -260, 230);
-      controls.target.set(0, 0, 10);
-    } else if (!next && preview) {
-      for (const [id, visible] of Object.entries(saved.visible)) parts[id].visible = visible;
-      grid.visible = true;
-      controls.maxDistance = saved.maxDistance;
-      camera.position.copy(saved.position);
-      controls.target.copy(saved.target);
-    }
-    preview = next;
-    if (preview) scene.add(preview.group);
-    controls.update();
-    notify();
-  }
-  const resize = () => {
-    const rect = stage.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-    renderer.setSize(rect.width, rect.height, false);
-    camera.aspect = rect.width / rect.height;
-    camera.fov = camera.aspect < .9 ? 46 : 36;
-    camera.updateProjectionMatrix();
-  };
-  const observer = new ResizeObserver(resize);
-  observer.observe(stage);
-  resize();
-  function frame(timestamp) {
-    const delta = lastTime ? Math.min((timestamp - lastTime) / 1000, .1) : 0;
-    lastTime = timestamp;
+  sceneView.start(delta => {
     if (playing) {
       const next = Math.min(1, time + delta / animation.duration);
       if (next === 1) playing = false;
       setTime(next);
     }
-    dimensions.update({selected: preview ? new Set() : selectedMeasurements, progress: measureProgress});
+    dimensions.update({selected: selectedMeasurements, progress: measureProgress});
     partDrag.update();
     if (!partDrag.activePart) controls.update();
-    renderer.render(scene, camera);
-    frameId = requestAnimationFrame(frame);
-  }
-  frameId = requestAnimationFrame(frame);
+  });
   notify();
   return {
     model, scene, camera, controls, parts, partDrag, dimensions,
@@ -171,21 +118,13 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
     pause() { playing = false; notify(); },
     scrub(value) { playing = false; setTime(value); },
     setMode(id) { animation = model.animations.find(item => item.id === id); setOpen(false); for (const track of animation.tracks) parts[track.part].visible = true; },
-    setOpen, reset, setWireframe, setPrintPreview,
+    setOpen, reset, setWireframe,
     setVisible(id, value) { parts[id].visible = value; },
     setMeasurements(ids) { selectedMeasurements = new Set(ids); },
     setView(id) { const view = model.camera.views.find(item => item.id === id); camera.position.set(...view.offset).add(controls.target); camera.lookAt(controls.target); controls.update(); },
     dispose() {
-      cancelAnimationFrame(frameId);
-      observer.disconnect();
       partDrag.dispose();
-      controls.dispose();
-      scene.traverse(object => {
-        object.geometry?.dispose();
-        if (object.material) { object.material.map?.dispose(); object.material.dispose(); }
-      });
-      renderer.dispose();
-      renderer.forceContextLoss();
+      sceneView.dispose();
     }
   };
 }

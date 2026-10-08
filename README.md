@@ -1,6 +1,6 @@
 # Bàn in
 
-[App](https://nguyenvanduocit.github.io/esp-enclosures/) dùng một viewer cho tất cả model. Gallery và model chuyển trong cùng trang, theo URL `#model/<id>`.
+[App](https://nguyenvanduocit.github.io/esp-enclosures/) dùng một viewer cho tất cả model. Gallery, màn hình model 3D (`#model/<id>`) và màn hình mô phỏng in (`#print/<id>`) chuyển trong cùng trang.
 
 Mỗi model là một file `model.py`. `printkit` dựng CAD, kiểm tra, xuất STL/STEP và sinh `model.json` cho viewer từ cùng các hằng số đó.
 
@@ -32,7 +32,7 @@ python3 -m http.server 8000  # mở http://localhost:8000
 
 `slice` ghi thêm `print/<id>.gcode.3mf` (mở trong Bambu Studio, gửi thẳng sang P1S) và `print/layers.json` (đường chạy đầu in từng lớp cho viewer), cùng khối `print` và mục **Kết quả slice** trong `model.json` với khối lượng nhựa và thời gian thật. `cad` chạy riêng sẽ xóa `print/` của lần slice trước vì nó không còn khớp hình học. Cần cài Bambu Studio: `brew install --cask bambu-studio`.
 
-Với model đã `slice`, viewer có menu **Mô phỏng in**: tick **Xem đường in theo lớp** để ẩn các chi tiết và xem đường chạy đầu in trên bàn in, kéo thanh lớp hoặc bấm phát để chạy từng lớp, bật/tắt từng loại đường (thành ngoài, thành trong, infill…); các lớp bên dưới lớp đang xem được làm mờ. Dữ liệu đọc từ `print/layers.json` do `slice` sinh ra; model chưa slice không hiện menu này.
+Với model đã `slice`, màn hình model có nút **Mô phỏng in** mở `#print/<id>`: màn hình riêng chỉ có bàn in và đường chạy đầu in. Kéo thanh lớp hoặc bấm phát để chạy từng lớp, bật/tắt từng loại đường (thành ngoài, thành trong, infill…); các lớp bên dưới lớp đang xem được làm mờ. Sidebar có khối lượng nhựa, thời gian và số lớp từ khối `print`, và nút **Xem mô hình 3D** để quay lại. Dữ liệu đọc từ `print/layers.json` do `slice` sinh ra; model chưa slice không hiện nút này và không tải dữ liệu in, còn `#print/<id>` của nó báo chưa có dữ liệu in.
 
 `cad` in cảnh báo hướng in ra stderr, dạng `warning: lid: set print_rotation to (0, 0, 180) …`: giá trị gợi ý là `print_rotation` tuyệt đối, dán thẳng vào `model.py`. Cùng thông tin nằm trong `verification.json`: khối `printability` (mỗi chi tiết có `overhang_mm2`, `bridges`, xếp hạng 6 hướng in `orientations`) và danh sách `warnings`.
 
