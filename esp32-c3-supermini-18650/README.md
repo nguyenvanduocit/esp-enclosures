@@ -2,13 +2,13 @@
 
 Thân hộp 60 × 84 × 27,2 mm cho bo đã hàn hai hàng chân hướng xuống, một viên 18650 tháo rời và module tăng/hạ áp mini. Có hai nắp độc lập; thay pin qua nắp bên trái. Không có khoang mạch sạc. Có nút bịt USB tháo rời; kích thước bao ngoài khi gắn nút là 60 × 85,2 × 27,2 mm. Bản V1 nằm ở thư mục bên cạnh và được giữ nguyên.
 
-Mở `viewer.html` trực tiếp bằng trình duyệt có WebGL. File chạy offline, có xoay/zoom, animation mở–đóng và chế độ **Thay pin**. Các nút trên model ẩn từng nắp và nút bịt USB; menu **Đo linh kiện** chọn PCB, viên pin, khay hoặc mạch nguồn. Số đo vỏ luôn tính khi lắp kín, không cộng khoảng bóc tách. Chế độ **Mở/đóng nút bịt USB** chỉ di chuyển nút bịt; chế độ thay pin giữ nó tại chỗ.
+Mở `viewer.html` trực tiếp bằng trình duyệt có WebGL. File chạy offline, có xoay/zoom, animation mở–đóng và chế độ **Thay pin**. Sidebar có **Hiển thị** để ẩn từng chi tiết, **Đo** để bật kích thước vỏ hoặc linh kiện và **In & tải** để lấy file cùng cấu hình in. Số đo vỏ luôn tính khi lắp kín, không cộng khoảng bóc tách. Chế độ **Bịt USB** chỉ di chuyển nút bịt; chế độ thay pin giữ nó tại chỗ.
 
 ## Kéo từng chi tiết
 
 Rê chuột lên chi tiết để làm sáng nó và hiện mũi tên. Giữ chuột trái rồi kéo theo mũi tên để tháo, kéo ngược để lắp lại. Nắp, bo, khay và pin di chuyển theo trục đứng; nút bịt USB đi ra trước; thân hộp đi xuống. ESP32 và toàn bộ chân pin di chuyển cùng nhau.
 
-Kéo vùng trống hoặc giữ Alt khi kéo để xoay góc nhìn. Thả chuột giữ nguyên vị trí chi tiết; Esc hủy lượt kéo đang thực hiện. **Đóng hộp** hoặc **Đặt lại** đưa các phần về vị trí lắp. Khi kéo, animation tạm dừng; bấm **Phát** sau đó bắt đầu lại chu kỳ từ trạng thái đóng. Nếu nhìn thẳng dọc hướng tháo, kéo lên/xuống màn hình để di chuyển chi tiết theo trục đó. Cảm ứng giữ thao tác xoay/chụm để zoom.
+Kéo vùng trống hoặc giữ Alt khi kéo để xoay góc nhìn. Thả chuột giữ nguyên vị trí chi tiết; Esc hủy lượt kéo đang thực hiện. **Lắp lại** hoặc **Đặt lại** đưa các phần về vị trí lắp. Khi kéo, animation tạm dừng; bấm **Phát** sau đó bắt đầu lại chu kỳ từ trạng thái đóng. Nếu nhìn thẳng dọc hướng tháo, kéo lên/xuống màn hình để di chuyển chi tiết theo trục đó. Cảm ứng giữ thao tác xoay/chụm để zoom.
 
 Đây là thao tác bóc tách minh họa, không mô phỏng va chạm trong lúc kéo. Số đo vỏ giữ kích thước lắp kín; số đo linh kiện đi theo linh kiện.
 

@@ -1,5 +1,5 @@
 // Pointer interaction for the viewer; part axes are in world coordinates.
-export function createPartDrag({THREE, scene, camera, controls, canvas, parts, tooltip, onStart, onMove, onEnd}) {
+export function createPartDrag({THREE, scene, camera, controls, canvas, parts, tooltip, onStart, onMove}) {
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
   const owner = new WeakMap();
@@ -57,8 +57,9 @@ export function createPartDrag({THREE, scene, camera, controls, canvas, parts, t
     const extent = Math.abs(hovered.axis.x)*size.x + Math.abs(hovered.axis.y)*size.y + Math.abs(hovered.axis.z)*size.z;
     arrow.position.copy(center).addScaledVector(hovered.axis, extent/2+2);
     arrow.setDirection(hovered.axis);
-    tooltip.textContent = `${hovered.label} · ${hovered.direction} · ${Math.max(0, offset(hovered)).toFixed(1)} mm`;
-    if (drag?.fallback) tooltip.textContent += ' · kéo lên/xuống màn hình';
+    const distance = Math.max(0, offset(hovered));
+    tooltip.textContent = hovered.label+(distance>.05 ? ` · ${distance.toFixed(1)} mm` : '');
+    if (drag?.fallback) tooltip.textContent += ' · ↕';
     if (lastPointer) {
       const rect = canvas.getBoundingClientRect();
       tooltip.style.left = Math.max(8, Math.min(rect.width-tooltip.offsetWidth-8, lastPointer.x-rect.left+16))+'px';
@@ -74,7 +75,6 @@ export function createPartDrag({THREE, scene, camera, controls, canvas, parts, t
     controls.enabled = ended.controlsEnabled;
     if (canvas.hasPointerCapture(ended.pointerId)) canvas.releasePointerCapture(ended.pointerId);
     canvas.style.cursor = hovered ? 'grab' : '';
-    onEnd(ended.part, offset(ended.part), cancel);
   }
 
   canvas.addEventListener('pointerdown', event => {

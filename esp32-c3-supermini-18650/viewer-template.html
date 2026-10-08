@@ -2,23 +2,58 @@
 <html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ESP32-C3 + 18650 · Hộp V2</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23367c85'/%3E%3Cpath d='M10 14l10-5 10 5v13l-10 5-10-5zM10 14l10 5 10-5M20 19v13' fill='none' stroke='%23eee4cb' stroke-width='2'/%3E%3C/svg%3E">
 <style>
-:root{--bg:#111c24;--surface:#182a32;--border:#2b4048;--text:#e8f0ed;--text-dim:#a4b8bb;--accent:#65c3b4;--measure:#efb96e}*{box-sizing:border-box}html{font-size:16px}body{margin:0;background:var(--bg);color:var(--text);font-family:'Avenir Next','Segoe UI',sans-serif}button,input,a{font:inherit}button,a{touch-action:manipulation}button{color:var(--text);background:transparent;border:1px solid var(--border);border-radius:7px;padding:.65rem .85rem;cursor:pointer}button:hover{background:#29424a}button:disabled{opacity:.45;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:4px}button.primary{background:var(--accent);color:var(--bg);font-weight:650;border-color:var(--accent)}header{height:84px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--border);gap:16px}h1{font-size:1.2rem;margin:0}header p{color:var(--text-dim);font-size:.8rem;margin:.3rem 0 0}.badge{font:.72rem Menlo,monospace;border:1px solid var(--border);padding:.5rem .7rem;white-space:nowrap;color:var(--accent)}main{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:calc(100dvh - 84px)}.viewport{position:relative;min-width:0;display:flex;flex-direction:column}.canvas-wrap{position:relative;flex:1;min-height:450px}canvas.scene{display:block;width:100%;height:100%;position:absolute;inset:0;touch-action:none}.hint{position:absolute;left:22px;top:18px;color:var(--text-dim);font-size:.75rem;pointer-events:none}.status{position:absolute;left:22px;bottom:18px;font-size:.8rem;color:var(--measure);pointer-events:none}.playback{border-top:1px solid var(--border);padding:18px 22px;display:flex;gap:14px;align-items:center}.playback input{min-width:60px;flex:1}.time{font:.75rem Menlo,monospace;white-space:nowrap;color:var(--text-dim)}aside{border-left:1px solid var(--border);padding:24px;display:flex;flex-direction:column;gap:24px;background:var(--surface)}h2{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin:0 0 12px}p{font-size:.875rem;line-height:1.6;margin:0}small{display:block;font-size:.75rem;line-height:1.6;color:var(--text-dim)}.dimensions{font:1.05rem Menlo,monospace;letter-spacing:-.04em;margin:0 0 6px}.row{display:flex;gap:8px;flex-wrap:wrap}.row button{flex:1;font-size:.8rem;padding:.55rem .5rem}.control{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.875rem;margin:10px 0}.control label{display:flex;align-items:center;gap:8px}input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}input[type=checkbox]{accent-color:var(--accent);width:17px;height:17px;margin:0}.value{font:.75rem Menlo,monospace;color:var(--accent)}a{color:var(--accent);font-size:.85rem;text-decoration:none;border-bottom:1px solid #416962;padding-bottom:2px}.swatch{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:3px}.note{margin-top:auto;border-top:1px solid var(--border);padding-top:16px}#error{display:none;position:absolute;inset:35% 10% auto;background:var(--surface);border:1px solid var(--measure);padding:20px;z-index:3}.download{display:flex;gap:18px}.legend{display:flex;gap:12px;align-items:center;color:var(--text-dim);font-size:.72rem;margin-top:12px}@media(max-width:760px){header{padding:0 18px}main{grid-template-columns:1fr}.canvas-wrap{height:60dvh;min-height:400px;flex:auto}aside{border-left:0;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;padding:20px;gap:22px}.note{grid-column:1/-1}.playback{padding:14px;gap:10px}.hint{font-size:.68rem;left:14px}header .badge{display:none}}@media(max-width:400px){aside{grid-template-columns:1fr}.note{grid-column:auto}.time{font-size:.65rem}}
-
-main{height:calc(100dvh - 84px)}aside{overflow-y:auto}.viewport{min-height:0}.canvas-wrap{min-height:0}.quick-tools{position:absolute;right:18px;top:14px;display:flex;gap:8px}.quick-tools button{background:var(--surface);font-size:.8rem}.pcb-spec{margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}.pcb-spec .dimensions{color:#83caff;font-size:.95rem}.pcb-label{color:#83caff}.hint{max-width:calc(100% - 190px)}@media(max-width:760px){main{height:auto}.canvas-wrap{min-height:400px}.hint{max-width:calc(100% - 132px)}.quick-tools{right:12px;top:12px}}
-select{width:100%;padding:.6rem;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:7px} .download{flex-direction:column;gap:10px} .quick-tools{top:42px}.quick-tools button{padding:.5rem} .hint{max-width:95%}.spec{font:.8rem Menlo,monospace;color:var(--accent);line-height:1.8} .canvas-wrap{overflow:hidden}.part-tip{position:absolute;z-index:4;max-width:280px;padding:8px 12px;border:1px solid var(--accent);border-radius:6px;background:#142c32;color:#b6f1e3;font-size:.75rem;pointer-events:none}.part-tip[hidden]{display:none}
-.print-info{border-top:1px solid var(--border);padding-top:18px}.print-info details{border-bottom:1px solid var(--border);padding:12px 0}.print-info summary{cursor:pointer;font-size:.85rem;font-weight:600;line-height:1.5}.print-info summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}.print-info details[open] summary{margin-bottom:12px}.print-info table{width:100%;border-collapse:collapse;font-size:.78rem;line-height:1.5}.print-info th,.print-info td{padding:6px 0;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}.print-info th{font-weight:400;color:var(--text-dim);width:48%;padding-right:12px}.print-info tr:last-child th,.print-info tr:last-child td{border:0}.print-info small{margin-top:10px}.material-total{font:1.25rem Menlo,monospace;color:var(--accent);margin-bottom:4px}.print-info ul{padding-left:18px;font-size:.78rem;line-height:1.6;margin:10px 0}.print-info li+li{margin-top:6px}.print-info a{font-size:inherit}.review-status{color:var(--accent)}
+:root{--bg:#111c24;--surface:#182a32;--border:#2b4048;--text:#e8f0ed;--muted:#a4b8bb;--accent:#65c3b4}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px 'Avenir Next','Segoe UI',sans-serif;height:100dvh;display:flex}
+button,input,select,summary,a{font:inherit}button,summary,a{touch-action:manipulation}button,select,summary{color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:8px 12px;cursor:pointer}
+button:hover,summary:hover,a:hover{background:#29424a}button:disabled{opacity:.4}button:focus-visible,summary:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+aside{width:252px;flex-shrink:0;padding:24px 18px;display:flex;flex-direction:column;gap:20px;border-right:1px solid var(--border);overflow:auto;background:#132229}h1{font-size:16px;font-weight:600;margin:0;white-space:nowrap}
+main{flex:1;position:relative;min-width:0;min-height:0}.canvas-wrap{position:absolute;inset:0;overflow:hidden}canvas.scene{display:block;width:100%;height:100%;touch-action:none}
+.menu{border-top:1px solid var(--border);padding-top:14px}.menu summary{border:0;padding:0;background:none;user-select:none;color:var(--muted)}.menu[open] summary{margin-bottom:12px;color:var(--text)}
+.panel label{display:flex;align-items:center;gap:9px;min-height:32px}.panel select{width:100%;margin-top:8px}.panel hr{border:0;border-top:1px solid var(--border);margin:10px 0}.views{display:flex;gap:8px;margin-top:10px}.views button{flex:1}
+input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;margin:0}input[type=range]{accent-color:var(--accent);min-width:60px;cursor:pointer}
+.playback{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.playback button,.playback select{white-space:nowrap}.playback select{flex:1;min-width:0;padding:8px}.playback .timeline{width:100%;margin:8px 0;order:1}.playback .icon{width:36px;min-width:36px;padding:8px 0}.playback .primary{background:var(--accent);color:var(--bg);border-color:var(--accent)}.playback .loop{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}#assembly{flex:1}.playback #assembly,.playback .loop,.playback #reset{order:2}#openPrint{margin-top:auto;width:100%}
+.part-tip{position:absolute;z-index:4;max-width:260px;padding:7px 10px;border:1px solid var(--accent);border-radius:6px;background:#142c32;color:#b6f1e3;font-size:12px;pointer-events:none}.part-tip[hidden]{display:none}
+#loading{position:absolute;inset:45% 0 auto;text-align:center;color:var(--muted);pointer-events:none}#error{display:none;position:absolute;inset:35% 10% auto;background:var(--surface);border:1px solid #efb96e;padding:20px}
+dialog{width:min(560px,calc(100% - 32px));max-height:85dvh;padding:24px;border:1px solid var(--border);border-radius:12px;color:var(--text);background:var(--surface)}dialog::backdrop{background:#0008}.dialog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.dialog-header h2{margin:0;font-size:18px}.dialog-header button{font-size:20px;padding:0 10px}
+h3{font-size:12px;font-weight:500;color:var(--muted);margin:18px 0 10px}.downloads{display:grid;grid-template-columns:1fr 1fr;gap:8px}a{color:var(--accent);text-decoration:none}.downloads a,.bundle{display:block;padding:10px 12px;border:1px solid var(--border);border-radius:7px}.bundle{margin-top:8px;text-align:center}
+.print-info{margin-top:22px}.material-total{margin:0 0 10px;color:var(--muted);font-size:13px}.print-info details{border-top:1px solid var(--border);padding:12px 0}.print-info summary{border:0;padding:0;font-size:13px;background:none}.print-info details[open] summary{margin-bottom:12px}.print-info table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.5}.print-info th,.print-info td{padding:6px 0;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}.print-info th{font-weight:400;color:var(--muted);width:48%;padding-right:12px}.print-info tr:last-child th,.print-info tr:last-child td{border:0}.print-info small{display:block;font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}.print-info ul{padding-left:18px;font-size:12px;line-height:1.6;margin:10px 0}.print-info li+li{margin-top:6px}.print-info p{font-size:13px}
+@media(max-width:600px){body{flex-direction:column}aside{width:100%;max-height:42dvh;flex-shrink:0;padding:14px 16px;gap:12px;border-right:0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;align-items:start}h1{grid-column:1/-1;font-size:15px}.playback{grid-column:1/-1}.playback .timeline{flex:1;width:0;margin:0 4px}.playback #assembly{flex:0}.playback .loop{display:none}.menu{padding-top:10px}.menu .panel{padding-bottom:8px}#openPrint{grid-column:1/-1;width:auto;justify-self:start;margin:0;padding:6px 10px}main{min-height:40dvh}}
 </style></head><body>
-<header><div><h1>ESP32-C3 + 18650</h1><p>Pin tháo rời, sạc ngoài · Hai nắp độc lập</p></div><span class="badge">V2 / MM</span></header>
-<main><section class="viewport" aria-label="Mô hình hộp 3D"><div class="canvas-wrap" id="stage"><canvas class="scene" id="canvas" tabindex="0" aria-label="Chuột trái kéo chi tiết theo mũi tên; kéo vùng trống để xoay; cuộn để zoom"></canvas><div class="hint">Kéo chi tiết: tháo/lắp · Kéo nền / Alt+kéo: xoay · Cuộn: zoom</div><div id="partTip" class="part-tip" hidden></div><div class="quick-tools"><button id="toggleBatteryLid" aria-pressed="false">Ẩn nắp pin</button><button id="toggleElectronicsLid" aria-pressed="false">Ẩn nắp mạch</button><button id="toggleUsbCap" aria-pressed="false">Ẩn bịt USB</button></div><div class="status" id="status" role="status">Đang tải model…</div><div id="error" role="alert"></div></div>
-<div class="playback"><button class="primary" id="play" disabled>▶ Phát</button><input id="timeline" aria-label="Tua animation" type="range" min="0" max="1000" value="0"><span class="time" id="time">0.0 / 10 s</span></div></section>
-<aside><section><h2>Kích thước khi đóng</h2><p class="dimensions" id="outerDimensions">60 × 85.2 × 27.2 mm</p><small>Rộng × dài × cao. Thân dài 84 mm; gắn nút USB: 85,2 mm.</small><div class="pcb-spec"><h2>Linh kiện tham khảo</h2><p class="spec">PCB: 18 × 22.5 × 1.6<br>18650: Ø18.5 × 65.3<br>Khay: 22 × 75 × 18<br>Nguồn: 24 × 34 × 4.5</p><small>Đơn vị mm. PCB chưa tính chân và USB.<br>Khay pin là linh kiện mua sẵn, không in.</small></div></section>
-<section><h2>Animation</h2><small style="margin-bottom:12px">Rê chuột để xem hướng tháo; Esc hủy kéo. Cảm ứng: xoay, chụm để zoom.</small><select id="mode" aria-label="Chế độ animation"><option value="explode">Mở toàn bộ</option><option value="battery">Thay pin</option><option value="usb">Mở/đóng nút bịt USB</option></select><div class="row" style="margin-top:12px"><button id="close">Đóng hộp</button><button id="explode">Mở hết</button></div><div class="control"><label for="separation">Độ mở</label><output id="separationValue" class="value">0%</output></div><input id="separation" type="range" min="0" max="100" value="0" aria-label="Độ mở hộp"><div class="control"><label><input id="loop" type="checkbox" checked>Lặp animation</label></div></section>
-<section><h2>Hiển thị & số đo</h2><div class="control"><label><input id="usbCapVisible" type="checkbox" checked>Nút bịt USB</label></div><div class="control"><label><input id="baseVisible" type="checkbox" checked>Thân hộp</label></div><div class="control"><label><input id="boardVisible" type="checkbox" checked>ESP32 & chân pin</label></div><div class="control"><label><input id="cellVisible" type="checkbox" checked>Viên 18650</label></div><div class="control"><label><input id="holderVisible" type="checkbox" checked>Khay pin</label></div><div class="control"><label><input id="converterVisible" type="checkbox" checked>Mạch TPS63020</label></div><div class="control"><label><input id="measure" type="checkbox" checked>Đo kích thước vỏ</label></div><label for="componentMeasure"><small>Đo linh kiện</small></label><select id="componentMeasure"><option value="board">PCB ESP32</option><option value="cell">Viên 18650</option><option value="holder">Khay pin</option><option value="converter">Mạch nguồn</option><option value="none">Ẩn số đo linh kiện</option></select><div class="control"><label><input id="wireframe" type="checkbox">Lưới tam giác</label></div></section>
-<section><h2>Góc nhìn</h2><div class="row"><button id="front">Mặt USB</button><button id="top">Từ trên</button><button id="reset">Đặt lại</button></div></section>
-<section class="print-info" aria-label="Thông tin in 3D">
-<h2>In V2 · Bambu Studio</h2>
-<p class="material-total">≈ 40–50 g PLA</p>
-<small>Ước tính · Chưa chia lớp hoặc in thử.</small>
+<aside aria-label="Điều khiển"><h1>ESP32-C3 + 18650</h1>
+<div class="playback">
+<button class="primary icon" id="play" disabled aria-label="Phát" title="Phát">▶</button>
+<select id="mode" aria-label="Animation"><option value="explode">Mở hộp</option><option value="battery">Thay pin</option><option value="usb">Bịt USB</option></select>
+<button id="assembly">Tách rời</button>
+<input class="timeline" id="timeline" aria-label="Tua animation" type="range" min="0" max="1000" value="0">
+<label class="loop"><input id="loop" type="checkbox" checked>Lặp</label>
+<button class="icon" id="reset" aria-label="Đặt lại" title="Đặt lại">↺</button>
+</div>
+<details class="menu" id="displayMenu"><summary>Hiển thị</summary><div class="panel">
+<label><input id="toggleBatteryLid" type="checkbox" checked>Nắp pin</label>
+<label><input id="toggleElectronicsLid" type="checkbox" checked>Nắp mạch</label>
+<label><input id="usbCapVisible" type="checkbox" checked>Bịt USB</label>
+<hr>
+<label><input id="baseVisible" type="checkbox" checked>Thân</label>
+<label><input id="boardVisible" type="checkbox" checked>ESP32</label>
+<label><input id="cellVisible" type="checkbox" checked>Pin</label>
+<label><input id="holderVisible" type="checkbox" checked>Khay</label>
+<label><input id="converterVisible" type="checkbox" checked>Mạch nguồn</label>
+<hr>
+<label><input id="wireframe" type="checkbox">Lưới</label>
+<div class="views"><button id="front">Trước</button><button id="top">Trên</button></div>
+</div></details>
+<details class="menu" id="measureMenu"><summary>Đo</summary><div class="panel">
+<label><input id="measure" type="checkbox">Vỏ hộp</label>
+<select id="componentMeasure" aria-label="Đo linh kiện"><option value="none">Chọn linh kiện</option><option value="board">PCB ESP32</option><option value="cell">Pin</option><option value="holder">Khay</option><option value="converter">Mạch nguồn</option></select>
+</div></details>
+<button id="openPrint">In & tải</button>
+</aside>
+<main aria-label="Mô hình 3D"><div class="canvas-wrap" id="stage"><canvas class="scene" id="canvas" tabindex="0" aria-label="Mô hình 3D. Kéo chi tiết để tháo; kéo nền để xoay."></canvas><div id="partTip" class="part-tip" hidden></div><div id="loading">Đang tải…</div><div id="error" role="alert"></div></div>
+</main>
+<dialog id="printDialog" aria-labelledby="printTitle"><div class="dialog-header"><h2 id="printTitle">In 3D</h2><button id="closePrint" aria-label="Đóng">×</button></div>
+<h3>STL</h3><div class="downloads"><a id="downloadBase" download="base.stl">Thân</a><a id="downloadBatteryLid" download="battery_lid.stl">Nắp pin</a><a id="downloadElectronicsLid" download="electronics_lid.stl">Nắp mạch</a><a id="downloadUsbCap" download="usb_cap.stl">Bịt USB</a></div>
+<a class="bundle" href="esp32-c3-supermini-18650.zip" download>Tải tất cả (.zip)</a>
+<div class="print-info"><p class="material-total">≈ 40–50 g PLA · chưa in thử</p>
 <details id="printSettings"><summary>Cấu hình in thử</summary>
 <table aria-label="Cấu hình Bambu Studio"><tbody>
 <tr><th scope="row">Máy / vật liệu</th><td>Chọn đúng máy · nozzle 0,4 mm · PLA thường</td></tr>
@@ -36,21 +71,19 @@ select{width:100%;padding:.6rem;background:var(--bg);color:var(--text);border:1p
 <ul><li>Thân: đáy xuống bàn, miệng hướng lên.</li><li>Nắp và nút USB: mặt ngoài xuống bàn, phần gài hướng lên.</li><li>Xem cầu 8 mm ở cửa dây, Z ≈ 10 mm, và rãnh nắp pin rộng 1,2 mm, sâu 0,4 mm. Chỉ thêm support cục bộ nếu cầu thử bị võng.</li><li>Nếu nắp cong góc: thêm outer brim 3–5 mm.</li></ul>
 <small>Nguồn: <a href="https://wiki.bambulab.com/en/software/bambu-studio/wall-generator" target="_blank" rel="noopener">Arachne</a> · <a href="https://wiki.bambulab.com/en/software/bambu-studio/parameter/elephant-foot" target="_blank" rel="noopener">Bù chân voi</a>.</small>
 </details>
-<details id="materialEstimate"><summary>Lượng nhựa & chi phí</summary>
+<details id="materialEstimate"><summary>Nhựa & chi phí</summary>
 <table aria-label="Khối lượng PLA nếu in đặc"><tbody>
 <tr><th scope="row">Thân</th><td>34,6 g</td></tr><tr><th scope="row">Nắp pin</th><td>6,0 g</td></tr><tr><th scope="row">Nắp mạch</th><td>6,5 g</td></tr><tr><th scope="row">Nút USB</th><td>0,8 g</td></tr><tr><th scope="row">Tổng nếu in đặc</th><td>47,9 g</td></tr>
 </tbody></table>
 <small>Tính từ thể tích CAD với <a href="https://store.bblcdn.com/s7/default/b189de92249a4b9ebed28b8ea1f080f0/Bambu_PLA_Basic_Technical_Data_Sheet.pdf" target="_blank" rel="noopener">PLA 1,24 g/cm³</a>. Infill giảm phần ruột; brim và nhựa mồi cộng thêm.</small>
 <small>Ví dụ cuộn 300.000đ/kg: khoảng 12.000–15.000đ/bộ, chưa tính điện và in lỗi. Bambu Studio cho số ước tính theo cấu hình sau khi Slice.</small>
 </details>
-<details id="meshReview"><summary>Lưới đạt · cần thử độ vừa</summary>
+<details id="meshReview"><summary>Độ vừa</summary>
 <p class="review-status">4 STL kín, mỗi file một khối.</p>
 <small>Không cạnh/đỉnh lỗi, mặt tự giao, mặt trùng hoặc tam giác suy biến; hướng mặt nhất quán.</small>
 <ul><li>Thành/đáy 2 mm; nắp 1,8 mm; gờ nhỏ nhất 1 mm. Kiểm tra gờ và gân cài còn đủ trong Preview.</li><li>Mép cài nắp 1,2 mm, sâu 2,4 mm. Khe hở 0,2 mm mỗi bên; gân dôi 0,08 mm. In thử để chỉnh độ chặt.</li><li>Nút USB sâu 1,7 mm, cách cổng trên bo 1,05 mm theo model; không có gioăng kín nước.</li><li>Đo khay, pin và module thực trước khi in. Linh kiện trên bo là hình minh họa; chưa chừa giắc Dupont.</li><li>Khay và bo cần cố định thêm. Cửa dây 8 × 6 mm; chưa có rãnh hoặc kẹp dây.</li></ul>
 </details>
-</section>
-<section><h2>File in 3D</h2><div class="download"><a id="downloadBase" download="base.stl">Thân hộp STL ↓</a><a id="downloadBatteryLid" download="battery_lid.stl">Nắp pin STL ↓</a><a id="downloadElectronicsLid" download="electronics_lid.stl">Nắp mạch STL ↓</a><a id="downloadUsbCap" download="usb_cap.stl">Nút bịt USB STL ↓</a><a href="esp32-c3-supermini-18650.zip" download>Trọn bộ STL · STEP · viewer ↓</a></div></section>
-</aside></main>
+</div></dialog>
 <script id="assets" type="application/json">__ASSETS__</script>
 <script type="module">
 const $=id=>document.getElementById(id);window.viewerErrors=[];
@@ -101,46 +134,47 @@ function setSeparation(value){partDrag.reset();manualPose=false;base.position.z=
  groups.cell.position.z=full?27*separation:batteryMode?40*ease((separation-.45)/.55):0;
  groups.holder.position.z=0;usbCap.position.y=assets.usb_cap_origin[1]-((full||mode==='usb')?24*separation:0);
  const lift=mode==='usb'?0:25*separation,dz=lift-cameraLift;cameraLift=lift;camera.position.z+=dz;controls.target.z+=dz;
- $('separation').value=String(Math.round(separation*100));$('separationValue').textContent=Math.round(separation*100)+'%';
+ updateAssemblyButton();
 }
-function setPlaying(value){playing=value;$('play').textContent=playing?'Ⅱ Tạm dừng':'▶ Phát'}
-function applyTimeline(value){timeline=clamp(value);let opened;if(timeline<.4)opened=ease((timeline-.08)/.32);else if(timeline<.72)opened=1;else opened=1-ease((timeline-.72)/.25);setSeparation(opened);measureProgress=clamp((timeline-.34)/.30);$('timeline').value=String(Math.round(timeline*1000));$('time').textContent=(timeline*10).toFixed(1)+' / 10 s';const mode=$('mode').value==='battery',capMode=$('mode').value==='usb';$('status').textContent=timeline<.08?'Hộp đóng':timeline<.4?(capMode?'Mở nút bịt USB':mode?'Mở nắp pin · nhấc pin':'Đang mở hộp'):timeline<.65?'Đang đo kích thước':timeline<.72?'Đã đo · kéo để xem góc khác':timeline<.97?(capMode?'Đóng nút bịt USB':mode?'Đặt pin · đóng nắp pin':'Đang đóng hộp'):'Hộp đóng'}
-function manualOpen(value){setPlaying(false);setSeparation(value);measureProgress=1;timeline=0;$('timeline').value=0;$('time').textContent='0.0 / 10 s';$('status').textContent=separation?($('mode').value==='usb'?'Tháo nút bịt USB · lỗ USB đã mở':$('mode').value==='battery'?'Thay pin · khoang điện tử vẫn đóng':'Tách rời · số đo theo trạng thái đóng'):'Hộp đóng · kích thước bao ngoài'}
+function updateAssemblyButton(){$('assembly').textContent=manualPose||separation>0?'Lắp lại':'Tách rời'}
+function setPlaying(value){playing=value;$('play').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',value?'Tạm dừng':'Phát');$('play').title=value?'Tạm dừng':'Phát'}
+function applyTimeline(value){timeline=clamp(value);let opened;if(timeline<.4)opened=ease((timeline-.08)/.32);else if(timeline<.72)opened=1;else opened=1-ease((timeline-.72)/.25);setSeparation(opened);measureProgress=clamp((timeline-.34)/.30);$('timeline').value=String(Math.round(timeline*1000))}
+function manualOpen(value){setPlaying(false);setSeparation(value);measureProgress=1;timeline=0;$('timeline').value=0}
 $('play').onclick=()=>{if(!playing&&(timeline>=1||manualPose))applyTimeline(0);setPlaying(!playing)};
 $('timeline').oninput=e=>{setPlaying(false);applyTimeline(Number(e.target.value)/1000)};
-$('separation').oninput=e=>manualOpen(Number(e.target.value)/100);
-$('close').onclick=()=>manualOpen(0);$('explode').onclick=()=>manualOpen(1);
-function lidVisibility(lid,id,caption,visible){lid.visible=visible;$(id).textContent=(visible?'Ẩn ':'Hiện ')+caption;$(id).setAttribute('aria-pressed',String(!visible))}
-function setUsbCapVisible(visible){lidVisibility(usbCap,'toggleUsbCap','bịt USB',visible);$('usbCapVisible').checked=visible}
-$('toggleUsbCap').onclick=()=>setUsbCapVisible(!usbCap.visible);
+$('assembly').onclick=()=>manualOpen(manualPose||separation>0?0:1);
+function lidVisibility(lid,id,visible){lid.visible=visible;$(id).checked=visible}
+function setUsbCapVisible(visible){usbCap.visible=visible;$('usbCapVisible').checked=visible}
 $('usbCapVisible').onchange=e=>setUsbCapVisible(e.target.checked);
-$('toggleBatteryLid').onclick=()=>lidVisibility(batteryLid,'toggleBatteryLid','nắp pin',!batteryLid.visible);
-$('toggleElectronicsLid').onclick=()=>lidVisibility(electronicsLid,'toggleElectronicsLid','nắp mạch',!electronicsLid.visible);
+$('toggleBatteryLid').onchange=e=>lidVisibility(batteryLid,'toggleBatteryLid',e.target.checked);
+$('toggleElectronicsLid').onchange=e=>lidVisibility(electronicsLid,'toggleElectronicsLid',e.target.checked);
 for(const [id,mesh] of [['baseVisible',base],...Object.entries(groups).map(([name,group])=>[name+'Visible',group])])$(id).onchange=e=>mesh.visible=e.target.checked;
 function wireframe(value){scene.traverse(mesh=>{if(mesh.isMesh)mesh.material.wireframe=value})}
 $('wireframe').onchange=e=>wireframe(e.target.checked);
-$('mode').onchange=()=>{manualOpen(0);if($('mode').value==='battery'){$('componentMeasure').value='cell';lidVisibility(batteryLid,'toggleBatteryLid','nắp pin',true);lidVisibility(electronicsLid,'toggleElectronicsLid','nắp mạch',true)}else if($('mode').value==='usb'){$('componentMeasure').value='none';setUsbCapVisible(true)}else $('componentMeasure').value='board'};
+$('mode').onchange=()=>{manualOpen(0);if($('mode').value==='battery'){lidVisibility(batteryLid,'toggleBatteryLid',true);lidVisibility(electronicsLid,'toggleElectronicsLid',true)}else if($('mode').value==='usb'){setUsbCapVisible(true)}};
 function setView(position){camera.position.set(...position).add(controls.target);camera.lookAt(controls.target);controls.update()}
 $('front').onclick=()=>setView([0,-285,.01]);$('top').onclick=()=>setView([0,-.01,285]);
-$('reset').onclick=()=>{$('mode').value='explode';manualOpen(0);controls.target.set(0,0,16);setView([145,-196,142]);for(const [id,mesh] of [['baseVisible',base],...Object.entries(groups).map(([name,group])=>[name+'Visible',group])]){$(id).checked=true;mesh.visible=true}lidVisibility(batteryLid,'toggleBatteryLid','nắp pin',true);lidVisibility(electronicsLid,'toggleElectronicsLid','nắp mạch',true);setUsbCapVisible(true);$('wireframe').checked=false;wireframe(false);$('measure').checked=true;$('componentMeasure').value='board'};
+$('reset').onclick=()=>{$('mode').value='explode';manualOpen(0);controls.target.set(0,0,16);setView([145,-196,142]);for(const [id,mesh] of [['baseVisible',base],...Object.entries(groups).map(([name,group])=>[name+'Visible',group])]){$(id).checked=true;mesh.visible=true}lidVisibility(batteryLid,'toggleBatteryLid',true);lidVisibility(electronicsLid,'toggleElectronicsLid',true);setUsbCapVisible(true);$('wireframe').checked=false;wireframe(false);$('measure').checked=false;$('componentMeasure').value='none'};
 const draggableParts=[
- {id:'base',label:'Thân hộp',object:base,axis:[0,0,-1],direction:'kéo xuống',maxDistance:60},
- {id:'batteryLid',label:'Nắp pin',object:batteryLid,axis:[0,0,1],direction:'kéo lên',maxDistance:100},
- {id:'electronicsLid',label:'Nắp mạch',object:electronicsLid,axis:[0,0,1],direction:'kéo lên',maxDistance:100},
- {id:'usbCap',label:'Nút bịt USB',object:usbCap,axis:[0,-1,0],direction:'kéo ra trước',maxDistance:60},
- ...Object.entries(groups).map(([id,object])=>({id,object,label:{board:'ESP32 & chân pin',cell:'Pin 18650',holder:'Khay pin',converter:'Mạch nguồn'}[id],axis:[0,0,1],direction:'kéo lên',maxDistance:90}))
+ {id:'base',label:'Thân hộp',object:base,axis:[0,0,-1],maxDistance:60},
+ {id:'batteryLid',label:'Nắp pin',object:batteryLid,axis:[0,0,1],maxDistance:100},
+ {id:'electronicsLid',label:'Nắp mạch',object:electronicsLid,axis:[0,0,1],maxDistance:100},
+ {id:'usbCap',label:'Nút bịt USB',object:usbCap,axis:[0,-1,0],maxDistance:60},
+ ...Object.entries(groups).map(([id,object])=>({id,object,label:{board:'ESP32 & chân pin',cell:'Pin 18650',holder:'Khay pin',converter:'Mạch nguồn'}[id],axis:[0,0,1],maxDistance:90}))
 ];
 const partDrag=createPartDrag({THREE,scene,camera,controls,canvas:$('canvas'),parts:draggableParts,tooltip:$('partTip'),
  onStart(){setPlaying(false);measureProgress=1},
- onMove(part,distance){manualPose=true;$('separationValue').textContent='Tùy chỉnh';$('time').textContent='Kéo chi tiết';$('status').textContent=part.label+' · đã kéo '+distance.toFixed(1)+' mm'},
- onEnd(part,distance,cancel){$('status').textContent=cancel?'Đã hủy lượt kéo':part.label+' · cách vị trí lắp '+Math.max(0,distance).toFixed(1)+' mm'}
+ onMove(){manualPose=true;updateAssemblyButton()}
 });
+$('openPrint').onclick=()=>{setPlaying(false);$('printDialog').showModal()};
+$('closePrint').onclick=()=>$('printDialog').close();
+$('printDialog').addEventListener('click',event=>{if(event.target===$('printDialog')){const r=$('printDialog').getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)$('printDialog').close()}});
 const resize=()=>{const r=$('stage').getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.fov=camera.aspect<.9?46:36;camera.updateProjectionMatrix()};new ResizeObserver(resize).observe($('stage'));resize();
 window.viewer={scene,camera,controls,partDrag,base,batteryLid,electronicsLid,usbCap,groups,dimensions,componentMeasures,assembledHeight,get separation(){return separation},get playing(){return playing},get timeline(){return timeline},get dimensionLabels(){return dims.map(d=>d.text)},get componentLabels(){return partDims.filter(d=>d.group.visible).map(d=>d.text)}};
 function updateMeasures(){const minY=usbCap.visible?boundsWithCap.min.y:assembledBounds.min.y;
  const closedLength=usbCap.visible?closedLengthWithCap:assembledBounds.max.y-assembledBounds.min.y;
  dimensions.position.copy(base.position);
- $('outerDimensions').textContent='60 × '+Number(closedLength.toFixed(1))+' × 27.2 mm';dimensions.visible=$('measure').checked;
+ dimensions.visible=$('measure').checked;
  updateDimension(dims[0],[-30,-49,0],[30,-49,0],[-30,-42,0],[30,-42,0],'60 mm · Rộng',clamp(measureProgress*3),[0,-5,0]);
  updateDimension(dims[1],[38,minY,0],[38,42,0],[30,minY,0],[30,42,0],Number(closedLength.toFixed(1))+' mm · Dài',clamp(measureProgress*3-1),[10,0,0]);
  updateDimension(dims[2],[-39,-42,0],[-39,-42,assembledHeight],[-30,-42,0],[-30,-42,assembledHeight],assembledHeight.toFixed(1)+' mm · Cao vỏ',clamp(measureProgress*3-2),[-12,0,0]);
@@ -152,6 +186,6 @@ function updateMeasures(){const minY=usbCap.visible?boundsWithCap.min.y:assemble
  updateDimension(partDims[2],[-w-5,l,s.z],[-w-5,l,z],[-w,l,s.z],[-w,l,z],s.h+' mm · '+s.name+(key==='board'?' dày':' cao'),cell?0:clamp(measureProgress*3-2),[-14,0,3]);
 }
 function frame(time){const dt=lastTime?Math.min((time-lastTime)/1000,.1):0;lastTime=time;if(playing){const next=timeline+dt/10;if(next>=1){applyTimeline(1);if($('loop').checked)applyTimeline(0);else setPlaying(false)}else applyTimeline(next)}updateMeasures();partDrag.update();if(!partDrag.activePart)controls.update();renderer.render(scene,camera);requestAnimationFrame(frame)}
-$('play').disabled=false;$('status').textContent='Hộp đóng · kích thước bao ngoài';document.body.dataset.ready='true';requestAnimationFrame(frame);
-} catch(error){window.viewerErrors.push(String(error));$('status').textContent='Không tải được viewer';$('error').style.display='block';$('error').textContent='Không khởi tạo được 3D. Hãy mở bằng trình duyệt có WebGL. '+error.message;console.error(error)}
+$('play').disabled=false;$('loading').hidden=true;document.body.dataset.ready='true';requestAnimationFrame(frame);
+} catch(error){window.viewerErrors.push(String(error));$('loading').hidden=true;$('error').style.display='block';$('error').textContent='Không tải được model. '+error.message;console.error(error)}
 </script></body></html>
