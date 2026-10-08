@@ -59,7 +59,7 @@ def test_clear_names_obstacle():
 
 
 def test_export_writes_print_frame_meshes_and_poses(tmp_path):
-    manifest, report = export(demo(), tmp_path, '../model.schema.json')
+    manifest, report = export(demo(), tmp_path, '../../model.schema.json')
     names = sorted(path.name for path in tmp_path.iterdir())
     assert names == ['assembly.step', 'base.stl', 'lid.stl', 'model.json', 'verification.json']
     lid = next(part for part in manifest['parts'] if part['id'] == 'lid')
@@ -76,17 +76,17 @@ def test_export_writes_print_frame_meshes_and_poses(tmp_path):
 
 
 def test_failed_check_writes_nothing(tmp_path):
-    export(demo(), tmp_path, '../model.schema.json')
+    export(demo(), tmp_path, '../../model.schema.json')
     before = {path.name: path.read_bytes() for path in tmp_path.iterdir()}
     with pytest.raises(ModelError, match='Lid clears base: forced failure'):
-        export(demo(check_passes=False), tmp_path, '../model.schema.json')
+        export(demo(check_passes=False), tmp_path, '../../model.schema.json')
     assert {path.name: path.read_bytes() for path in tmp_path.iterdir()} == before
 
 
 def test_export_removes_stale_generated_files(tmp_path):
-    export(demo(), tmp_path, '../model.schema.json')
+    export(demo(), tmp_path, '../../model.schema.json')
     (tmp_path / 'thumbnail.png').write_bytes(b'keep')
-    export(demo(part_id='cover'), tmp_path, '../model.schema.json')
+    export(demo(part_id='cover'), tmp_path, '../../model.schema.json')
     names = sorted(path.name for path in tmp_path.iterdir())
     assert names == ['assembly.step', 'base.stl', 'cover.stl', 'model.json', 'thumbnail.png', 'verification.json']
 
@@ -99,7 +99,7 @@ def test_invalid_solid_is_rejected(tmp_path):
         return block(2, 2, 2).union(block(2, 2, 2, x=10))
 
     with pytest.raises(ModelError, match='split'):
-        export(model, tmp_path, '../model.schema.json')
+        export(model, tmp_path, '../../model.schema.json')
     assert list(tmp_path.iterdir()) == []
 
 
@@ -115,7 +115,7 @@ def test_non_check_errors_are_reported_with_check_name(tmp_path):
         raise CheckFailed('also bad')
 
     with pytest.raises(ModelError) as error:
-        export(model, tmp_path, '../model.schema.json')
+        export(model, tmp_path, '../../model.schema.json')
     message = str(error.value)
     assert 'Broken lookup: KeyError' in message
     assert 'Second failure: also bad' in message
@@ -123,10 +123,10 @@ def test_non_check_errors_are_reported_with_check_name(tmp_path):
 
 
 def test_export_replaces_existing_files_and_reference_dir(tmp_path):
-    export(demo(), tmp_path, '../model.schema.json')
+    export(demo(), tmp_path, '../../model.schema.json')
     (tmp_path / 'base.stl').write_bytes(b'old')
     (tmp_path / 'reference').mkdir()
     (tmp_path / 'reference' / 'stale.stl').write_bytes(b'old')
-    export(demo(), tmp_path, '../model.schema.json')
+    export(demo(), tmp_path, '../../model.schema.json')
     assert (tmp_path / 'base.stl').read_bytes() != b'old'
     assert not (tmp_path / 'reference').exists()

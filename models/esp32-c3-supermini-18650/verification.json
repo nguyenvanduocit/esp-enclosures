@@ -1,0 +1,91 @@
+{
+  "units": "mm",
+  "dimensions": [
+    60.0,
+    85.2,
+    27.2
+  ],
+  "parts": {
+    "base": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 27887.99,
+      "bounds_mm": [
+        [
+          -30.0,
+          -42.0,
+          0.0
+        ],
+        [
+          30.0,
+          42.0,
+          25.4
+        ]
+      ]
+    },
+    "batteryLid": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 4850.28,
+      "bounds_mm": [
+        [
+          -14.2,
+          -42.0,
+          0.0
+        ],
+        [
+          14.2,
+          42.0,
+          4.2
+        ]
+      ]
+    },
+    "electronicsLid": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 5207.95,
+      "bounds_mm": [
+        [
+          -15.7,
+          -42.0,
+          0.0
+        ],
+        [
+          15.7,
+          42.0,
+          4.2
+        ]
+      ]
+    },
+    "usbCap": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 669.5,
+      "bounds_mm": [
+        [
+          -8.5,
+          -8.6,
+          0.0
+        ],
+        [
+          8.5,
+          8.6,
+          2.9
+        ]
+      ]
+    }
+  },
+  "checks": {
+    "Lids without friction ribs clear base": true,
+    "Independent lids clear": true,
+    "Reference envelopes clear": true,
+    "USB cap without ribs clears base": true,
+    "USB cap clears lids": true,
+    "Continuous USB cap withdrawal clear": true,
+    "Continuous battery removal clear": true,
+    "USB cable 12x6 clear": true,
+    "USB cap clears board socket": {
+      "socket_clearance_mm": 1.05
+    }
+  }
+}
