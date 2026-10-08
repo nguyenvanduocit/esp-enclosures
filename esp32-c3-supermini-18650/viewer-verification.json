@@ -1,0 +1,46 @@
+{
+  "checks": [
+    "explode 0% fixed height",
+    "explode 61% fixed height",
+    "explode 100% fixed height",
+    "battery 0% fixed height",
+    "electronics stationary 0%",
+    "battery 61% fixed height",
+    "electronics stationary 61%",
+    "battery 100% fixed height",
+    "electronics stationary 100%",
+    "hide battery lid independently",
+    "hide electronics lid independently",
+    "measure board",
+    "hidden board hides dimensions",
+    "measure cell",
+    "hidden cell hides dimensions",
+    "measure holder",
+    "hidden holder hides dimensions",
+    "measure converter",
+    "hidden converter hides dimensions",
+    "download base exact mesh",
+    "download battery_lid exact mesh",
+    "download electronics_lid exact mesh",
+    "animation starts",
+    "no runtime errors"
+  ],
+  "viewport": {
+    "width": 2560,
+    "height": 911
+  },
+  "animationEnd": {
+    "closed": true,
+    "height": "27.2 mm · Cao vỏ",
+    "errors": []
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390,
+    "noHorizontalOverflow": true,
+    "dimensionLabelProjectionFits": true,
+    "narrowFovDegrees": 46
+  },
+  "external_network_resources": [],
+  "self_contained_assets": true
+}

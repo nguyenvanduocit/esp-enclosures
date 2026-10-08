@@ -1,0 +1,92 @@
+{
+  "units": "mm",
+  "outer_dimensions": [
+    60.0,
+    84.0,
+    27.2
+  ],
+  "reference_envelopes": {
+    "holder": [
+      22,
+      75,
+      18
+    ],
+    "cell_diameter_length": [
+      18.5,
+      65.3
+    ],
+    "converter": [
+      24,
+      34,
+      4.5
+    ],
+    "pcb": [
+      18,
+      22.5,
+      1.6
+    ]
+  },
+  "parts": {
+    "base": {
+      "watertight": true,
+      "solid_count": 1,
+      "bounds_mm": [
+        [
+          -30.0,
+          -42.0,
+          0.0
+        ],
+        [
+          30.0,
+          42.0,
+          25.4
+        ]
+      ],
+      "volume_mm3": 27887.99
+    },
+    "battery_lid": {
+      "watertight": true,
+      "solid_count": 1,
+      "bounds_mm": [
+        [
+          -14.2,
+          -42.0,
+          -0.0
+        ],
+        [
+          14.2,
+          42.0,
+          4.2
+        ]
+      ],
+      "volume_mm3": 4850.28
+    },
+    "electronics_lid": {
+      "watertight": true,
+      "solid_count": 1,
+      "bounds_mm": [
+        [
+          -15.7,
+          -42.0,
+          -0.0
+        ],
+        [
+          15.7,
+          42.0,
+          4.2
+        ]
+      ],
+      "volume_mm3": 5207.95
+    }
+  },
+  "checks": {
+    "physical_fit_tested": false,
+    "exact_shopee_variant_verified": false,
+    "reference_envelopes_clear": true,
+    "lid_without_ribs_clear": true,
+    "independent_lids_clear": true,
+    "continuous_battery_removal_clear": true,
+    "usb_12x6_clear": true,
+    "step_three_valid_solids": true
+  }
+}

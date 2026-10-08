@@ -1,0 +1,5 @@
+*.stl binary
+*.step binary
+*/viewer.html linguist-generated=true
+*/reference.json linguist-generated=true
+*/vendor/* linguist-vendored=true

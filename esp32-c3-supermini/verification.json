@@ -1,0 +1,58 @@
+{
+  "units": "mm",
+  "outer_dimensions": [
+    26.4,
+    32.0,
+    20.2
+  ],
+  "pcb_assumption": [
+    18.0,
+    22.5,
+    1.6
+  ],
+  "space_below_pcb": 10.0,
+  "lid_clearance_per_side": 0.2,
+  "rib_interference": 0.08,
+  "parts": {
+    "base": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 5398.35,
+      "bounds_mm": [
+        [
+          -13.2,
+          -16.0,
+          0.0
+        ],
+        [
+          13.2,
+          16.0,
+          18.4
+        ]
+      ]
+    },
+    "lid": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 1652.76,
+      "bounds_mm": [
+        [
+          -13.2,
+          -16.0,
+          0.0
+        ],
+        [
+          13.2,
+          16.0,
+          4.2
+        ]
+      ]
+    }
+  },
+  "checks": {
+    "reference_board_and_headers_clear": true,
+    "lid_without_friction_ribs_clears_base": true,
+    "cable_envelope_12x6_clear": true,
+    "physical_fit_tested": false
+  }
+}
