@@ -1,4 +1,5 @@
 import json
+import math
 
 import cadquery as cq
 import numpy as np
@@ -279,3 +280,12 @@ def test_overlap_mixes_cadquery_and_manifold():
 def test_copy_needs_an_earlier_print_part():
     with pytest.raises(ValueError, match='ghost'):
         demo().copy('twin', 'Đôi', of='ghost')
+
+
+def test_oblique_drag_survives_six_decimal_rounding(tmp_path):
+    model = demo()
+    axis = (math.cos(math.radians(70)), 0.0, math.sin(math.radians(70)))
+    model.reference('tilted', 'Nghiêng', [Box('tilted', (2, 2, 2), (40, 0, 1), '#c99b49')], drag=Drag(axis, 150))
+    model.animations[0]['openPose']['tilted'] = [65 * a for a in axis]
+    manifest, _ = export(model, tmp_path, '../../model.schema.json')
+    assert next(part for part in manifest['parts'] if part['id'] == 'tilted')['drag']['axis'] == [0.34202, 0.0, 0.939693]

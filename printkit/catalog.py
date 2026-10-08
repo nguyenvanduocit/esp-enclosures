@@ -8,6 +8,8 @@ from jsonschema import Draft202012Validator, ValidationError
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "model.schema.json"
+# model.json floats carry 6 decimals (manifest.clean), so a unit vector is off by up to √3·5e-7.
+ROUNDING = 1e-6
 
 
 def local_file(folder, value):
@@ -33,7 +35,7 @@ def validate_data(model):
         raise ValueError("Camera distance limits are reversed")
     for part in model["parts"]:
         if part.get("drag") and not math.isclose(
-            math.hypot(*part["drag"]["axis"]), 1, abs_tol=1e-8
+            math.hypot(*part["drag"]["axis"]), 1, abs_tol=ROUNDING
         ):
             raise ValueError("Drag axis must be a unit vector")
         if part["kind"] == "print" and any(
@@ -100,7 +102,7 @@ def validate_data(model):
                 if (
                     distance < 0
                     or distance > drag["maxDistance"]
-                    or math.hypot(*residual) > 1e-8
+                    or math.hypot(*residual) > ROUNDING * (1 + distance)
                 ):
                     raise ValueError(
                         "Animation is outside the part removal axis or limits"

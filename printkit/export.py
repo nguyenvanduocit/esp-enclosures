@@ -43,17 +43,26 @@ def body_mesh(name, path):
     return mesh
 
 
+def print_frame(shape, print_rotation):
+    """A Manifold turned to its print orientation and centred in XY on the bed.
+
+    Returns the bed translation and the canonical trimesh that export writes as the STL, so
+    model checks can measure exactly what gets printed."""
+    turned = placed(shape, print_rotation, (0, 0, 0))
+    x0, y0, z0, x1, y1, z1 = turned.bounding_box()
+    translation = [-(x0 + x1) / 2, -(y0 + y1) / 2, -z0]
+    verts, tris, _ = canonical_mesh(turned.translate(translation))
+    return translation, trimesh.Trimesh(verts, tris, process=False)
+
+
 def print_stl(name, shape, print_rotation, path):
     """Write `shape` turned to its print orientation and centred in XY on the bed.
 
     Returns the bed translation and the checked mesh. Manifold STLs come from canonical_mesh,
     so their bytes depend only on the geometry."""
     if isinstance(shape, m3.Manifold):
-        turned = placed(shape, print_rotation, (0, 0, 0))
-        x0, y0, z0, x1, y1, z1 = turned.bounding_box()
-        translation = [-(x0 + x1) / 2, -(y0 + y1) / 2, -z0]
-        verts, tris, _ = canonical_mesh(turned.translate(translation))
-        trimesh.Trimesh(verts, tris, process=False).export(path)
+        translation, mesh = print_frame(shape, print_rotation)
+        mesh.export(path)
         return translation, body_mesh(name, path)
     cq.exporters.export(rotated(shape, print_rotation), str(path), **PRINT_TOLERANCE)
     mesh = body_mesh(name, path)

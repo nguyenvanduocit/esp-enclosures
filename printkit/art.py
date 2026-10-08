@@ -318,7 +318,8 @@ def canonical_mesh(shape):
     )
     a, b, c = (verts[tris[:, i]] for i in range(3))
     normal = np.cross(b - a, c - a)
-    normal /= np.linalg.norm(normal, axis=1, keepdims=True)
+    with np.errstate(invalid="ignore"):  # zero-area triangles get NaN normals and stay as they are
+        normal /= np.linalg.norm(normal, axis=1, keepdims=True)
     offset = np.einsum("ij,ij->i", normal, a)
     edges = np.concatenate([tris[:, [0, 1]], tris[:, [1, 2]], tris[:, [2, 0]]])
     owner = np.tile(np.arange(len(tris)), 3)
