@@ -64,7 +64,9 @@ def test_process_settings_defaults_and_brim():
         "sparse_infill_pattern": "grid",
         "enable_support": "0",
         "brim_type": "auto_brim",
+        "curr_bed_type": "Textured PEI Plate",
     }
+    assert process_settings(Print(plate="Cool Plate"))["curr_bed_type"] == "Cool Plate"
     assert process_settings(Print(brim=0))["brim_type"] == "no_brim"
     custom = process_settings(
         Print(brim=4, supports=True, extra={"outer_wall_speed": 60})

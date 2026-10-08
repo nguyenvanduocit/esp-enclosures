@@ -175,6 +175,7 @@ def test_pulse_rests_then_holds_then_returns():
 def test_print_rows_defaults():
     assert print_rows(Print()) == [
         ["Máy / nhựa", "Bambu Lab P1S · nozzle 0,4 mm · PLA"],
+        ["Bàn in", "Textured PEI Plate"],
         ["Layer / lớp đầu", "0,16 / 0,2 mm"],
         ["Thành", "2 vòng"],
         ["Infill", "15% grid"],
@@ -199,9 +200,10 @@ def test_print_rows_custom_and_extra():
     assert ["Brim", "Không"] in print_rows(Print(brim=0))
 
 
-def test_print_rejects_unknown_brim():
+@pytest.mark.parametrize("bad", ["ears", None, [4], True, False, -1, -0.5])
+def test_print_rejects_invalid_brim(bad):
     with pytest.raises(ValueError, match="brim"):
-        Print(brim="ears")
+        Print(brim=bad)
 
 
 def test_render_puts_print_settings_first():

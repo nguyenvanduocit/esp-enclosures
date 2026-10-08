@@ -61,6 +61,7 @@ def process_settings(settings):
         "sparse_infill_density": f"{setting_text(float(density))}%",
         "sparse_infill_pattern": pattern,
         "enable_support": settings.supports,
+        "curr_bed_type": settings.plate,
     }
     if settings.brim == "auto":
         keys["brim_type"] = "auto_brim"
@@ -125,10 +126,21 @@ PROFILES = STUDIO / "Contents/Resources/profiles/BBL"
 TIMEOUT_S = 600
 
 
+def require_studio():
+    if not BINARY.exists():
+        raise SliceError(
+            f"{BINARY} not found; install it with `brew install --cask bambu-studio`"
+        )
+
+
 def studio_version():
-    return plistlib.loads((STUDIO / "Contents/Info.plist").read_bytes())[
-        "CFBundleShortVersionString"
-    ]
+    plist = STUDIO / "Contents/Info.plist"
+    try:
+        return plistlib.loads(plist.read_bytes())["CFBundleShortVersionString"]
+    except (OSError, plistlib.InvalidFileException, KeyError) as error:
+        raise SliceError(
+            f"cannot read Bambu Studio version from {plist}: {error!r}"
+        ) from None
 
 
 @cache
@@ -224,10 +236,7 @@ def slice_model(model, out):
     """Slice every print STL in `out` on one P1S plate, then each part alone for per-part numbers.
 
     Writes out/print/<id>.gcode.3mf and out/print/layers.json; returns the model.json `print` block."""
-    if not BINARY.exists():
-        raise SliceError(
-            f"{BINARY} not found; install it with `brew install --cask bambu-studio`"
-        )
+    require_studio()
     parts = [part for part in model.parts if isinstance(part, PrintPart)]
     folder = out / "print"
     folder.mkdir()

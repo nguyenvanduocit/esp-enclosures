@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from printkit import cli
+from printkit import cli, slicer
 
 
 @pytest.fixture
@@ -95,3 +95,44 @@ def test_cad_names_the_part_that_fails_to_build(repo, capsys):
     model_py.write_text(model_py.read_text().replace("return block(W, L, H)", "raise KeyError('nope')"))
     assert cli.main(["cad", "alpha"]) == 1
     assert "body: KeyError: 'nope'" in capsys.readouterr().err
+
+
+def fake_slicer(model, out):
+    (out / "print").mkdir()
+    (out / "print" / f"{model.id}.gcode.3mf").write_bytes(b"PK")
+    (out / "print" / "layers.json").write_text("{}")
+    return {
+        "project": f"print/{model.id}.gcode.3mf",
+        "layers": "print/layers.json",
+        "slicer": "Bambu Studio test",
+        "seconds": 600,
+        "grams": 1.5,
+        "layerCount": 3,
+        "parts": [{"id": "body", "seconds": 600, "grams": 1.5}],
+    }
+
+
+def test_cad_after_slice_says_print_outputs_were_removed(repo, monkeypatch, tmp_path, capsys):
+    fake_binary = tmp_path / "BambuStudio"
+    fake_binary.write_text("")
+    monkeypatch.setattr(slicer, "BINARY", fake_binary)
+    monkeypatch.setattr(cli, "slice_model", fake_slicer)
+    assert cli.main(["new", "alpha"]) == 0
+    assert cli.main(["slice", "alpha"]) == 0
+    capsys.readouterr()
+    assert (repo / "models/alpha/print").is_dir()
+    assert cli.main(["cad", "alpha"]) == 0
+    assert "alpha: removed print/ from the earlier slice; run printkit slice alpha to re-slice" in capsys.readouterr().out
+    assert not (repo / "models/alpha/print").exists()
+    assert cli.main(["cad", "alpha"]) == 0
+    assert "removed print/" not in capsys.readouterr().out
+
+
+def test_slice_without_studio_fails_before_loading_the_model(repo, monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(slicer, "BINARY", tmp_path / "missing" / "BambuStudio")
+    folder = repo / "models/alpha"
+    folder.mkdir(parents=True)
+    (folder / "model.py").write_text("raise RuntimeError('model.py was loaded')\n")
+    assert cli.main(["slice", "alpha"]) == 1
+    err = capsys.readouterr().err
+    assert "brew install --cask bambu-studio" in err and "model.py was loaded" not in err

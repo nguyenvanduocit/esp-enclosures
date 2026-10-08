@@ -59,6 +59,7 @@ PRINTER_LABEL = "Bambu Lab P1S · nozzle 0,4 mm"
 class Print:
     """Plate-wide slicer settings; slicer.process_settings maps them to Bambu Studio keys.
 
+    `plate` is the build plate Studio heats for (the CLI ignores the printer's default bed type).
     `brim` is 'auto', 0 for no brim, or a width in mm for an outer brim. `extra` holds raw
     Bambu Studio process keys for anything the named fields do not cover."""
 
@@ -69,10 +70,14 @@ class Print:
     supports: bool = False
     brim: object = "auto"
     filament: str = "PLA"
+    plate: str = "Textured PEI Plate"
     extra: dict = field(default_factory=dict)
 
     def __post_init__(self):
-        if self.brim != "auto" and (isinstance(self.brim, (str, bool)) or self.brim < 0):
+        valid = self.brim == "auto" or (
+            isinstance(self.brim, (int, float)) and not isinstance(self.brim, bool) and self.brim >= 0
+        )
+        if not valid:
             raise ValueError(f"brim must be 'auto', 0 or a width in mm, got {self.brim!r}")
 
 
@@ -89,6 +94,7 @@ def print_rows(settings):
         brim = f"{vn(settings.brim)} mm, viền ngoài" if settings.brim else "Không"
     rows = [
         ["Máy / nhựa", f"{PRINTER_LABEL} · {settings.filament}"],
+        ["Bàn in", settings.plate],
         ["Layer / lớp đầu", f"{vn(settings.layer)} / {vn(settings.first_layer)} mm"],
         ["Thành", f"{settings.walls} vòng"],
         ["Infill", f"{vn(density)}% {pattern}"],

@@ -239,3 +239,8 @@ Phases run in order; each starts only after the previous one meets its acceptanc
 - Presets are flattened from the installed Bambu Studio at slice time instead of exported files under `printers/` (spike: system presets passed directly are silently ignored).
 - `printkit slice` runs CAD and slicing in one atomic run and `printkit cad` alone removes print outputs, so model.json has one writer and never shows toolpaths for outdated geometry.
 - Per-part `supports` overrides are not implemented (a one-plate CLI slice cannot apply per-object settings).
+- Slice stats live in model.json's `print` block; there is no `print/slice.json`.
+- The layers file is `print/layers.json`: per layer a `z` and polylines (`paths`) per toolpath type, plus a top-level `unit`.
+- The G-code parser is `printkit/gcode.py`.
+- The viewer draws two LineSegments per toolpath type: past layers darkened, the current layer bright.
+- The build plate is declared by `Print.plate` (default Textured PEI Plate) because the CLI ignores the printer's default bed type.

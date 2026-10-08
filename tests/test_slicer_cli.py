@@ -1,3 +1,5 @@
+import plistlib
+import re
 import stat
 
 import pytest
@@ -33,6 +35,8 @@ def test_slice_plate_applies_settings(tmp_path):
     assert summary["seconds"] > 0 and summary["grams"] > 0
     assert summary["layerCount"] == gcode.count("; CHANGE_LAYER")
     assert not (work / "result.json").exists()
+    assert "; curr_bed_type = Textured PEI Plate" in gcode
+    assert re.search(r"^M190 S55\b", gcode, re.M)
 
 
 @studio
@@ -97,3 +101,14 @@ def test_run_studio_survives_malformed_result_json(tmp_path, monkeypatch):
     )
     with pytest.raises(SliceError, match="exited 3: boom"):
         slicer.run_studio([tmp_path / "a.stl"], tmp_path, tmp_path / "out.3mf", work)
+
+
+def test_studio_version_unreadable_plist_is_a_slice_error(tmp_path, monkeypatch):
+    monkeypatch.setattr(slicer, "STUDIO", tmp_path / "missing.app")
+    with pytest.raises(SliceError, match="Info.plist"):
+        slicer.studio_version()
+    (tmp_path / "Contents").mkdir()
+    (tmp_path / "Contents/Info.plist").write_bytes(plistlib.dumps({"CFBundleName": "x"}))
+    monkeypatch.setattr(slicer, "STUDIO", tmp_path)
+    with pytest.raises(SliceError, match="CFBundleShortVersionString"):
+        slicer.studio_version()
