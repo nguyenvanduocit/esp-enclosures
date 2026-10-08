@@ -172,3 +172,10 @@ def test_export_sweeps_only_its_own_reference_files(tmp_path):
     export(reference_demo(False), tmp_path, '../../model.schema.json')
     assert sorted(path.name for path in (tmp_path / 'reference').iterdir()) == ['mine.stl']
     assert not (tmp_path / 'reference' / 'slab.stl').exists()
+
+
+def test_orientation_warning_is_absolute_print_rotation(tmp_path):
+    # The demo lid is declared with print_rotation=(0, 180, 0), which puts its tab on the bed.
+    _, report = export(demo(), tmp_path, '../../model.schema.json')
+    assert report['printability']['lid']['warning'].startswith('set print_rotation to (0, 0, 180)')
+    assert report['warnings'][0].startswith('lid: set print_rotation to (0, 0, 180)')

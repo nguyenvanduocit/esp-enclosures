@@ -10,7 +10,7 @@ import trimesh
 from printkit.catalog import validate_data
 from printkit.checks import CheckFailed
 from printkit.manifest import PrintPart, Solid, render
-from printkit.pose import installed_pose
+from printkit.pose import euler_xyz_matrix, half_open, installed_pose, matrix_euler_xyz, tidy
 from printkit.printability import assess
 from printkit.shapes import rotated
 
@@ -54,6 +54,15 @@ def rgb(hex_color):
     return cq.Color(*(int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5)))
 
 
+def orientation_warning(part, result):
+    """assess() ranks rotations relative to the current print frame; users edit the absolute print_rotation."""
+    best = result['orientations'][0]
+    total = euler_xyz_matrix(best['rotation']) @ euler_xyz_matrix(part.print_rotation)
+    x, y, z = (half_open(angle) for angle in tidy(matrix_euler_xyz(total)))
+    return (f"set print_rotation to ({x:g}, {y:g}, {z:g}) to cut overhang "
+            f"from {result['overhang_mm2']} mm² to {best['overhang_mm2']} mm²")
+
+
 def write_outputs(model, out):
     installed, poses, parts, printability = {}, {}, {}, {}
     for part in model.parts:
@@ -67,6 +76,8 @@ def write_outputs(model, out):
             mesh.apply_translation(translation)
             mesh.export(path)
             printability[part.id] = assess(mesh)
+            if 'warning' in printability[part.id]:
+                printability[part.id]['warning'] = orientation_warning(part, printability[part.id])
             limit = part.max_overhang_mm2
             if limit is not None and printability[part.id]['overhang_mm2'] > limit:
                 raise ModelError(f"{part.id}: overhang {printability[part.id]['overhang_mm2']} mm² exceeds {limit} mm²")

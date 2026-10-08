@@ -33,7 +33,8 @@ def tidy(values, digits=6):
     return [round(float(value), digits) + 0.0 for value in values]
 
 
-def _half_open(angle):
+def half_open(angle):
+    """Angle in (-180, 180]."""
     angle = (angle + 180) % 360 - 180
     return 180.0 if angle == -180 else angle
 
@@ -47,7 +48,7 @@ def installed_pose(print_rotation, translation):
     position = -inverse @ np.asarray(translation, dtype=float)
     if sum(1 for angle in print_rotation if angle) <= 1:
         # A single-axis rotation inverts to its negation, which keeps poses readable.
-        rotation = [_half_open(-angle) for angle in print_rotation]
+        rotation = [half_open(-angle) for angle in print_rotation]
     else:
         rotation = matrix_euler_xyz(inverse)
     return tidy(position), tidy(rotation)
