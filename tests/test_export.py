@@ -3,7 +3,7 @@ import json
 import numpy as np
 import pytest
 
-from printkit import Box, Drag, Model
+from printkit import Box, Drag, Model, Solid
 from printkit.checks import CheckFailed, clear
 from printkit.export import ModelError, export
 from printkit.pose import euler_xyz_matrix
@@ -122,14 +122,11 @@ def test_non_check_errors_are_reported_with_check_name(tmp_path):
     assert list(tmp_path.iterdir()) == []
 
 
-def test_export_replaces_existing_files_and_reference_dir(tmp_path):
+def test_export_replaces_existing_files(tmp_path):
     export(demo(), tmp_path, '../../model.schema.json')
     (tmp_path / 'base.stl').write_bytes(b'old')
-    (tmp_path / 'reference').mkdir()
-    (tmp_path / 'reference' / 'stale.stl').write_bytes(b'old')
     export(demo(), tmp_path, '../../model.schema.json')
     assert (tmp_path / 'base.stl').read_bytes() != b'old'
-    assert not (tmp_path / 'reference').exists()
 
 
 def test_overhang_limit_fails_export(tmp_path):
@@ -148,3 +145,30 @@ def test_report_includes_printability(tmp_path):
     _, report = export(demo(), tmp_path, '../../model.schema.json')
     assert set(report['printability']) == {'base', 'lid'}
     assert report['printability']['base']['overhang_mm2'] == 0
+
+
+def test_export_keeps_files_it_did_not_generate(tmp_path):
+    (tmp_path / 'stray.stl').write_bytes(b'before any manifest')
+    export(demo(), tmp_path, '../../model.schema.json')
+    (tmp_path / 'vendor.step').write_bytes(b'user step')
+    (tmp_path / 'notes.stl').write_bytes(b'user stl')
+    export(demo(part_id='cover'), tmp_path, '../../model.schema.json')
+    names = sorted(path.name for path in tmp_path.iterdir())
+    assert names == ['assembly.step', 'base.stl', 'cover.stl', 'model.json', 'notes.stl', 'stray.stl',
+                     'vendor.step', 'verification.json']
+
+
+def reference_demo(with_solid):
+    model = demo()
+    if with_solid:
+        model.reference('slab', 'Tấm', [Solid('slab', block(4, 4, 4, x=30), '#c99b49')])
+    return model
+
+
+def test_export_sweeps_only_its_own_reference_files(tmp_path):
+    export(reference_demo(True), tmp_path, '../../model.schema.json')
+    assert (tmp_path / 'reference' / 'slab.stl').is_file()
+    (tmp_path / 'reference' / 'mine.stl').write_bytes(b'user')
+    export(reference_demo(False), tmp_path, '../../model.schema.json')
+    assert sorted(path.name for path in (tmp_path / 'reference').iterdir()) == ['mine.stl']
+    assert not (tmp_path / 'reference' / 'slab.stl').exists()

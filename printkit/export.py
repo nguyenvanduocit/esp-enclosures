@@ -1,7 +1,6 @@
 """Build a declared model, verify it, and replace its generated files atomically."""
 import json
 import os
-import shutil
 import tempfile
 from pathlib import Path
 
@@ -15,7 +14,6 @@ from printkit.pose import installed_pose
 from printkit.printability import assess
 from printkit.shapes import rotated
 
-GENERATED = ('*.stl', '*.step', 'model.json', 'verification.json')
 PRINT_TOLERANCE = {'tolerance': 0.03, 'angularTolerance': 0.1}
 REFERENCE_TOLERANCE = {'tolerance': 0.04, 'angularTolerance': 0.15}
 
@@ -95,21 +93,35 @@ def write_assembly(model, installed, out):
         raise ModelError(f'assembly.step: expected {len(installed)} valid solids, found {len(solids)}')
 
 
+def previous_outputs(folder):
+    """Relative paths the previous run wrote, read from the folder's model.json.
+
+    Empty when there is no readable model.json, so files the toolset did not write are never deleted."""
+    try:
+        manifest = json.loads((folder / 'model.json').read_text())
+        sources = [mesh['src'] for part in manifest['parts'] for mesh in part['meshes'] if 'src' in mesh]
+        names = {'model.json', 'verification.json', manifest['downloads']['step'], *sources}
+    except (OSError, ValueError, KeyError, TypeError):
+        return set()
+    root = folder.resolve()
+    return {name for name in names if isinstance(name, str) and (folder / name).resolve().is_relative_to(root)}
+
+
 def replace_generated(folder, out):
-    """Swap `out` into `folder` file by file (os.replace; `out` shares the folder's filesystem),
-    then delete generated files the new set no longer contains."""
+    """Move every file of `out` into `folder` (os.replace; `out` shares the folder's filesystem),
+    then delete files the previous run generated that the new set no longer contains."""
     folder.mkdir(parents=True, exist_ok=True)
-    fresh = {path.name for path in out.iterdir()}
-    for path in out.iterdir():
-        if path.is_dir():
-            shutil.rmtree(folder / path.name, ignore_errors=True)
-        os.replace(path, folder / path.name)
-    for pattern in GENERATED:
-        for path in folder.glob(pattern):
-            if path.name not in fresh:
-                path.unlink()
-    if 'reference' not in fresh:
-        shutil.rmtree(folder / 'reference', ignore_errors=True)
+    previous = previous_outputs(folder)
+    fresh = {path.relative_to(out).as_posix() for path in out.rglob('*') if path.is_file()}
+    for name in sorted(fresh):
+        target = folder / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        os.replace(out / name, target)
+    for name in previous - fresh:
+        stale = folder / name
+        stale.unlink(missing_ok=True)
+        if stale.parent != folder and stale.parent.is_dir() and not any(stale.parent.iterdir()):
+            stale.parent.rmdir()
 
 
 def export(model, folder, schema_ref):
