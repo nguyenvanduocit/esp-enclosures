@@ -1,8 +1,9 @@
 """ps4-wraeclast-stand: vertical stand for an original PS4 (CUH-1000A) and two DualShock 4
-altars, dressed as Wraeclast ruins. Millimetres, Z up; the console front (disc slot) faces -Y.
+altars, dressed as dark gothic Wraeclast ruins. Millimetres, Z up; the console front (disc slot) faces -Y.
 
-Every shape is generated here: weathered stone, runes, a jawless skull and a broken chain. No
-mesh, logo or text comes from a game. The console envelope and intake position are
+Every shape is generated here: weathered stone with masonry courses and runes, a broken gothic
+window wall, an octagonal column, a skull with a jaw and a broken chain. No mesh, logo or text
+comes from a game. The console envelope and intake position are
 assumptions; see README before printing.
 
 Pipeline per stone part (`stone`): CadQuery blank → seeded chips → art.erode (inward only)
@@ -39,20 +40,29 @@ LOWER, UPPER = (170.0, 80.0, 10.0), (160.0, 72.0, 10.0)
 TOP = LOWER[2] + UPPER[2]
 WALL_IN, WALL_OUT, WALL_Y, WALL_TOP, WALL_MIN = 27.0, 39.0, 25.0, 65.0, 54.0
 SLOT_FLOOR, RIB_Y = 6.0, (14.0, 22.0)
-SOCKET, SOCKET_DEPTH, SOCKET_X = 34.4, 6.0, 60.0
+SOCKET_DEPTH, SOCKET_X = 6.0, 60.0
 FLOOR = TOP - SOCKET_DEPTH
 BUMPER_D, BUMPER_H, BUMPER_XY = 12.0, 1.5, (70.0, 30.0)
-SHAFT, CHAMFER, TENON_H, BAND, BAND_TOP = 34.0, 4.0, 6.0, 40.0, 18.0
-TALL_H, STUB_H, BREAK_ZONE = 210.0, 100.0, 30.0
-HOOK_Z, HOOK_D, HOOK_L, GUSSET_W = 170.0, 6.0, 20.0, 4.0
+# Window wall (+X) and octagonal column (-X). Part-local: z = 0 on the socket floor; each has a
+# tenon in its socket and a base band that sits on the plinth top.
+SOCKET_CLEAR = 0.4
+WINDOW_T, WINDOW_W, WINDOW_H = 30.0, 66.0, 198.0  # thickness (x), width (y), height of the intact side
+WINDOW_TENON, WINDOW_BAND = (34.0, WINDOW_W), (38.0, 70.0)
+COLUMN_FLATS, COLUMN_TENON, STUB_H = 30.0, 34.0, 100.0  # octagon across flats; square tenon
+TENON_H, BAND_TOP, BAND_CHAMFER = 6.0, 18.0, 2.0
+PINNACLE = (20.0, 12.0, 25.0)  # base x, y and rise above the wall; sits on the -Y jamb
+SILL_Z = (58.0, 64.0)  # projecting course under the windows; joints stay clear of it
+LANCET_W, LANCET_Z0, LANCET_SPRING = 19.0, 66.0, 135.0  # two pointed windows through the wall
+MULLION = 9.0
+BREAK_LINE = ((-6.0, 192.0), (33.0, 100.0))  # (y, z) points of the fracture across the +Y window
+COURSE, JOINT_W, JOINT_D = 14.0, 1.0, 1.5  # masonry course height, joint width and depth from the nominal face (erosion takes up to 1 mm first)
+HOOK_Z, HOOK_D, HOOK_L, GUSSET_W = 160.0, 6.0, 22.0, 4.0
 PEG_D, PEG_H, HOLE_D, HOLE_H = 8.0, 6.0, 8.4, 7.0
-WIRE, LINK_STRAIGHT, LINK_R, LINKS, LINK_OVERLAP = 4.0, 10.0, 6.0, 7, 0.4
+WIRE, LINK_STRAIGHT, LINK_R, LINKS, LINK_OVERLAP = 5.0, 10.0, 7.5, 6, 0.4
 PITCH = LINK_STRAIGHT + 2 * LINK_R - WIRE + LINK_OVERLAP
 CHAIN_X, CHAIN_GAP, BREAK_GAP = 32.0, 0.2, 2.0
 # Glyph size, stroke width, groove depth.
-PILLAR_GLYPH, BAND_GLYPH = (18.0, 2.0, 1.5), (8.0, 1.2, 1.0)
-RUNE_Z0, RUNE_PITCH = BAND_TOP + 4, 21.0
-RUNE_TOP = RUNE_Z0 + 5 * RUNE_PITCH + PILLAR_GLYPH[0]
+WINDOW_GLYPH, BAND_GLYPH = (22.0, 2.2, 1.4), (8.0, 1.2, 1.0)
 # DualShock 4 envelope (width along Y, thickness, depth grips->top) and its altar.
 # Set-local, front set, on the stub side (-X); ALTAR_EDGE is the box's back-bottom edge (x, z).
 DS4, DS4_G, LEAN = (162.0, 57.0, 100.0), 210.0, 70.0
@@ -87,7 +97,7 @@ TONGUE = (
     (0.0, 5.6),
 )  # altar locator, 0.2 clear of the pocket
 ALTAR_BUMPERS = ((-170.0, -96.0), (-49.0, 113.0))
-EROSION, CHIP_MAX = 1.0, 6.0
+EROSION, CHIP_MAX = 1.0, 5.0
 SEEDS = {"plinth": 11, "tall_pillar": 23, "stub": 37, "altar": 53}
 PLA_G_MM3, BED, MAX_TRIS, EPS = 1.24e-3, 250.0, 60000, 1e-3
 SHELL_MM, INFILL = (
@@ -123,10 +133,6 @@ GLYPHS = (
     ),
     (((0.3, 0), (0.3, 1)), ((0.3, 1), (0.82, 0.72)), ((0.3, 0.52), (0.78, 0.3))),
 )
-
-
-def column(side, z0, z1):
-    return block(side, side, z1 - z0, z=z0).edges("|Z").chamfer(CHAMFER)
 
 
 def bounds_block(bounds):
@@ -261,8 +267,17 @@ def plinth_cutters():
         slot = slot.cut(rib)
     cutters = [slot, bounds_block(POCKET)]
     cutters += [
-        block(SOCKET, SOCKET, SOCKET_DEPTH + 5, x=x, z=FLOOR)
-        for x in (-SOCKET_X, SOCKET_X)
+        block(
+            tenon_x + SOCKET_CLEAR,
+            tenon_y + SOCKET_CLEAR,
+            SOCKET_DEPTH + 5,
+            x=x,
+            z=FLOOR,
+        )
+        for x, (tenon_x, tenon_y) in (
+            (SOCKET_X, WINDOW_TENON),
+            (-SOCKET_X, (COLUMN_TENON, COLUMN_TENON)),
+        )
     ]
     cutters += [
         cylinder_z(BUMPER_D, -1, BUMPER_H, x * BUMPER_XY[0], y * BUMPER_XY[1])
@@ -286,6 +301,20 @@ def plinth_cutters():
     return union_all(cutters)
 
 
+@cache
+def plinth_joints():
+    """Masonry joints on the cradle walls' outer faces and ends."""
+    rng = random.Random(SEEDS["plinth"] + 1)
+    z0, z1 = TOP + 4, WALL_TOP + 1
+    pieces = []
+    for side in (-1, 1):
+        pieces.append(joints(0, side * WALL_OUT, side, (-WALL_Y, WALL_Y), z0, z1, rng))
+        x_span = sorted((side * WALL_IN, side * WALL_OUT))
+        for end in (-1, 1):
+            pieces.append(joints(1, end * WALL_Y, end, x_span, z0, z1, rng, block_len=12.0))
+    return m3.Manifold.batch_boolean(pieces, m3.OpType.Add)
+
+
 PLINTH_MASK = (
     (
         (-LOWER[0] / 2 - 5, -LOWER[1] / 2 - 1, -1),
@@ -295,126 +324,156 @@ PLINTH_MASK = (
 
 
 # ---------------------------------------------------------------- columns
+# The window wall (+X) is a broken two-lancet gothic window with a pinnacle on its intact jamb;
+# the stub (-X) is an octagonal column with a flared foot and capital. Openings, runes, joints and
+# flutes are cut exact after erosion, so they never see noise.
+
+LANCET_Y = MULLION / 2 + LANCET_W / 2
+COLUMN_BAND, COLUMN_CAP = (40.0, 40.0), 35.0  # the capital stays clear of the lifted controller
+RUNES = (2, 5, 0, 3, 4, 1)
+TENON_MASK_WINDOW = (
+    (-WINDOW_BAND[0] / 2 - 2, -WINDOW_BAND[1] / 2 - 2, -1),
+    (WINDOW_BAND[0] / 2 + 2, WINDOW_BAND[1] / 2 + 2, TENON_H + 0.5),
+)
+TENON_MASK_COLUMN = (
+    (-COLUMN_BAND[0] / 2 - 2, -COLUMN_BAND[1] / 2 - 2, -1),
+    (COLUMN_BAND[0] / 2 + 2, COLUMN_BAND[1] / 2 + 2, TENON_H + 0.5),
+)
+WINDOW_MASK = (
+    TENON_MASK_WINDOW,
+    # Rune panel on the +X face stays flat so the glyphs read.
+    (
+        (WINDOW_T / 2 - 1, -WINDOW_W / 2 - 2, BAND_TOP - 1),
+        (WINDOW_T / 2 + 1, WINDOW_W / 2 + 2, 60.0),
+    ),
+    # Face toward the console: hidden, kept flat to save triangles.
+    (
+        (-WINDOW_T / 2 - 1, -WINDOW_W / 2 - 2, 0.0),
+        (-WINDOW_T / 2 + 1, WINDOW_W / 2 + 2, 260.0),
+    ),
+)
+STUB_MASK = (TENON_MASK_COLUMN,)
+SEAT_SPARE = 2.0  # blank stands this far above the seat; the exact trim removes it
 
 
-def corner_chips(rng, count, z_range, shallow_zone):
-    """Wedge chips on the vertical chamfer faces; depth is exact (apex line parallel to the face)."""
-    distance = (SHAFT - CHAMFER) / math.sqrt(2)
-    chips, placed = [], []
-    while len(chips) < count:
-        corner = rng.choice(((1, 1), (1, -1), (-1, -1), (-1, 1)))
-        z = rng.uniform(*z_range)
-        above = (shallow_zone[1] + 12, z_range[1])
-        if (
-            (corner[0] == 1 or corner[1] == -1)
-            and above[0] < above[1]
-            and rng.random() < 0.5
-        ):
-            z = rng.uniform(*above)
-        if any(c == corner and abs(z - zc) < 16 for c, zc in placed):
-            continue
-        near_rune = (corner[0] == 1 or corner[1] == -1) and shallow_zone[
-            0
-        ] - 12 < z < shallow_zone[1] + 12
-        depth = rng.uniform(1.5, 2.5) if near_rune else rng.uniform(3, CHIP_MAX)
-        azimuth = math.degrees(math.atan2(corner[1], corner[0]))
-        chip = (
-            wedge(
-                depth,
-                rng.uniform(46, 60),
-                rng.uniform(30, 55),
-                16,
-                rng.uniform(-25, 25),
-            )
-            .rotate((0, 0, 0), (0, 0, 1), azimuth)
-            .translate(
-                (
-                    distance * math.cos(math.radians(azimuth)),
-                    distance * math.sin(math.radians(azimuth)),
-                    z,
-                )
-            )
-        )
-        chips.append((chip, depth))
-        placed.append((corner, z))
-    return chips
-
-
-def broken_top(rng, height):
-    """3-5 cuts inside the top BREAK_ZONE mm.
-
-    Slanted planes fall away from one surviving peak corner; a V-notch splits
-    the top into horns.
-    """
-    peak = rng.uniform(0, 360)
-    count = rng.randint(3, 5)
-    cuts = []
-    for _ in range(count - 1):
-        azimuth, tilt = peak + 180 + rng.uniform(-80, 80), rng.uniform(25, 42)
-        low = height - rng.uniform(10, BREAK_ZONE - 5)
-        plane = (
-            block(200, 200, 200)
-            .rotate((0, 0, 0), (0, 1, 0), tilt)
-            .rotate((0, 0, 0), (0, 0, 1), azimuth)
-            .translate(
-                (
-                    SHAFT / 2 * math.cos(math.radians(azimuth)),
-                    SHAFT / 2 * math.sin(math.radians(azimuth)),
-                    low,
-                )
-            )
-        )
-        cuts.append(plane)
-    apex = height - rng.uniform(10, 18)
-    notch = (
-        wedge(height - apex + 5, rng.uniform(22, 32), rng.uniform(22, 32), 80, 0)
-        .rotate((0, 0, 0), (0, 1, 0), -90)
-        .rotate((0, 0, 0), (0, 0, 1), rng.uniform(0, 180))
-        .translate((rng.uniform(-5, 5), rng.uniform(-5, 5), height + 5))
+def band(size, z0, z1):
+    """Chamfered base band; the 45 deg bottom chamfer keeps it printable on a narrower tenon."""
+    return (
+        block(size[0], size[1], z1 - z0, z=z0)
+        .faces("<Z")
+        .chamfer(BAND_CHAMFER)
+        .faces(">Z")
+        .chamfer(BAND_CHAMFER)
     )
-    cuts.append(notch)
+
+
+def octagon(flats, z0, z1):
+    return octagon_loft(flats, z0, flats, z1)
+
+
+def octagon_loft(flats0, z0, flats1, z1):
+    """Octagonal prism from `flats0` across flats at z0 to `flats1` at z1, flats facing the axes."""
+
+    def across_corners(flats):
+        return flats / math.cos(math.radians(22.5))
+
+    return (
+        cq.Workplane("XY", origin=(0, 0, z0))
+        .transformed(rotate=(0, 0, 22.5))
+        .polygon(8, across_corners(flats0))
+        .workplane(offset=z1 - z0)
+        .polygon(8, across_corners(flats1))
+        .loft()
+    )
+
+
+def yz_plane():
+    """Workplane at x = -WINDOW_T whose extrusions pass through the whole wall."""
+    return cq.Workplane("YZ", origin=(-WINDOW_T, 0, 0))
+
+
+def lancet(yc, z0, spring, width):
+    """Pointed window through the wall: a rectangle topped by an equilateral arch."""
+    through = 2 * WINDOW_T
+    rect = yz_plane().center(yc, (z0 + spring) / 2).rect(width, spring - z0).extrude(through)
+    left = yz_plane().center(yc - width / 2, spring).circle(width).extrude(through)
+    right = yz_plane().center(yc + width / 2, spring).circle(width).extrude(through)
+    cap = yz_plane().center(yc, spring + width).rect(2 * width, 2 * width).extrude(through)
+    return rect.union(left.intersect(right).intersect(cap))
+
+
+def quatrefoil(yc, zc, radius=3.6, offset=3.2):
+    """Four overlapping round lobes through the wall."""
+    return union_all(
+        [
+            yz_plane().center(yc + dy, zc + dz).circle(radius).extrude(2 * WINDOW_T)
+            for dy, dz in ((offset, 0), (-offset, 0), (0, offset), (0, -offset))
+        ]
+    )
+
+
+def fracture_z(y):
+    (y0, z0), (y1, z1) = BREAK_LINE
+    return z0 + (z1 - z0) / (y1 - y0) * (y - y0)
+
+
+def fracture_cuts(rng):
+    """The break across the +Y window: one slanted plane plus three stepped teeth below it."""
+    (y0, z0), (y1, _) = BREAK_LINE
+    far = y1 + 8  # the plane runs past the wall edge
+    cuts = [
+        yz_plane()
+        .polyline([(y0, z0), (far, fracture_z(far)), (far, 300), (y0, 300)])
+        .close()
+        .extrude(2 * WINDOW_T)
+    ]
+    for i in range(3):
+        ya = y0 + 9 + i * 9 + rng.uniform(-2, 2)
+        yb = min(ya + rng.uniform(6, 9), y1 - 4)  # a tooth reaching the edge would leave a fin
+        drop = rng.uniform(4, 9)
+        cuts.append(
+            yz_plane()
+            .polyline(
+                [(ya, fracture_z(ya) + 0.5), (yb, fracture_z(yb) - drop), (yb, fracture_z(yb) + 0.5)]
+            )
+            .close()
+            .extrude(2 * WINDOW_T)
+        )
     return cuts
 
 
-def column_blank(height):
-    """Shaft and base band from the top of the tenon up; the exact tenon is added after erosion."""
-    shaft = column(SHAFT, TENON_H, height)
-    band = column(BAND, TENON_H, BAND_TOP).faces("<Z").chamfer(2).faces(">Z").chamfer(2)
-    return shaft.union(band)
-
-
-def tenon():
-    return column(SHAFT, 0, TENON_H + 0.5)
-
-
-@cache
-def tall_pillar_blank():
-    """Returns the blank, the chip depths and the lowest point the broken top reaches."""
-    rng = random.Random(SEEDS["tall_pillar"])
-    column = column_blank(TALL_H)
-    for _ in range(20):  # resample until one horn keeps (almost) the full height
-        body = column
-        for cut in broken_top(rng, TALL_H):
-            body = body.cut(cut)
-        if body.val().BoundingBox().zmax >= TALL_H - 4:
-            break
-    else:
-        raise AssertionError("broken top never keeps a peak")
-    lowest_cut = column.cut(body).val().BoundingBox().zmin
-    chips = corner_chips(
-        rng,
-        rng.randint(5, 8),
-        (BAND_TOP + 12, TALL_H - BREAK_ZONE - 6),
-        (RUNE_Z0, RUNE_TOP),
+def face_chips(rng, count):
+    """Wedge chips on the four vertical faces above the rune panel; returns cutters and depths."""
+    half_t, half_w = WINDOW_T / 2, WINDOW_W / 2
+    faces = (  # rotation about Z, position of the face centre, half-extent along it
+        (0, (half_t, 0), half_w),
+        (180, (-half_t, 0), half_w),
+        (90, (0, half_w), half_t),
+        (-90, (0, -half_w), half_t),
     )
-    for chip, _ in chips:
-        body = body.cut(chip)
-    return body.clean(), [depth for _, depth in chips], lowest_cut
+    chips, depths = [], []
+    while len(chips) < count:
+        rotation, (fx, fy), reach = rng.choice(faces)
+        z = rng.uniform(70, WINDOW_H - 12)
+        along = rng.uniform(-reach + 6, reach - 6)
+        x, y = (fx, along) if rotation in (0, 180) else (along, fy)
+        if z > fracture_z(y if rotation in (0, 180) else fy) - 6:  # the break already took this
+            continue
+        depth = rng.uniform(1.5, CHIP_MAX)
+        chip = (
+            wedge(depth, rng.uniform(46, 60), rng.uniform(30, 55), rng.uniform(8, 16), rng.uniform(-25, 25))
+            .rotate((0, 0, 0), (0, 0, 1), rotation)
+            .translate((x, y, z))
+        )
+        chips.append(chip)
+        depths.append(depth)
+    return chips, depths
 
 
 def hook():
+    face = WINDOW_T / 2
     peg = (
-        cq.Workplane("YZ", origin=(SHAFT / 2 - 2, 0, HOOK_Z))
+        cq.Workplane("YZ", origin=(face - 2, 0, HOOK_Z))
         .circle(HOOK_D / 2)
         .extrude(HOOK_L + 2)
         .faces(">X")
@@ -425,9 +484,9 @@ def hook():
         cq.Workplane("XZ")
         .polyline(
             [
-                (SHAFT / 2 - 2, top),
-                (SHAFT / 2 + HOOK_L, top),
-                (SHAFT / 2 - 2, top - HOOK_L - 2),
+                (face - 2, top),
+                (face + HOOK_L, top),
+                (face - 2, top - HOOK_L - 2),
             ]
         )
         .close()
@@ -436,25 +495,52 @@ def hook():
     return peg.union(gusset)
 
 
+def window_tenon():
+    return block(*WINDOW_TENON, TENON_H + 0.5)
+
+
+def column_tenon():
+    return block(COLUMN_TENON, COLUMN_TENON, TENON_H + 0.5)
+
+
 @cache
-def pillar_runes():
-    size, stroke, depth = PILLAR_GLYPH
-    cutters = []
-    for i, (east, south) in enumerate(zip((0, 1, 2, 3, 4, 5), (3, 5, 1, 4, 0, 2))):
-        z = RUNE_Z0 + size / 2 + i * RUNE_PITCH
+def window_blank():
+    """Returns the blank, the face-chip depths and the lowest z the fracture reaches on the wall."""
+    rng = random.Random(SEEDS["tall_pillar"])
+    jamb_y = -WINDOW_W / 2 + PINNACLE[1] / 2
+    shaft_h = 10.0
+    body = band(WINDOW_BAND, TENON_H, BAND_TOP)
+    body = body.union(block(WINDOW_T, WINDOW_W, WINDOW_H - BAND_TOP + 1, z=BAND_TOP - 1))
+    body = body.union(band((WINDOW_T + 4, WINDOW_BAND[1]), *SILL_Z))  # sill course
+    body = body.union(block(PINNACLE[0], PINNACLE[1], shaft_h + 1, y=jamb_y, z=WINDOW_H - 1))
+    body = body.union(
+        cq.Workplane("XY", origin=(0, jamb_y, WINDOW_H + shaft_h))
+        .rect(PINNACLE[0], PINNACLE[1])
+        .workplane(offset=PINNACLE[2] - shaft_h)
+        .rect(1.2, 1.2)
+        .loft()
+    )
+    intact = body
+    for cut in fracture_cuts(rng):
+        body = body.cut(cut)
+    lowest = intact.cut(body).val().BoundingBox().zmin
+    chips, depths = face_chips(rng, rng.randint(5, 8))
+    for chip in chips:
+        body = body.cut(chip)
+    return body.clean(), depths, lowest
+
+
+@cache
+def window_cutters():
+    """Exact cutters from the CAD side: both lancets, the quatrefoil and the rune panel."""
+    cutters = [lancet(sign * LANCET_Y, LANCET_Z0, LANCET_SPRING, LANCET_W) for sign in (-1, 1)]
+    cutters.append(quatrefoil(-LANCET_Y, 180.0))
+    size, stroke, depth = WINDOW_GLYPH
+    for i in range(3):
         cutters.append(
             glyph(
-                east,
-                cq.Plane.named("YZ", (SHAFT / 2 - depth, 0, z)),
-                size,
-                stroke,
-                depth,
-            )
-        )
-        cutters.append(
-            glyph(
-                south,
-                cq.Plane.named("XZ", (0, -SHAFT / 2 + depth, z)),
+                RUNES[i],
+                cq.Plane.named("YZ", (WINDOW_T / 2 - depth, (i - 1) * 22.0, 38.0)),
                 size,
                 stroke,
                 depth,
@@ -463,50 +549,104 @@ def pillar_runes():
     return union_all(cutters)
 
 
-TENON_MASK = (
-    (-BAND / 2 - 2, -BAND / 2 - 2, -1),
-    (BAND / 2 + 2, BAND / 2 + 2, TENON_H + 0.5),
-)
-TALL_MASK = (
-    TENON_MASK,
-    ((SHAFT / 2 - 1, -11.5, RUNE_Z0 - 2), (SHAFT / 2 + 1, 11.5, HOOK_Z + 6)),
-    ((-11.5, -SHAFT / 2 - 1, RUNE_Z0 - 2), (11.5, -SHAFT / 2 + 1, RUNE_TOP + 2)),
-)
-STUB_MASK = (TENON_MASK,)
-SEAT_SPARE = 2.0  # blank stands this far above the seat; the exact trim removes it
+def joints(axis, coord, sign, span, z0, z1, rng, block_len=22.0):
+    """Mortar joints cut into one vertical face: bed joints every COURSE, staggered head joints.
+
+    The face is the plane `axis = coord` with outward direction `sign`; `span` runs along the
+    other horizontal axis."""
+    along = 1 - axis
+    depth = (coord - JOINT_D, coord + 1) if sign > 0 else (coord - 1, coord + JOINT_D)
+
+    def slab(a0, a1, lo_z, hi_z):
+        lo, hi = [0.0, 0.0, lo_z], [0.0, 0.0, hi_z]
+        lo[axis], hi[axis] = depth
+        lo[along], hi[along] = a0, a1
+        return art.box(tuple(lo), tuple(hi))
+
+    pieces, z, course = [], z0, 0
+    while z + COURSE <= z1 + 1e-6:
+        pieces.append(slab(span[0] - 1, span[1] + 1, z, z + JOINT_W))
+        a = span[0] + block_len * (0.4 if course % 2 == 0 else 0.9)
+        while a < span[1] - 2:
+            if rng.random() > 0.15:  # a few missing head joints keep the courses from looking tiled
+                pieces.append(slab(a - JOINT_W / 2, a + JOINT_W / 2, z + JOINT_W, z + COURSE))
+            a += block_len
+        z, course = z + COURSE, course + 1
+    return m3.Manifold.batch_boolean(pieces, m3.OpType.Add)
+
+
+@cache
+def window_joints():
+    rng = random.Random(SEEDS["tall_pillar"] + 1)
+    half_t, half_w = WINDOW_T / 2, WINDOW_W / 2
+    top = WINDOW_H + 1
+    # No mortar around the chain hook: joints would slice its root and gusset, which are added first.
+    hook_zone = art.box(
+        (half_t - 5, -HOOK_D / 2 - 2, HOOK_Z - HOOK_D / 2 - HOOK_L - 4),
+        (half_t + HOOK_L + 1, HOOK_D / 2 + 2, HOOK_Z + HOOK_D / 2 + 2),
+    )
+    cuts = m3.Manifold.batch_boolean(
+        [
+            joints(0, half_t, 1, (-half_w, half_w), 66.0, top, rng),
+            joints(0, -half_t, -1, (-half_w, half_w), 20.0, SILL_Z[0], rng),
+            joints(0, -half_t, -1, (-half_w, half_w), SILL_Z[1] + 2, top, rng),
+            joints(1, half_w, 1, (-half_t, half_t), 66.0, top, rng, block_len=15.0),
+            joints(1, -half_w, -1, (-half_t, half_t), 66.0, top, rng, block_len=15.0),
+        ],
+        m3.OpType.Add,
+    )
+    return cuts - hook_zone
+
+
+def window_exact_cut():
+    return art.to_manifold(window_cutters()) + window_joints()
 
 
 @cache
 def stub_blank():
     rng = random.Random(SEEDS["stub"])
-    body = column_blank(STUB_H + SEAT_SPARE)
-    count = rng.randint(3, 5)
-    for i in range(count):
-        if i % 2 == 0:
-            chip = corner_chips(rng, 1, (STUB_H - 2, STUB_H + 1), (0, 0))[0][0]
-        else:
-            azimuth = rng.choice((0, 90, 180, 270))
-            chip = (
-                wedge(
-                    rng.uniform(2.5, 4.5),
-                    75,
-                    rng.uniform(35, 50),
-                    rng.uniform(8, 14),
-                    rng.uniform(-12, 12),
-                )
-                .rotate((0, 0, 0), (0, 0, 1), azimuth)
-                .translate(
-                    (
-                        SHAFT / 2 * math.cos(math.radians(azimuth))
-                        + rng.uniform(-6, 6) * math.sin(math.radians(azimuth)),
-                        SHAFT / 2 * math.sin(math.radians(azimuth))
-                        + rng.uniform(-6, 6) * math.cos(math.radians(azimuth)),
-                        STUB_H,
-                    )
+    top = STUB_H + SEAT_SPARE
+    body = band(COLUMN_BAND, TENON_H, BAND_TOP)
+    body = body.union(octagon_loft(COLUMN_TENON, BAND_TOP - 1, COLUMN_FLATS, BAND_TOP + 8))  # flared foot
+    body = body.union(octagon(COLUMN_FLATS, BAND_TOP + 7, STUB_H - 16))
+    body = body.union(octagon_loft(COLUMN_FLATS, STUB_H - 16, COLUMN_CAP, STUB_H - 6))  # capital
+    body = body.union(octagon(COLUMN_CAP, STUB_H - 7, top))
+    for i in range(rng.randint(3, 5)):
+        azimuth = 45 * rng.randrange(8)
+        depth = rng.uniform(2.5, 4.5)
+        chip = (
+            wedge(depth, 75, rng.uniform(35, 50), rng.uniform(8, 14), rng.uniform(-12, 12))
+            .rotate((0, 0, 0), (0, 0, 1), azimuth)
+            .translate(
+                (
+                    COLUMN_CAP / 2 * math.cos(math.radians(azimuth)),
+                    COLUMN_CAP / 2 * math.sin(math.radians(azimuth)),
+                    STUB_H - rng.uniform(0, 3),
                 )
             )
+        )
         body = body.cut(chip)
     return body.clean()
+
+
+@cache
+def stub_joints():
+    """Eight flutes up the shaft and a groove ring at its foot and under the capital."""
+    flutes = [
+        art.box((COLUMN_FLATS / 2 - 1.2, -2.2, 30.0), (COLUMN_FLATS / 2 + 1, 2.2, STUB_H - 24)).rotate(
+            (0, 0, 45 * k)
+        )
+        for k in range(8)
+    ]
+    rings = [
+        art.to_manifold(
+            octagon(COLUMN_CAP + 4, z, z + JOINT_W).cut(
+                octagon(COLUMN_FLATS - 2 * JOINT_D, z - 1, z + JOINT_W + 1)
+            )
+        )
+        for z in (BAND_TOP + 12.0, STUB_H - 22.0)
+    ]
+    return m3.Manifold.batch_boolean(flutes + rings, m3.OpType.Add)
 
 
 def stub_peg():
@@ -664,9 +804,10 @@ def altar_cutters():
 
 
 ALTAR_MASK = (
+    # The slab layer stays flat: its top is mostly under the cradle and its band carries the runes.
     (
         (ALTAR_X[0] - 1, ALTAR_Y[0] - 5, -1),
-        (ALTAR_X[0] + 1.5, ALTAR_Y[1] + 5, ALTAR_SLAB + 0.5),
+        (ALTAR_X[1] + 1, ALTAR_Y[1] + 5, ALTAR_SLAB + 0.5),
     ),
     # Cheek faces toward the controller: hidden behind it, kept flat to save triangles.
     (
@@ -732,41 +873,75 @@ def chain_print():
 
 
 # ---------------------------------------------------------------- skull (SDF)
-# Teeth sit on an arc around (0, TEETH_ARC_Y); the face looks toward -Y.
-TEETH_ARC_Y, TEETH_ARC_R, TEETH = -9.0, 13.0, 8
-TEETH_ANGLES = [math.radians(-52 + 104 * i / (TEETH - 1)) for i in range(TEETH)]
+# Facing -Y: cranium and face above an open jaw (2.3 mm bite gap), on a short spine that carries the
+# peg hole. Teeth sit on arcs around (0, TEETH_ARC_Y); the upper row is 1.5 mm wider than the lower.
+TEETH_ARC_Y, TEETH_ARC_UP, TEETH_ARC_LO, TEETH = -8.0, 15.5, 14.0, 8
+SKULL_EDGE = 0.6  # mesh edge; 0.5 gives 58k triangles, too near the 60k cap
+TEETH_ANGLES = [math.radians(-54 + 108 * i / (TEETH - 1)) for i in range(TEETH)]
+
+
+def turn(x, z, cx, cz, degrees):
+    """Coordinates of (x, z) in a frame turned `degrees` about the point (cx, cz)."""
+    a = math.radians(degrees)
+    dx, dz = x - cx, z - cz
+    return dx * math.cos(a) + dz * math.sin(a), -dx * math.sin(a) + dz * math.cos(a)
 
 
 def skull_distance(p):
-    """Jawless stylised skull, facing -Y; negative inside. The base plane z = 0 is trimmed by skull()."""
     x, y, z = p
-    ax = abs(x)  # bilateral symmetry
+    ax = abs(x)
     q = (ax, y, z)
-    d = art.ellipsoid(q, (0, 6, 25), (20, 23.5, 21.5))  # cranium
-    d = art.smin(
-        d, art.round_box((ax, y - 4, z - 5.5), (15, 17, 5.5), 3), 10
-    )  # flat base
-    d = art.smin(
-        d, art.round_box((ax, y + 13, z - 18), (15, 9, 10), 5), 6
-    )  # face block
-    d = art.smin(d, art.round_box((ax, y + 15, z - 6), (11, 7, 6), 3), 3)  # maxilla
-    d = art.smin(d, art.ellipsoid(q, (14.5, -15, 15), (6, 6, 4)), 4)  # cheekbone
-    d = art.smin(
-        d, art.capsule(q, (15, -12, 15), (17.5, 6, 15.5), 2.5), 3
-    )  # zygomatic arch
-    d = art.smin(d, art.ellipsoid(q, (0, -19, 27), (17, 4.5, 4)), 5)  # brow ridge
-    d = art.smax(d, -art.ellipsoid(q, (21, -2, 23), (3.5, 8, 7)), 3)  # temple
-    d = art.smax(d, -art.ellipsoid(q, (9.5, -25, 20.5), (6.3, 11, 5.8)), 1.5)  # orbit
-    nose = art.triangle_2d(ax, z, (2.8, 14.8), (-2.8, 14.8), (0, 8.2)) - 0.9
-    d = art.smax(d, -max(nose, y + 16, -30 - y), 1.5)  # nasal aperture
-    if z < 9 and y < 4:
+
+    # cranium, face block, skull base
+    d = art.ellipsoid(q, (0, 6, 58), (25, 30, 21))
+    d = art.smin(d, art.ellipsoid(q, (0, 8, 36), (15, 15, 6)), 6)  # skull base
+    d = art.smin(d, art.round_box((ax, y + 12, z - 45), (15, 12, 12), 5), 8)  # face block
+    d = art.smin(d, art.round_box((ax, y + 18, z - 36.5), (12, 8, 4.5), 3), 3)  # maxilla
+    d = art.smin(d, art.ellipsoid(q, (17, -19, 41), (6.5, 6, 5)), 4)  # cheekbone
+    d = art.smin(d, art.capsule(q, (18, -17, 43), (24, 4, 46), 2.8), 3)  # zygomatic arch
+    u, v = turn(ax, z, 10.5, 53, -12)
+    d = art.smin(d, art.ellipsoid((u, y, v), (0, -24.5, 0), (10.5, 4.4, 3.6)), 3.5)  # brow arch
+    d = art.smin(d, art.ellipsoid(q, (0, -24, 51), (4.5, 4, 4)), 3)  # glabella
+    d = art.smax(d, -art.ellipsoid(q, (27, 0, 56), (4, 10, 8)), 3)  # temple
+
+    # orbits: slanted, deep
+    u, v = turn(ax, z, 11.5, 47, -14)
+    d = art.smax(d, -art.ellipsoid((u, y, v), (0, -27, 0), (7.4, 17, 6.2)), 1.4)
+    # nasal aperture
+    nose = art.triangle_2d(ax, z, (3.6, 43.5), (-3.6, 43.5), (0, 34.5)) - 0.9
+    d = art.smax(d, -max(nose, y + 17, -36 - y), 1.2)
+
+    # damage: a crack down the forehead and a broken chip at the top left
+    for a, b in (((2, 6, 79.5), (-5, -12, 67)), ((-5, -12, 67), (-8, -22, 56.5))):
+        d = art.smax(d, -art.capsule((x, y, z), a, b, 0.9), 0.3)
+    d = art.smax(d, -art.ellipsoid((x, y, z), (-21, 2, 76), (8, 10, 6)), 1.0)
+
+    # mandible, open ~3 mm; it sits under the cheekbones
+    d = art.smin(d, art.ellipsoid(q, (17.5, 6, 35), (3.2, 7, 13)), 3)  # ramus plate
+    for a, b, r in (
+        ((17, 4, 22), (10, -16, 18), 4.6),
+        ((10, -16, 18), (0, -20, 17.5), 5.0),
+    ):
+        d = art.smin(d, art.capsule(q, a, b, r), 2.5)
+
+    # spine: collar for the peg, flat base at z = 0
+    for c, r in (((0, 0, 3), (12.5, 11.5, 4)), ((0, 1, 9.5), (10.5, 9.5, 4.2)), ((0, 3, 16), (9.5, 9, 3.6))):
+        d = art.smin(d, art.ellipsoid(q, c, r), 2.0)
+    d = art.smin(d, art.capsule(q, (0, 3, 8), (0, 6, 32), 7.0), 3)
+
+    # teeth: upper from the maxilla, lower from the jaw
+    if 17 < z < 38 and y < 4:
         for angle in TEETH_ANGLES:
-            s, c = math.sin(angle), math.cos(angle)
-            cx, cy = TEETH_ARC_R * s, TEETH_ARC_Y - TEETH_ARC_R * c
-            dx, dy = x - cx, y - cy
-            # Tooth frame: u along the arc, v radial (outward), w vertical.
-            u, v = dx * c + dy * s, dx * s - dy * c
-            d = art.smin(d, art.round_box((u, v, z - 3.2), (1.35, 1.8, 3.2), 0.6), 0.5)
+            for row in (0, 1):
+                a = angle + (math.radians(7) if row else 0)
+                radius = TEETH_ARC_LO if row else TEETH_ARC_UP
+                s, c = math.sin(a), math.cos(a)
+                dx, dy = x - radius * s, y - (TEETH_ARC_Y - radius * c)
+                uu, vv = dx * c + dy * s, dx * s - dy * c
+                if row == 0:
+                    d = art.smin(d, art.round_box((uu, vv, z - (27 + 6.4 / 2)), (1.5, 2.1, 6.4 / 2), 0.6), 0.6)
+                else:
+                    d = art.smin(d, art.round_box((uu, vv, z - (19.5 + 2.6)), (1.3, 1.8, 2.6), 0.6), 0.6)
     return d
 
 
@@ -774,10 +949,15 @@ def skull_distance(p):
 def skull_local():
     """Skull on its exact flat base at z = 0, with the peg hole."""
     shape = art.level_set(
-        skull_distance, (-24.0, -28.0, -1.5, 24.0, 32.0, 49.0), art.MESH_EDGE
+        skull_distance, (-31.0, -36.0, -1.5, 31.0, 44.0, 82.0), SKULL_EDGE
     )
     shape = shape.trim_by_plane((0.0, 0.0, 1.0), 0.0).simplify(art.SIMPLIFY_TOL)
-    return shape - art.to_manifold(cylinder_z(HOLE_D, -1, HOLE_H))
+    shape = shape - art.to_manifold(cylinder_z(HOLE_D, -1, HOLE_H))
+    # Meshing and simplify leave zero-volume slivers next to the body; drop them, but never a real piece.
+    bodies_found = sorted(shape.decompose(), key=lambda piece: piece.volume())
+    if any(abs(piece.volume()) > 1.0 for piece in bodies_found[:-1]):
+        raise ValueError("skull has a detached piece larger than 1 mm³")
+    return bodies_found[-1]
 
 
 # ---------------------------------------------------------------- stone pipeline
@@ -786,47 +966,54 @@ def skull_local():
 def stone(blank, seed, mask, exact_add=None, cutters=None, ceiling=None):
     """Erode the blank, simplify, then restore exact functional geometry.
 
-    Returns the part and the volume the erosion step alone left outside the blank."""
+    Returns the part, the volume the erosion step alone left outside the blank, and the nominal
+    part: the same steps without erosion, meshed the same way, for measuring weathering drift."""
     core = art.to_manifold(blank)
     eroded = art.erode(core, seed, EROSION, mask)
     outward = (eroded - core).volume()
-    shape = eroded.simplify(art.SIMPLIFY_TOL)
+    shape, nominal = eroded.simplify(art.SIMPLIFY_TOL), core
     if ceiling is not None:  # exact flat top: keep z <= ceiling
         shape = shape.trim_by_plane((0.0, 0.0, -1.0), -ceiling)
+        nominal = nominal.trim_by_plane((0.0, 0.0, -1.0), -ceiling)
     if exact_add is not None:
-        shape = shape + art.to_manifold(exact_add)
+        add = exact_add if isinstance(exact_add, m3.Manifold) else art.to_manifold(exact_add)
+        shape, nominal = shape + add, nominal + add
     if cutters is not None:
-        shape = shape - art.to_manifold(cutters)
-    return shape, outward
+        cut = cutters if isinstance(cutters, m3.Manifold) else art.to_manifold(cutters)
+        shape, nominal = shape - cut, nominal - cut
+    return shape, outward, nominal
 
 
 @cache
 def stones():
-    """Set-local printable stone parts: name -> (Manifold, erosion-step volume outside the blank)."""
-    tall_core = tall_pillar_blank()[0]
+    """Set-local printable stone parts: name -> (Manifold, erosion-step volume outside the blank, nominal Manifold)."""
     return {
         "plinth": stone(
-            plinth_blank(), SEEDS["plinth"], PLINTH_MASK, cutters=plinth_cutters()
+            plinth_blank(),
+            SEEDS["plinth"],
+            PLINTH_MASK,
+            cutters=art.to_manifold(plinth_cutters()) + plinth_joints(),
         ),
         "pillar": stone(
-            tall_core,
+            window_blank()[0],
             SEEDS["tall_pillar"],
-            TALL_MASK,
-            tenon().union(hook()),
-            pillar_runes(),
+            WINDOW_MASK,
+            window_tenon().union(hook()),
+            window_exact_cut(),
         ),
         "stub": stone(
             stub_blank(),
             SEEDS["stub"],
             STUB_MASK,
-            tenon().union(stub_peg()),
+            column_tenon().union(stub_peg()),
+            stub_joints(),
             ceiling=STUB_H,
         ),
         "altar": stone(
             altar_blank(),
             SEEDS["altar"],
             ALTAR_MASK,
-            bounds_block(TONGUE),
+            art.to_manifold(bounds_block(TONGUE)) + hand_bones(),
             altar_cutters(),
         ),
     }
@@ -837,14 +1024,89 @@ def cores():
     """Set-local mechanical cores: the stone parts before erosion, and the chain. Exported as the STEP."""
     return {
         "plinth": plinth_blank().cut(plinth_cutters()),
-        "pillar": tall_pillar_blank()[0]
-        .union(tenon().union(hook()))
-        .cut(pillar_runes()),
+        "pillar": window_blank()[0]
+        .union(window_tenon().union(hook()))
+        .cut(window_cutters()),
         "stub": stub_blank()
-        .cut(block(4 * BAND, 4 * BAND, 2 * SEAT_SPARE, z=STUB_H))
-        .union(tenon().union(stub_peg())),
+        .cut(block(160, 160, 2 * SEAT_SPARE, z=STUB_H))
+        .union(column_tenon().union(stub_peg())),
         "altar": altar_blank().cut(altar_cutters()).union(bounds_block(TONGUE)),
     }
+
+
+# ---------------------------------------------------------------- hand
+# A skeletal hand lies palm-up on the desk in front of the cradle: four fingers fanned and curled up
+# at the tips, the thumb splayed off the +Y cheek. Bones are dumbbells (shaft plus flared heads), with
+# the three phalanges in the 1 : 0.8 : 0.7 ratio of a real hand. The controller rests on the palm, which
+# is the stone cradle; the knuckles sit inside its front wall. Bones are added after erosion, so they
+# stay smooth.
+
+HAND_EDGE, HAND_SIMPLIFY = 1.2, 0.2  # mesh edge and simplify tolerance of each digit; smooth bones need less than stone
+HAND_FRONT_X = lean_point(0, DS4[1] + LIP_GAP + LIP_T)[0] + 2.2  # knuckle line, 2.2 mm inside the wall
+# finger: (knuckle y, plan heading in degrees from -X toward +Y, phalanx lengths, shaft radius)
+FINGERS = (
+    (-30.0, -17.0, (31.0, 17.0, 17.0), 4.2),  # little
+    (1.0, -7.0, (41.0, 26.0, 19.0), 4.8),  # ring
+    (33.0, 1.0, (45.0, 28.0, 20.0), 5.0),  # middle
+    (65.0, 11.0, (40.0, 23.0, 19.0), 4.9),  # index
+)
+FINGER_CURL = (0.0, 32.0, 62.0)  # flexion of each phalanx on the one before it, degrees, upward
+THUMB_ROOT_Y, THUMB_ROOT_X = ALTAR_Y[1] - CHEEK_T / 2, -152.0  # inside the +Y cheek
+THUMB = (40.0, (30.0, 23.0, 19.0), 5.8, (0.0, 30.0, 60.0))
+
+
+def bone(p, a, b, radius):
+    """Dumbbell: a shaft with flared joint heads."""
+    d = art.capsule(p, a, b, radius)
+    d = art.smin(d, art.ellipsoid(p, a, (radius * 1.38,) * 3), 1.0)
+    return art.smin(d, art.ellipsoid(p, b, (radius * 1.34,) * 3), 1.0)
+
+
+def digit_joints(root, heading, lengths, curl):
+    """Joint positions of a digit that starts at `root`, heads `heading` degrees off -X in plan and
+    flexes upward by the cumulative `curl`."""
+    points, angle, h = [root], 0.0, math.radians(heading)
+    for length, flexion in zip(lengths, curl):
+        angle += flexion
+        flat = math.cos(math.radians(angle))
+        x, y, z = points[-1]
+        points.append(
+            (
+                x - math.cos(h) * flat * length,
+                y + math.sin(h) * flat * length,
+                z + math.sin(math.radians(angle)) * length,
+            )
+        )
+    return points
+
+
+def digit_mesh(root, heading, lengths, radius, curl):
+    """One digit as a Manifold, flat on the bed and simplified."""
+    points = digit_joints(root, heading, lengths, curl)
+
+    def distance(p):
+        d = 1e9
+        for i, (a, b) in enumerate(zip(points, points[1:])):
+            d = art.smin(d, bone(p, a, b, radius * (0.85 if i == len(points) - 2 else 1.0)), 1.5)
+        return art.smin(d, art.ellipsoid(p, points[-1], (radius * 1.15,) * 3), 1.0)
+
+    pad = radius * 1.4 + 2
+    lo = [min(point[i] for point in points) - pad for i in range(3)]
+    hi = [max(point[i] for point in points) + pad for i in range(3)]
+    shape = art.level_set(distance, (lo[0], lo[1], -1.0, hi[0], hi[1], hi[2]), HAND_EDGE)
+    return shape.trim_by_plane((0.0, 0.0, 1.0), 0.0).simplify(HAND_SIMPLIFY)
+
+
+@cache
+def hand_bones():
+    """Four fingers and the thumb, set-local, lying on the desk."""
+    digits = [
+        digit_mesh((HAND_FRONT_X, y, radius * 0.7), heading, lengths, radius, FINGER_CURL)
+        for y, heading, lengths, radius in FINGERS
+    ]
+    heading, lengths, radius, curl = THUMB
+    digits.append(digit_mesh((THUMB_ROOT_X, THUMB_ROOT_Y, radius * 0.7), heading, lengths, radius, curl))
+    return m3.Manifold.batch_boolean(digits, m3.OpType.Add)
 
 
 # Chain: print frame has the chain axis along +X; hanging, the axis points down and the top
@@ -903,17 +1165,17 @@ def front_chain(shape):
 
 # ---------------------------------------------------------------- model
 
-STONE, BONE, IRON = "#7a746b", "#d9cfb4", "#3d3d42"
+STONE, BONE, IRON = "#5c5750", "#cdc2a4", "#34343a"
 LEAN_LIFT = tuple(65 * LEAN_V)
 
 model = Model(
     "ps4-wraeclast-stand",
     title="PS4 · Phế tích Wraeclast",
-    description="Giá dựng đứng PS4 đời đầu và hai bệ tay cầm: cột khắc rune, sọ, xích gãy. Mọi hình khối sinh từ code.",
+    description="Giá dựng đứng PS4 đời đầu và hai bệ tay cầm, dựng như phế tích gothic: tường cửa sổ vòm nhọn bị vỡ, cột bát giác, sọ có hàm, xích nặng, và hai bàn tay xương đỡ tay cầm. Mọi hình khối sinh từ code.",
     category="Giá đỡ",
     status="Chưa in thử",
     thumbnail="thumbnail.png",
-    dimensions=(360.0, 305.0, 295.0),
+    dimensions=(503.0, 305.0, 295.0),
     camera={
         "position": [620, -880, 540],
         "target": [0, -10, 120],
@@ -922,7 +1184,7 @@ model = Model(
     },
     grid={"size": 500, "divisions": 50},
     print_info={
-        "summary": "≈ 907 g PLA cho 2 bộ, 2 bệ tay cầm và coupon · in coupon trước · chưa in thử",
+        "summary": "≈ 1.040 g PLA cho 2 bộ, 2 bàn tay xương và coupon · in coupon trước · chưa in thử",
         "sections": [
             {
                 "title": "Thứ tự in",
@@ -932,13 +1194,13 @@ model = Model(
                         "fitCoupon.stl · một lát của đế, ≈ 15–25 phút",
                     ],
                     ["2. Đế", "plinth.stl · in 2 cái"],
-                    ["3. Cột", "pillar.stl ×2, stub.stl ×2"],
+                    ["3. Tường và cột", "pillar.stl ×2 (tường cửa sổ), stub.stl ×2 (cột bát giác)"],
                     ["4. Trang trí", "skull.stl ×2, chain.stl ×2 · cần support"],
-                    ["5. Bệ tay cầm", "altar.stl ×2 · không cần support"],
+                    ["5. Bàn tay xương (bệ tay cầm)", "altar.stl ×2 · cần tree support ở các ngón"],
                 ],
                 "notes": [
                     "Lắp coupon lên máy thật trước: máy phải lọt khe 54 mm và nằm trên gân đỡ. Chỉnh máy in nếu quá chặt hoặc quá lỏng; không scale STL.",
-                    "Hai bộ dùng chung STL; bộ sau xoay 180° quanh trục đứng nên cột cao nằm chéo góc.",
+                    "Hai bộ dùng chung STL; bộ sau xoay 180° quanh trục đứng nên tường cửa sổ nằm chéo góc.",
                     "Bệ tay cầm đứng riêng trên 4 chân cao su. Mộng 39,6 × 19,8 × 5,6 mm cắm vào hốc dưới đầu −X của đế (hở 0,2 mm) chỉ để định vị, không chịu lực.",
                 ],
                 "links": [],
@@ -951,18 +1213,18 @@ model = Model(
                     ["Thành", "Arachne · 3 wall loops"],
                     ["Lớp đặc trên / dưới", "5 / 4"],
                     ["Infill", "15% Gyroid"],
-                    ["Support", "Đế, cột, bệ, coupon: tắt · Sọ, xích: tree"],
-                    ["Brim", "Cột cao: 5 mm · còn lại tắt"],
+                    ["Support", "Đế, tường, cột, coupon: tắt · Sọ, xích, ngón tay của bệ: tree"],
+                    ["Brim", "Tường cửa sổ: 5 mm · còn lại tắt"],
                     ["Scale / đơn vị", "100% / mm"],
                     ["Bù lỗ / biên XY", "0 / 0 mm"],
                     ["Nhiệt, quạt, flow, bù chân voi", "Theo preset nhựa và bàn in"],
                 ],
                 "notes": [
-                    "Hướng in giữ nguyên như trong file: đế, cột, bệ tay cầm, coupon đáy xuống bàn; sọ đáy phẳng xuống bàn; xích nằm ngang, các mắt nghiêng ±45°.",
-                    "Móc treo xích có gân 45° bên dưới nên cột cao in đứng không cần support.",
+                    "Hướng in giữ nguyên như trong file: đế, tường, cột, bệ tay cầm, coupon đáy xuống bàn; sọ đáy phẳng xuống bàn; xích nằm ngang, các mắt nghiêng ±45°.",
+                    "Cung cửa sổ là vòm nhọn và móc treo xích có gân 45° bên dưới nên tường in đứng không cần support; nên dùng brim vì tường cao 222 mm.",
                     "Hõm chân cao su Ø12 × 1,5 mm ở mặt dưới đế là cầu 12 mm. Nếu võng, chỉ bật support cho vùng đó.",
-                    "Sọ: support cho hốc mắt, gò má và hàng răng. Xích: support cho nửa trên mỗi mắt; gỡ nhẹ tay vì dây Ø4 mm.",
-                    "Bệ tay cầm: xem gờ chặn dày 6 mm và rãnh rune trong Preview. Hốc mộng ở đầu −X của đế là cầu rộng 40 mm.",
+                    "Sọ: tree support cho hốc mắt, gò má, hàm và hai hàng răng (≈ 2.980 mm² dốc hơn 45°); gỡ cẩn thận ở khe giữa hai hàm. Xích: support cho nửa trên mỗi mắt; gỡ nhẹ tay vì dây Ø5 mm.",
+                    "Bệ tay cầm: xem gờ chặn dày 6 mm và rãnh rune trong Preview. Hốc mộng ở đầu −X của đế là cầu rộng 40 mm. Bàn tay xương: các ngón nằm sát bàn, đốt giữa nghiêng 32° so với mặt bàn, đốt cuối dựng gần thẳng đứng (86°; ngón cái 30° và 90°); tree support dưới các ngón (≈ 690 mm² dốc hơn 45°, hầu hết ở độ cao 0–20 mm; cả bệ ≈ 1.240 mm²); gỡ nhẹ tay vì xương Ø7–10 mm.",
                 ],
                 "links": [
                     {
@@ -978,19 +1240,19 @@ model = Model(
             {
                 "title": "Nhựa & chi phí",
                 "rows": [
-                    ["Đế ×2", "2 × 109,2 g"],
-                    ["Cột cao ×2", "2 × 78,4 g"],
-                    ["Cột gãy ×2", "2 × 40,5 g"],
-                    ["Sọ ×2", "2 × 22,0 g"],
-                    ["Xích ×2", "2 × 6,2 g"],
-                    ["Bệ tay cầm ×2", "2 × 186,5 g"],
-                    ["Coupon thử khe", "21,8 g"],
-                    ["Tổng 2 bộ + 2 bệ + coupon", "≈ 907 g"],
-                    ["Nếu in đặc 100% (cùng số chi tiết)", "2.647 g"],
+                    ["Đế ×2", "2 × 109,8 g"],
+                    ["Tường cửa sổ ×2", "2 × 106,6 g"],
+                    ["Cột bát giác ×2", "2 × 34,5 g"],
+                    ["Sọ ×2", "2 × 39,4 g"],
+                    ["Xích ×2", "2 × 9,3 g"],
+                    ["Bệ tay cầm + bàn tay xương ×2", "2 × 209,7 g"],
+                    ["Coupon thử khe", "22,2 g"],
+                    ["Tổng 2 bộ + 2 bệ + coupon", "≈ 1.040 g"],
+                    ["Nếu in đặc 100% (cùng số chi tiết)", "2.811 g"],
                 ],
                 "notes": [
                     "Mọi số tính cho 2 bộ, 2 bệ tay cầm và 1 coupon. Ước tính từ thể tích và diện tích bề mặt CAD: vỏ 1,2 mm (3 thành) cộng 15% infill, PLA 1,24 g/cm³. Support, brim và nhựa mồi cộng thêm.",
-                    "Ví dụ cuộn 300.000đ/kg: khoảng 272.000đ cho cùng số chi tiết, chưa tính điện và in lỗi. Bambu Studio cho số chính xác sau khi Slice.",
+                    "Ví dụ cuộn 300.000đ/kg: khoảng 312.000đ cho cùng số chi tiết, chưa tính điện và in lỗi. Bambu Studio cho số chính xác sau khi Slice.",
                 ],
                 "links": [
                     {
@@ -1005,13 +1267,13 @@ model = Model(
                 "notes": [
                     "Máy giả định: PS4 đời đầu CUH-1000A, 275 × 53 × 305 mm, 2,8 kg. Không dành cho PS4 Slim hoặc Pro.",
                     "Khe 54 mm, hở 0,5 mm mỗi bên. Máy tựa trên 4 gân đỡ; gầm máy cách bàn 20 mm, rãnh gió đáy cao 14 mm chạy suốt chiều sâu đế.",
-                    "Hai cụm đế chỉ chiếm y = ±52,5…132,5 mm nên không che cổng trước, cổng sau và lỗ thoát nhiệt. Bệ tay cầm đặt cạnh máy (x = ±86…180 mm), cách vùng cổng 1 mm. Vị trí lưới hút gió ở hai mặt hông chưa đo trên máy thật.",
-                    "Cột cắm hốc 34,4 mm (chân cột 34 mm, sâu 6 mm). Chốt Ø8 × 6 mm của cột gãy vào lỗ Ø8,4 × 7 mm dưới sọ.",
-                    "Góc lật tối thiểu 23,96° kể cả khi bỏ qua khối lượng giá (30,07° với PLA đặc và 2 tay cầm), tính tới tâm 4 chân cao su mỗi đế. Bệ tay cầm không gắn cứng nên không được tính vào đa giác đỡ.",
+                    "Hai cụm đế chỉ chiếm y = ±52,5…132,5 mm nên không che cổng trước, cổng sau và lỗ thoát nhiệt. Bệ đá đặt cạnh máy (x = ±86…180 mm), cách vùng cổng 1 mm; các ngón tay xương vươn thêm tới x = ±251 mm và ngón cái tới y = 158,9 mm trong tọa độ cụm (66,4 mm ở tọa độ thế giới), đều nằm ngoài vùng cổng. Vị trí lưới hút gió ở hai mặt hông chưa đo trên máy thật.",
+                    "Tường cửa sổ cắm hốc 34,4 × 66,4 mm (chân 34 × 66 mm) và cột bát giác cắm hốc 34,4 × 34,4 mm, cả hai sâu 6 mm. Chốt Ø8 × 6 mm của cột bát giác vào lỗ Ø8,4 × 7 mm dưới sọ.",
+                    "Góc lật tối thiểu 23,96° kể cả khi bỏ qua khối lượng giá (30,06° với PLA đặc và 2 tay cầm), tính tới tâm 4 chân cao su mỗi đế. Bệ tay cầm không gắn cứng nên không được tính vào đa giác đỡ.",
                     "7 STL kín, mỗi file một khối, dưới 60.000 tam giác. STEP chỉ chứa phần cơ khí của 10 chi tiết in (chưa bào mòn, không có sọ).",
                     "Tay cầm giả định: DualShock 4, hộp bao 162 × 57 × 100 mm, 210 g (số công bố dao động 161–162 × 52–57 × 98–100 mm). Bệ chỉ dựa trên hộp bao này, không theo đường cong thật của tay cầm.",
                     "Tay cầm nghiêng 70°, mặt hướng ra ngoài, đầu (cổng micro-USB) hướng về đế; lưng tựa chỉ cao 60% chiều dài nên cổng sạc vẫn thông. Hai má hở 2 mm, gờ chặn trước hở 1 mm.",
-                    "Lấy tay cầm: nhấc lên khỏi gờ chặn rồi kéo ra phía ngoài. Nhấc thẳng theo trục nghiêng chỉ được 19 mm rồi chạm sọ.",
+                    "Lấy tay cầm: nhấc lên khỏi gờ chặn rồi kéo ra phía ngoài. Lấy tay cầm: nhấc 12 mm theo trục nghiêng rồi kéo ra phía ngoài; các ngón tay nằm thấp, ngoài đường đi. Nhấc thẳng theo trục nghiêng chỉ được 26 mm rồi chạm sọ.",
                     "Chưa in thử, chưa thử tải trọng.",
                 ],
                 "links": [],
@@ -1039,7 +1301,7 @@ plinth_back = model.copy(
 
 @model.part(
     "pillar",
-    "Cột cao trước",
+    "Tường cửa sổ trước",
     color=STONE,
     drag=Drag((0, 0, 1), 150),
     core=lambda: front(cores()["pillar"], "pillar"),
@@ -1049,13 +1311,13 @@ def pillar():
 
 
 pillar_back = model.copy(
-    "pillarBack", "Cột cao sau", of="pillar", rotation=BACK, drag=Drag((0, 0, 1), 150)
+    "pillarBack", "Tường cửa sổ sau", of="pillar", rotation=BACK, drag=Drag((0, 0, 1), 150)
 )
 
 
 @model.part(
     "stub",
-    "Cột gãy trước",
+    "Cột bát giác trước",
     color=STONE,
     drag=Drag((0, 0, 1), 150),
     core=lambda: front(cores()["stub"], "stub"),
@@ -1065,7 +1327,7 @@ def stub():
 
 
 stub_back = model.copy(
-    "stubBack", "Cột gãy sau", of="stub", rotation=BACK, drag=Drag((0, 0, 1), 150)
+    "stubBack", "Cột bát giác sau", of="stub", rotation=BACK, drag=Drag((0, 0, 1), 150)
 )
 
 
@@ -1236,7 +1498,7 @@ model.measure(
 )
 model.measure(
     "pillar",
-    "Cột cao",
+    "Tường cửa sổ",
     kind="case",
     follow="pillar",
     color="#efb96e",
@@ -1244,10 +1506,10 @@ model.measure(
     lines=[
         line(
             [60, -150, 0],
-            [60, -150, 221.5],
+            [60, -150, 236.5],
             [60, -132.5, 0],
-            [60, -109.5, 221.5],
-            "221.5 mm · Đỉnh cột",
+            [60, -119.5, 236.5],
+            "236.5 mm · Đỉnh tháp nhọn",
             [0, -6, 0],
         )
     ],
@@ -1273,10 +1535,10 @@ model.measure(
         "console": [
             line(
                 [-110, -92.5, 0],
-                [-110, -92.5, 221.5],
+                [-110, -92.5, 236.5],
                 [-85, -92.5, 0],
-                [43, -92.5, 221.5],
-                "221.5 mm · Cao giá",
+                [60, -119.5, 236.5],
+                "236.5 mm · Cao giá",
                 [-34, 0, 0],
             )
         ]
@@ -1517,11 +1779,8 @@ def no_overlap(pairs):
 
 
 def outside_nominal():
-    """Final printable part minus its nominal core, mm³; simplify may move a surface by <= 0.05 mm."""
-    return {
-        name: (stones()[name][0] - art.to_manifold(cores()[name])).volume()
-        for name in stones()
-    }
+    """Final printable part minus its unweathered nominal, mm³; simplify may move a surface by <= 0.05 mm."""
+    return {name: (part - nominal).volume() for name, (part, _, nominal) in stones().items()}
 
 
 # ---------------------------------------------------------------- checks
@@ -1626,6 +1885,32 @@ def ds4_clear():
     return {**report, "ds4_straight_lift_free_mm": free_lift}
 
 
+@model.check("ds4_pulls_out_over_the_fingers")
+def ds4_removal():
+    """The controller leaves as the README says: lift along the lean axis past the lip, then pull it
+    out along the face normal. The lip, cheeks, skull and every finger stay clear all the way; without
+    the lift the lip still holds it."""
+    ds4 = references()["ds4"]
+    parts = {name: world()[name] for name in ("altar", "skull", "stub", "plinth")}
+    lift, reach = LIP_H + 2.0, 90
+    lifted = ds4.translate(tuple(lift * LEAN_V))
+    worst = 0.0
+    for pull in range(0, reach + 1, 2):
+        moved = lifted.translate(tuple(pull * LEAN_N))
+        worst = max(worst, *(overlap(moved, part) for part in parts.values()))
+    if worst >= EPS:
+        raise CheckFailed(f"controller catches on the way out: {worst:.4f} mm³")
+    held = overlap(ds4.translate(tuple(20 * LEAN_N)), parts["altar"])
+    if held < EPS:
+        raise CheckFailed("the lip does not hold the controller")
+    return {
+        "lift_along_lean_mm": lift,
+        "pull_out_mm": reach,
+        "max_overlap_mm3": worst,
+        "pulled_out_without_lift_hits_mm3": round(held, 3),
+    }
+
+
 def zone_clear(region):
     blocking = {
         part_id: round(overlap(shape, region), 4)
@@ -1675,19 +1960,25 @@ def ports():
 
 @model.check("tenon_clears_socket_by_0_15")
 def tenon_clearance():
-    """A tenon 0.15 mm bigger per side still fits the socket."""
-    probe = art.box(
-        (SOCKET_X - SHAFT / 2 - 0.15, -SET_Y - SHAFT / 2 - 0.15, FLOOR + 0.05),
-        (SOCKET_X + SHAFT / 2 + 0.15, -SET_Y + SHAFT / 2 + 0.15, TOP),
-    )
-    value = overlap(plinth(), probe)
-    if value >= EPS:
-        raise CheckFailed(f"socket too tight: {value:.4f} mm³")
-    return {
-        "overlap_mm3": value,
-        "socket": [SOCKET, SOCKET, SOCKET_DEPTH],
-        "tenon": [SHAFT, SHAFT, TENON_H],
-    }
+    """A tenon 0.15 mm bigger per side still fits its socket: the window wall's and the column's."""
+    report = {}
+    for name, x, (tenon_x, tenon_y) in (
+        ("window_wall", SOCKET_X, WINDOW_TENON),
+        ("column", -SOCKET_X, (COLUMN_TENON, COLUMN_TENON)),
+    ):
+        probe = art.box(
+            (x - tenon_x / 2 - 0.15, -SET_Y - tenon_y / 2 - 0.15, FLOOR + 0.05),
+            (x + tenon_x / 2 + 0.15, -SET_Y + tenon_y / 2 + 0.15, TOP),
+        )
+        value = overlap(plinth(), probe)
+        if value >= EPS:
+            raise CheckFailed(f"{name} socket too tight: {value:.4f} mm³")
+        report[name] = {
+            "overlap_mm3": value,
+            "socket": [tenon_x + SOCKET_CLEAR, tenon_y + SOCKET_CLEAR, SOCKET_DEPTH],
+            "tenon": [tenon_x, tenon_y, TENON_H],
+        }
+    return report
 
 
 @model.check("peg_clears_hole_by_0_15")
@@ -1795,7 +2086,7 @@ def altar_lip():
 @model.check("erosion_step_inward_only")
 def erosion_inward():
     """Displacement step alone, before simplify: only float32 rounding may stick out."""
-    outward = {name: round(value, 4) for name, (_, value) in stones().items()}
+    outward = {name: round(value, 4) for name, (_, value, _) in stones().items()}
     if max(outward.values()) >= 0.5:
         raise CheckFailed(f"erosion pushed material outward: {outward} mm³")
     return {
@@ -1852,7 +2143,7 @@ def stub_seat():
     )
     seat_area = float(mesh.area_faces[seat_faces].sum())
     rim = mesh.vertices[np.linalg.norm(mesh.vertices[:, :2], axis=1) > PEG_D / 2 + 1, 2]
-    if seat_area <= 0.6 * SHAFT**2:
+    if seat_area <= 0.6 * COLUMN_TENON**2:
         raise CheckFailed(f"stub seat too small: {seat_area:.0f} mm²")
     if rim.max() > STUB_H + 1e-3:
         raise CheckFailed("stub rim rises above the seat")
@@ -1865,32 +2156,34 @@ def stub_seat():
 
 @model.check("broken_edges_within_limits")
 def broken_edges():
-    """Cradle walls keep their grip, the broken top stays in its zone, chips stay within depth."""
-    _, chip_depths, top_lowest = tall_pillar_blank()
+    """Cradle walls keep their grip, the window wall breaks only across its +Y window and keeps
+    its pinnacle, and face chips stay within depth."""
+    _, chip_depths, fracture_lowest = window_blank()
     plinth_mesh = local_mesh(stones()["plinth"][0])
+    mortar = JOINT_D + 0.3  # samples stay clear of the mortar slots on the outer face and ends
     wall_grid = [
         (side * x, y)
         for side in (-1, 1)
-        for x in np.arange(WALL_IN + 0.25, WALL_OUT - 1.2, 0.5)
-        for y in np.arange(-WALL_Y + 1.25, WALL_Y - 1.2, 0.5)
+        for x in np.arange(WALL_IN + 0.25, WALL_OUT - mortar, 0.5)
+        for y in np.arange(-WALL_Y + mortar, WALL_Y - mortar, 0.5)
     ]
     wall_tops = surface_top(plinth_mesh, wall_grid, z_min=TOP + 10)
-    tall_top = float(stones()["pillar"][0].bounding_box()[5])
+    top = float(stones()["pillar"][0].bounding_box()[5])
+    pinnacle_top = WINDOW_H + PINNACLE[2]
     if wall_tops.min() < WALL_MIN - EROSION - art.SIMPLIFY_TOL:
         raise CheckFailed(f"cradle wall broken too low: {wall_tops.min():.2f}")
-    if (
-        not TALL_H - BREAK_ZONE < tall_top <= TALL_H + 1e-3
-        or top_lowest < TALL_H - BREAK_ZONE
-    ):
-        raise CheckFailed(f"broken top outside the top {BREAK_ZONE} mm")
+    if not pinnacle_top - 1.0 < top <= pinnacle_top + 1e-3:
+        raise CheckFailed(f"pinnacle top {top:.2f} is not within 1 mm of {pinnacle_top}")
+    if fracture_lowest < 80.0:
+        raise CheckFailed(f"fracture reaches z = {fracture_lowest:.1f}, below the windows")
     if not (5 <= len(chip_depths) <= 8 and max(chip_depths) <= CHIP_MAX):
-        raise CheckFailed(f"corner chips out of range: {chip_depths}")
+        raise CheckFailed(f"face chips out of range: {chip_depths}")
     return {
-        "tall_pillar_top_z_local": round(tall_top, 2),
-        "tall_pillar_top_z_world": round(tall_top + FLOOR, 2),
-        "broken_top_lowest_z_local": round(top_lowest, 2),
-        "corner_chips": len(chip_depths),
-        "corner_chip_depths_mm": [round(d, 2) for d in chip_depths],
+        "window_wall_top_z_local": round(top, 2),
+        "window_wall_top_z_world": round(top + FLOOR, 2),
+        "fracture_lowest_z_local": round(fracture_lowest, 2),
+        "face_chips": len(chip_depths),
+        "face_chip_depths_mm": [round(d, 2) for d in chip_depths],
         "cradle_wall_top_z": [
             round(float(wall_tops.min()), 2),
             round(float(wall_tops.max()), 2),

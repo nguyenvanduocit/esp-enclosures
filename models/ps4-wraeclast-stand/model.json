@@ -6,9 +6,9 @@
   "status": "Chưa in thử",
   "thumbnail": "thumbnail.png",
   "title": "PS4 · Phế tích Wraeclast",
-  "description": "Giá dựng đứng PS4 đời đầu và hai bệ tay cầm: cột khắc rune, sọ, xích gãy. Mọi hình khối sinh từ code.",
+  "description": "Giá dựng đứng PS4 đời đầu và hai bệ tay cầm, dựng như phế tích gothic: tường cửa sổ vòm nhọn bị vỡ, cột bát giác, sọ có hàm, xích nặng, và hai bàn tay xương đỡ tay cầm. Mọi hình khối sinh từ code.",
   "dimensions": [
-    360.0,
+    503.0,
     305.0,
     295.0
   ],
@@ -31,7 +31,7 @@
     "divisions": 50
   },
   "printInfo": {
-    "summary": "≈ 907 g PLA cho 2 bộ, 2 bệ tay cầm và coupon · in coupon trước · chưa in thử",
+    "summary": "≈ 1.040 g PLA cho 2 bộ, 2 bàn tay xương và coupon · in coupon trước · chưa in thử",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -80,21 +80,21 @@
             "plinth.stl · in 2 cái"
           ],
           [
-            "3. Cột",
-            "pillar.stl ×2, stub.stl ×2"
+            "3. Tường và cột",
+            "pillar.stl ×2 (tường cửa sổ), stub.stl ×2 (cột bát giác)"
           ],
           [
             "4. Trang trí",
             "skull.stl ×2, chain.stl ×2 · cần support"
           ],
           [
-            "5. Bệ tay cầm",
-            "altar.stl ×2 · không cần support"
+            "5. Bàn tay xương (bệ tay cầm)",
+            "altar.stl ×2 · cần tree support ở các ngón"
           ]
         ],
         "notes": [
           "Lắp coupon lên máy thật trước: máy phải lọt khe 54 mm và nằm trên gân đỡ. Chỉnh máy in nếu quá chặt hoặc quá lỏng; không scale STL.",
-          "Hai bộ dùng chung STL; bộ sau xoay 180° quanh trục đứng nên cột cao nằm chéo góc.",
+          "Hai bộ dùng chung STL; bộ sau xoay 180° quanh trục đứng nên tường cửa sổ nằm chéo góc.",
           "Bệ tay cầm đứng riêng trên 4 chân cao su. Mộng 39,6 × 19,8 × 5,6 mm cắm vào hốc dưới đầu −X của đế (hở 0,2 mm) chỉ để định vị, không chịu lực."
         ],
         "links": []
@@ -124,11 +124,11 @@
           ],
           [
             "Support",
-            "Đế, cột, bệ, coupon: tắt · Sọ, xích: tree"
+            "Đế, tường, cột, coupon: tắt · Sọ, xích, ngón tay của bệ: tree"
           ],
           [
             "Brim",
-            "Cột cao: 5 mm · còn lại tắt"
+            "Tường cửa sổ: 5 mm · còn lại tắt"
           ],
           [
             "Scale / đơn vị",
@@ -144,11 +144,11 @@
           ]
         ],
         "notes": [
-          "Hướng in giữ nguyên như trong file: đế, cột, bệ tay cầm, coupon đáy xuống bàn; sọ đáy phẳng xuống bàn; xích nằm ngang, các mắt nghiêng ±45°.",
-          "Móc treo xích có gân 45° bên dưới nên cột cao in đứng không cần support.",
+          "Hướng in giữ nguyên như trong file: đế, tường, cột, bệ tay cầm, coupon đáy xuống bàn; sọ đáy phẳng xuống bàn; xích nằm ngang, các mắt nghiêng ±45°.",
+          "Cung cửa sổ là vòm nhọn và móc treo xích có gân 45° bên dưới nên tường in đứng không cần support; nên dùng brim vì tường cao 222 mm.",
           "Hõm chân cao su Ø12 × 1,5 mm ở mặt dưới đế là cầu 12 mm. Nếu võng, chỉ bật support cho vùng đó.",
-          "Sọ: support cho hốc mắt, gò má và hàng răng. Xích: support cho nửa trên mỗi mắt; gỡ nhẹ tay vì dây Ø4 mm.",
-          "Bệ tay cầm: xem gờ chặn dày 6 mm và rãnh rune trong Preview. Hốc mộng ở đầu −X của đế là cầu rộng 40 mm."
+          "Sọ: tree support cho hốc mắt, gò má, hàm và hai hàng răng (≈ 2.980 mm² dốc hơn 45°); gỡ cẩn thận ở khe giữa hai hàm. Xích: support cho nửa trên mỗi mắt; gỡ nhẹ tay vì dây Ø5 mm.",
+          "Bệ tay cầm: xem gờ chặn dày 6 mm và rãnh rune trong Preview. Hốc mộng ở đầu −X của đế là cầu rộng 40 mm. Bàn tay xương: các ngón nằm sát bàn, đốt giữa nghiêng 32° so với mặt bàn, đốt cuối dựng gần thẳng đứng (86°; ngón cái 30° và 90°); tree support dưới các ngón (≈ 690 mm² dốc hơn 45°, hầu hết ở độ cao 0–20 mm; cả bệ ≈ 1.240 mm²); gỡ nhẹ tay vì xương Ø7–10 mm."
         ],
         "links": [
           {
@@ -166,44 +166,44 @@
         "rows": [
           [
             "Đế ×2",
-            "2 × 109,2 g"
+            "2 × 109,8 g"
           ],
           [
-            "Cột cao ×2",
-            "2 × 78,4 g"
+            "Tường cửa sổ ×2",
+            "2 × 106,6 g"
           ],
           [
-            "Cột gãy ×2",
-            "2 × 40,5 g"
+            "Cột bát giác ×2",
+            "2 × 34,5 g"
           ],
           [
             "Sọ ×2",
-            "2 × 22,0 g"
+            "2 × 39,4 g"
           ],
           [
             "Xích ×2",
-            "2 × 6,2 g"
+            "2 × 9,3 g"
           ],
           [
-            "Bệ tay cầm ×2",
-            "2 × 186,5 g"
+            "Bệ tay cầm + bàn tay xương ×2",
+            "2 × 209,7 g"
           ],
           [
             "Coupon thử khe",
-            "21,8 g"
+            "22,2 g"
           ],
           [
             "Tổng 2 bộ + 2 bệ + coupon",
-            "≈ 907 g"
+            "≈ 1.040 g"
           ],
           [
             "Nếu in đặc 100% (cùng số chi tiết)",
-            "2.647 g"
+            "2.811 g"
           ]
         ],
         "notes": [
           "Mọi số tính cho 2 bộ, 2 bệ tay cầm và 1 coupon. Ước tính từ thể tích và diện tích bề mặt CAD: vỏ 1,2 mm (3 thành) cộng 15% infill, PLA 1,24 g/cm³. Support, brim và nhựa mồi cộng thêm.",
-          "Ví dụ cuộn 300.000đ/kg: khoảng 272.000đ cho cùng số chi tiết, chưa tính điện và in lỗi. Bambu Studio cho số chính xác sau khi Slice."
+          "Ví dụ cuộn 300.000đ/kg: khoảng 312.000đ cho cùng số chi tiết, chưa tính điện và in lỗi. Bambu Studio cho số chính xác sau khi Slice."
         ],
         "links": [
           {
@@ -218,13 +218,13 @@
         "notes": [
           "Máy giả định: PS4 đời đầu CUH-1000A, 275 × 53 × 305 mm, 2,8 kg. Không dành cho PS4 Slim hoặc Pro.",
           "Khe 54 mm, hở 0,5 mm mỗi bên. Máy tựa trên 4 gân đỡ; gầm máy cách bàn 20 mm, rãnh gió đáy cao 14 mm chạy suốt chiều sâu đế.",
-          "Hai cụm đế chỉ chiếm y = ±52,5…132,5 mm nên không che cổng trước, cổng sau và lỗ thoát nhiệt. Bệ tay cầm đặt cạnh máy (x = ±86…180 mm), cách vùng cổng 1 mm. Vị trí lưới hút gió ở hai mặt hông chưa đo trên máy thật.",
-          "Cột cắm hốc 34,4 mm (chân cột 34 mm, sâu 6 mm). Chốt Ø8 × 6 mm của cột gãy vào lỗ Ø8,4 × 7 mm dưới sọ.",
-          "Góc lật tối thiểu 23,96° kể cả khi bỏ qua khối lượng giá (30,07° với PLA đặc và 2 tay cầm), tính tới tâm 4 chân cao su mỗi đế. Bệ tay cầm không gắn cứng nên không được tính vào đa giác đỡ.",
+          "Hai cụm đế chỉ chiếm y = ±52,5…132,5 mm nên không che cổng trước, cổng sau và lỗ thoát nhiệt. Bệ đá đặt cạnh máy (x = ±86…180 mm), cách vùng cổng 1 mm; các ngón tay xương vươn thêm tới x = ±251 mm và ngón cái tới y = 158,9 mm trong tọa độ cụm (66,4 mm ở tọa độ thế giới), đều nằm ngoài vùng cổng. Vị trí lưới hút gió ở hai mặt hông chưa đo trên máy thật.",
+          "Tường cửa sổ cắm hốc 34,4 × 66,4 mm (chân 34 × 66 mm) và cột bát giác cắm hốc 34,4 × 34,4 mm, cả hai sâu 6 mm. Chốt Ø8 × 6 mm của cột bát giác vào lỗ Ø8,4 × 7 mm dưới sọ.",
+          "Góc lật tối thiểu 23,96° kể cả khi bỏ qua khối lượng giá (30,06° với PLA đặc và 2 tay cầm), tính tới tâm 4 chân cao su mỗi đế. Bệ tay cầm không gắn cứng nên không được tính vào đa giác đỡ.",
           "7 STL kín, mỗi file một khối, dưới 60.000 tam giác. STEP chỉ chứa phần cơ khí của 10 chi tiết in (chưa bào mòn, không có sọ).",
           "Tay cầm giả định: DualShock 4, hộp bao 162 × 57 × 100 mm, 210 g (số công bố dao động 161–162 × 52–57 × 98–100 mm). Bệ chỉ dựa trên hộp bao này, không theo đường cong thật của tay cầm.",
           "Tay cầm nghiêng 70°, mặt hướng ra ngoài, đầu (cổng micro-USB) hướng về đế; lưng tựa chỉ cao 60% chiều dài nên cổng sạc vẫn thông. Hai má hở 2 mm, gờ chặn trước hở 1 mm.",
-          "Lấy tay cầm: nhấc lên khỏi gờ chặn rồi kéo ra phía ngoài. Nhấc thẳng theo trục nghiêng chỉ được 19 mm rồi chạm sọ.",
+          "Lấy tay cầm: nhấc lên khỏi gờ chặn rồi kéo ra phía ngoài. Lấy tay cầm: nhấc 12 mm theo trục nghiêng rồi kéo ra phía ngoài; các ngón tay nằm thấp, ngoài đường đi. Nhấc thẳng theo trục nghiêng chỉ được 26 mm rồi chạm sọ.",
           "Chưa in thử, chưa thử tải trọng."
         ],
         "links": []
@@ -250,7 +250,7 @@
       "meshes": [
         {
           "src": "plinth.stl",
-          "color": "#7a746b"
+          "color": "#5c5750"
         }
       ],
       "drag": {
@@ -279,7 +279,7 @@
       "meshes": [
         {
           "src": "plinth.stl",
-          "color": "#7a746b"
+          "color": "#5c5750"
         }
       ],
       "drag": {
@@ -293,11 +293,11 @@
     },
     {
       "id": "pillar",
-      "label": "Cột cao trước",
+      "label": "Tường cửa sổ trước",
       "kind": "print",
       "position": [
-        68.651559,
-        -92.52379,
+        69.095207,
+        -92.5,
         14.0
       ],
       "rotation": [
@@ -308,7 +308,7 @@
       "meshes": [
         {
           "src": "pillar.stl",
-          "color": "#7a746b"
+          "color": "#5c5750"
         }
       ],
       "drag": {
@@ -322,11 +322,11 @@
     },
     {
       "id": "pillarBack",
-      "label": "Cột cao sau",
+      "label": "Tường cửa sổ sau",
       "kind": "print",
       "position": [
-        -68.651559,
-        92.52379,
+        -69.095207,
+        92.5,
         14.0
       ],
       "rotation": [
@@ -337,7 +337,7 @@
       "meshes": [
         {
           "src": "pillar.stl",
-          "color": "#7a746b"
+          "color": "#5c5750"
         }
       ],
       "drag": {
@@ -351,11 +351,11 @@
     },
     {
       "id": "stub",
-      "label": "Cột gãy trước",
+      "label": "Cột bát giác trước",
       "kind": "print",
       "position": [
-        -59.996881,
-        -92.465697,
+        -59.986166,
+        -92.473407,
         14.0
       ],
       "rotation": [
@@ -366,7 +366,7 @@
       "meshes": [
         {
           "src": "stub.stl",
-          "color": "#7a746b"
+          "color": "#5c5750"
         }
       ],
       "drag": {
@@ -380,11 +380,11 @@
     },
     {
       "id": "stubBack",
-      "label": "Cột gãy sau",
+      "label": "Cột bát giác sau",
       "kind": "print",
       "position": [
-        59.996881,
-        92.465697,
+        59.986166,
+        92.473407,
         14.0
       ],
       "rotation": [
@@ -395,7 +395,7 @@
       "meshes": [
         {
           "src": "stub.stl",
-          "color": "#7a746b"
+          "color": "#5c5750"
         }
       ],
       "drag": {
@@ -413,7 +413,7 @@
       "kind": "print",
       "position": [
         -60.0,
-        -89.694626,
+        -88.852394,
         114.0
       ],
       "rotation": [
@@ -424,7 +424,7 @@
       "meshes": [
         {
           "src": "skull.stl",
-          "color": "#d9cfb4"
+          "color": "#cdc2a4"
         }
       ],
       "drag": {
@@ -442,7 +442,7 @@
       "kind": "print",
       "position": [
         60.0,
-        89.694626,
+        88.852394,
         114.0
       ],
       "rotation": [
@@ -453,7 +453,7 @@
       "meshes": [
         {
           "src": "skull.stl",
-          "color": "#d9cfb4"
+          "color": "#cdc2a4"
         }
       ],
       "drag": {
@@ -470,9 +470,9 @@
       "label": "Xích trước",
       "kind": "print",
       "position": [
-        87.586775,
-        -96.913225,
-        123.0
+        86.483469,
+        -98.016531,
+        116.2
       ],
       "rotation": [
         -90.0,
@@ -482,7 +482,7 @@
       "meshes": [
         {
           "src": "chain.stl",
-          "color": "#3d3d42"
+          "color": "#34343a"
         }
       ],
       "drag": {
@@ -499,9 +499,9 @@
       "label": "Xích sau",
       "kind": "print",
       "position": [
-        -87.586775,
-        96.913225,
-        123.0
+        -86.483469,
+        98.016531,
+        116.2
       ],
       "rotation": [
         90.0,
@@ -511,7 +511,7 @@
       "meshes": [
         {
           "src": "chain.stl",
-          "color": "#3d3d42"
+          "color": "#34343a"
         }
       ],
       "drag": {
@@ -528,8 +528,8 @@
       "label": "Bệ tay cầm trước",
       "kind": "print",
       "position": [
-        -122.599998,
-        -60.5,
+        -158.298388,
+        -42.552273,
         0.0
       ],
       "rotation": [
@@ -540,7 +540,7 @@
       "meshes": [
         {
           "src": "altar.stl",
-          "color": "#7a746b"
+          "color": "#5c5750"
         }
       ],
       "drag": {
@@ -557,8 +557,8 @@
       "label": "Bệ tay cầm sau",
       "kind": "print",
       "position": [
-        122.599998,
-        60.5,
+        158.298388,
+        42.552273,
         0.0
       ],
       "rotation": [
@@ -569,7 +569,7 @@
       "meshes": [
         {
           "src": "altar.stl",
-          "color": "#7a746b"
+          "color": "#5c5750"
         }
       ],
       "drag": {
@@ -824,7 +824,7 @@
     },
     {
       "id": "pillar",
-      "label": "Cột cao",
+      "label": "Tường cửa sổ",
       "kind": "case",
       "followPart": "pillar",
       "color": "#efb96e",
@@ -839,7 +839,7 @@
           "b": [
             60,
             -150,
-            221.5
+            236.5
           ],
           "anchorA": [
             60,
@@ -848,10 +848,10 @@
           ],
           "anchorB": [
             60,
-            -109.5,
-            221.5
+            -119.5,
+            236.5
           ],
-          "label": "221.5 mm · Đỉnh cột",
+          "label": "236.5 mm · Đỉnh tháp nhọn",
           "labelOffset": [
             0,
             -6,
@@ -910,7 +910,7 @@
               "b": [
                 -110,
                 -92.5,
-                221.5
+                236.5
               ],
               "anchorA": [
                 -85,
@@ -918,11 +918,11 @@
                 0
               ],
               "anchorB": [
-                43,
-                -92.5,
-                221.5
+                60,
+                -119.5,
+                236.5
               ],
-              "label": "221.5 mm · Cao giá",
+              "label": "236.5 mm · Cao giá",
               "labelOffset": [
                 -34,
                 0,
