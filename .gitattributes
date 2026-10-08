@@ -1,4 +1,3 @@
 *.stl binary
 *.step binary
-*/viewer.html linguist-generated=true
 viewer/vendor/* linguist-vendored=true

@@ -162,11 +162,9 @@ def build():
             archive.write(ROOT / 'model.schema.json', 'model.schema.json')
             archive.write(ROOT / 'viewer/vendor/LICENSE', 'THREE-LICENSE.txt')
             for path in sorted(folder.rglob('*')):
-                if not path.is_file() or path.suffix in ('.zip', '.html', '.pyc') or '__pycache__' in path.parts or path.name == '.DS_Store':
+                if not path.is_file() or path.suffix in ('.zip', '.pyc') or '__pycache__' in path.parts or path.name == '.DS_Store':
                     continue
                 archive.write(path, path.relative_to(ROOT).as_posix())
-        redirect = f'../#model/{model["id"]}'
-        (folder / 'viewer.html').write_text(f'<!doctype html>\n<html lang="vi"><meta charset="utf-8"><meta http-equiv="refresh" content="0;url={redirect}"><title>{model["title"]}</title><a href="{redirect}">Mở model</a></html>\n')
         print(f'{model["id"]}: validated, packaged {target.stat().st_size:,} bytes')
 
 

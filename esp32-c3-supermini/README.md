@@ -3,7 +3,7 @@
 Two-piece enclosure for a board with two soldered male headers facing downward.
 Outer dimensions: **26.4 × 32 × 20.2 mm**. All model dimensions are millimetres.
 
-![CAD preview](preview.png)
+![CAD preview](thumbnail.png)
 
 - `base.stl` and `lid.stl`: separate printable parts, each placed flat at Z = 0.
 - `enclosure.step`: assembled enclosure with separate base and lid solids.
@@ -12,8 +12,8 @@ Outer dimensions: **26.4 × 32 × 20.2 mm**. All model dimensions are millimetre
 - `model.json`: parts, installed transforms, measurements and animation data for
   the shared viewer. Case height stays 20.2 mm during disassembly; PCB dimensions
   exclude headers and USB. Hide the lid under **Hiển thị**.
-- `viewer.html`: compatibility redirect to the shared app. The ZIP contains an
-  offline `index.html` that opens directly in a WebGL-capable browser.
+- The ZIP contains an offline `index.html` that opens directly in a
+  WebGL-capable browser.
 
 The board outline is assumed to be 18 × 22.5 mm, with 1.6 mm PCB thickness.
 The [board manual](https://www.makerguides.com/wp-content/uploads/2025/04/ESP32-C3-SuperMini-Manual.pdf)
@@ -31,7 +31,6 @@ it is not screwed down or clamped vertically. Component positions are approximat
 
 Regenerate and verify: `uv run --python 3.12 --with cadquery==2.8.0 --with trimesh==5.1.1 python model.py`
 
-Regenerate the preview with the same command, replacing `model.py` with `render_preview.py`.
 Both parts are designed to print in their exported orientations. Physical fit and
 printing have not been tested; inspect the sliced layers before printing.
 

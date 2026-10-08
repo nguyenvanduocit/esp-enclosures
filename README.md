@@ -14,7 +14,6 @@ models.json                Danh sách đường dẫn model.json
   reference/               Mesh linh kiện tham khảo (nếu có)
   model.py                 Nguồn CAD
   thumbnail.png
-  viewer.html              Chuyển hướng link cũ về app
 ```
 
 ## Chạy và kiểm tra
@@ -30,7 +29,7 @@ uv run --with jsonschema==4.23.0 python -m unittest discover -s tests
 
 `build.py` kiểm tra schema, đường dẫn asset, ID và tham chiếu, hướng kéo, giới hạn di chuyển, thứ tự keyframe. Build gắn phiên bản đồng bộ cho JS/CSS để tránh cache trộn code cũ và mới, rồi tạo ZIP cho từng model. Trong ZIP, mở `index.html` trực tiếp để dùng offline; HTML này được sinh từ cùng nguồn app, chứa thư viện và dữ liệu của model đó. Không sửa file sinh ra.
 
-GitHub Pages phục vụ thư mục gốc. App online tải mesh khi mở model; thư viện và UI chỉ có một bản dùng chung. Các link `*/viewer.html` cũ vẫn hoạt động bằng chuyển hướng.
+GitHub Pages phục vụ thư mục gốc. App online tải mesh khi mở model; thư viện và UI chỉ có một bản dùng chung.
 
 ## Khai báo model
 
