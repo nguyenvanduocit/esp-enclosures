@@ -2,6 +2,9 @@ import {$, element} from './dom.js';
 import {readJSON} from './resources.js';
 import {createScene} from './scene.js';
 import {createPrintPreview} from './print-preview.js';
+import {createStatus} from './status.js';
+
+const status = createStatus($('printStatus'));
 
 // Looks at the bed (origin at its centre) from the front left, framed by the bed's larger side.
 function bedCamera([width, depth]) {
@@ -64,12 +67,7 @@ function stopPlay() {
   syncPlay(false);
 }
 
-function showStatus(text) {
-  $('printStatus').textContent = text;
-  $('printStatus').hidden = !text;
-}
-
-export async function showPrint({model, folder}) {
+export async function showPrint({model, folder}, retry) {
   $('printScreen').hidden = false;
   $('printModelTitle').textContent = model.title;
   $('modelLink').href = '#model/' + model.id;
@@ -77,15 +75,15 @@ export async function showPrint({model, folder}) {
   $('printControls').hidden = true;
   $('printCanvas').hidden = true;
   if (!model.print) {
-    showStatus(`Model này chưa có dữ liệu in. Chạy uv run printkit slice ${model.id} để tạo.`);
+    status.info('Model này chưa có dữ liệu in. Tạo bằng lệnh:', {detail: `uv run printkit slice ${model.id}`});
     document.body.dataset.ready = 'true';
     return;
   }
   loading = new AbortController();
   const request = loading;
-  showStatus('Đang tải…');
+  status.loading('Đang tải dữ liệu in…');
   try {
-    const data = await readJSON(folder + model.print.layers);
+    const data = await readJSON(folder + model.print.layers, (loaded, total) => { if (!request.signal.aborted) status.progress(total ? Math.min(loaded / total, 1) : null); });
     request.signal.throwIfAborted();
     preview = createPrintPreview(data);
     $('printCanvas').replaceWith($('printCanvas').cloneNode());
@@ -98,7 +96,7 @@ export async function showPrint({model, folder}) {
     renderStats(model);
     showLayer(preview.layerCount - 1);
     $('printControls').hidden = false;
-    showStatus('');
+    status.clear();
     document.body.dataset.ready = 'true';
   } catch (error) {
     if (request.signal.aborted) return;
@@ -106,7 +104,7 @@ export async function showPrint({model, folder}) {
     sceneView?.dispose();
     sceneView = preview = null;
     $('printCanvas').hidden = true;
-    showStatus('Không tải được dữ liệu in. ' + error.message);
+    status.error('Không tải được dữ liệu in.', {detail: error.message, retry});
     window.viewerErrors.push(String(error));
   }
 }
@@ -114,6 +112,7 @@ export async function showPrint({model, folder}) {
 export function hidePrint() {
   loading?.abort();
   loading = null;
+  status.clear();
   stopPlay();
   sceneView?.dispose();
   sceneView = null;

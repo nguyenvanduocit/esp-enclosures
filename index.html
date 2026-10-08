@@ -6,13 +6,13 @@
 <meta name="theme-color" content="#1c1e20">
 <title>Bàn in</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23232527'/%3E%3Cpath d='m16 5 10 6v11l-10 5-10-5V11zM6 11l10 6 10-6M16 17v10' fill='none' stroke='%23b7cebf' stroke-width='1.5'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="viewer/style.css?v=66f4c6545db6">
+<link rel="stylesheet" href="viewer/style.css?v=e7f03c544d53">
 </head>
 <body>
 <section id="gallery" class="gallery">
 <header class="gallery-header"><h1>Bàn in</h1><a href="https://github.com/nguyenvanduocit/esp-enclosures" target="_blank" rel="noopener">GitHub ↗</a></header>
 <div class="gallery-tools"><label><span class="sr-only">Tìm model</span><input id="search" type="search" placeholder="Tìm model…" autocomplete="off"></label></div>
-<div id="cards" class="cards"></div>
+<div id="cards" class="cards" aria-busy="true"><article class="card skeleton" aria-hidden="true"><div class="skeleton-image"></div><div class="card-content"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></article><article class="card skeleton" aria-hidden="true"><div class="skeleton-image"></div><div class="card-content"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></article></div>
 <p id="empty" class="empty" hidden>Không tìm thấy model.</p>
 </section>
 <div id="workspace" class="workspace" hidden>
@@ -36,7 +36,7 @@
 </div>
 <div class="sidebar-footer"><a class="screen-link" id="printLink" title="Mô phỏng in" hidden><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6 M6 18H4v-7h16v7h-2 M8 14h8v7H8Z"/></svg>Mô phỏng in</a><button id="openPrint"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4 M4 16v5h16v-5"/></svg>In & tải</button></div>
 </aside>
-<main aria-label="Mô hình 3D"><div class="canvas-wrap" id="stage"><canvas class="scene" id="canvas" tabindex="0" aria-label="Mô hình 3D. Kéo chi tiết để tháo; kéo nền để xoay."></canvas><div id="partTip" class="part-tip" hidden></div><div id="loading">Đang tải…</div><div id="error" role="alert"></div></div>
+<main aria-label="Mô hình 3D"><div class="canvas-wrap" id="stage" aria-busy="true"><canvas class="scene" id="canvas" tabindex="0" aria-label="Mô hình 3D. Kéo chi tiết để tháo; kéo nền để xoay."></canvas><div id="partTip" class="part-tip" hidden></div><div id="stageStatus" class="status status-overlay" hidden></div></div>
 </main>
 </div>
 <div id="printScreen" class="workspace" hidden>
@@ -53,7 +53,7 @@
 </div>
 <div class="sidebar-footer"><a class="screen-link" id="modelLink" title="Xem mô hình 3D"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7Z M3 7l9 5 9-5 M12 12v10"/></svg>Xem mô hình 3D</a></div>
 </aside>
-<main aria-label="Mô phỏng in"><div class="canvas-wrap" id="printStage"><canvas class="scene" id="printCanvas" tabindex="0" aria-label="Đường in trên bàn in. Kéo để xoay."></canvas><p class="stage-status" id="printStatus" hidden></p></div>
+<main aria-label="Mô phỏng in"><div class="canvas-wrap" id="printStage"><canvas class="scene" id="printCanvas" tabindex="0" aria-label="Đường in trên bàn in. Kéo để xoay."></canvas><div id="printStatus" class="status status-overlay" hidden></div></div>
 </main>
 </div>
 <dialog id="printDialog" aria-labelledby="printTitle"><div class="dialog-header"><h2 id="printTitle">In 3D</h2><button id="closePrint" aria-label="Đóng"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12 M6 18 18 6"/></svg></button></div>
@@ -63,8 +63,8 @@
 <a class="bundle" id="projectDownload" download hidden>Bambu Studio (.gcode.3mf)</a>
 <div class="print-info"><p class="material-total" id="printSummary"></p><div id="printSections"></div></div></dialog>
 
-<p id="appError" role="alert" hidden></p>
-<script type="importmap">{"imports":{"./viewer/vendor/three.module.min.js":"./viewer/vendor/three.module.min.js?v=66f4c6545db6","./viewer/vendor/OrbitControls.js":"./viewer/vendor/OrbitControls.js?v=66f4c6545db6","./viewer/dom.js":"./viewer/dom.js?v=66f4c6545db6","./viewer/resources.js":"./viewer/resources.js?v=66f4c6545db6","./viewer/model-core.js":"./viewer/model-core.js?v=66f4c6545db6","./viewer/scene.js":"./viewer/scene.js?v=66f4c6545db6","./viewer/print-preview.js":"./viewer/print-preview.js?v=66f4c6545db6","./viewer/part-drag.js":"./viewer/part-drag.js?v=66f4c6545db6","./viewer/dimensions.js":"./viewer/dimensions.js?v=66f4c6545db6","./viewer/renderer.js":"./viewer/renderer.js?v=66f4c6545db6","./viewer/model-screen.js":"./viewer/model-screen.js?v=66f4c6545db6","./viewer/print-screen.js":"./viewer/print-screen.js?v=66f4c6545db6","./viewer/app.js":"./viewer/app.js?v=66f4c6545db6"}}</script>
-<script type="module" src="viewer/app.js?v=66f4c6545db6"></script>
+<div id="appStatus" class="status status-page" hidden></div>
+<script type="importmap">{"imports":{"./viewer/vendor/three.module.min.js":"./viewer/vendor/three.module.min.js?v=e7f03c544d53","./viewer/vendor/OrbitControls.js":"./viewer/vendor/OrbitControls.js?v=e7f03c544d53","./viewer/dom.js":"./viewer/dom.js?v=e7f03c544d53","./viewer/status.js":"./viewer/status.js?v=e7f03c544d53","./viewer/resources.js":"./viewer/resources.js?v=e7f03c544d53","./viewer/model-core.js":"./viewer/model-core.js?v=e7f03c544d53","./viewer/scene.js":"./viewer/scene.js?v=e7f03c544d53","./viewer/print-preview.js":"./viewer/print-preview.js?v=e7f03c544d53","./viewer/part-drag.js":"./viewer/part-drag.js?v=e7f03c544d53","./viewer/dimensions.js":"./viewer/dimensions.js?v=e7f03c544d53","./viewer/renderer.js":"./viewer/renderer.js?v=e7f03c544d53","./viewer/model-screen.js":"./viewer/model-screen.js?v=e7f03c544d53","./viewer/print-screen.js":"./viewer/print-screen.js?v=e7f03c544d53","./viewer/app.js":"./viewer/app.js?v=e7f03c544d53"}}</script>
+<script type="module" src="viewer/app.js?v=e7f03c544d53"></script>
 </body>
 </html>

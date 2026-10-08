@@ -12,6 +12,7 @@ MODULES = [
     "viewer/vendor/three.module.min.js",
     "viewer/vendor/OrbitControls.js",
     "viewer/dom.js",
+    "viewer/status.js",
     "viewer/resources.js",
     "viewer/model-core.js",
     "viewer/scene.js",

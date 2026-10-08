@@ -1,7 +1,9 @@
 import {$, element} from './dom.js';
 import {downloadURL} from './resources.js';
 import {createViewer} from './renderer.js';
+import {createStatus} from './status.js';
 
+const status = createStatus($('stageStatus'));
 let viewer = null, loading = null, resources = [];
 
 function renderControls(model, folder) {
@@ -96,31 +98,31 @@ function syncVisibility() {
   for (const input of $('partControls').querySelectorAll('input')) input.checked = viewer.parts[input.dataset.part].visible;
 }
 
-export async function showModel({model, folder}) {
+export async function showModel({model, folder}, retry) {
   loading = new AbortController();
   const request = loading;
   $('workspace').hidden = false;
-  $('loading').hidden = false;
-  $('error').style.display = 'none';
+  $('stage').setAttribute('aria-busy', 'true');
+  status.loading('Đang tải mô hình…');
   $('sidebarBody').inert = true;
   $('openPrint').disabled = true;
   $('play').disabled = true;
   document.title = model.title + ' · Bàn in';
-  renderControls(model, folder);
-  $('canvas').replaceWith($('canvas').cloneNode());
   try {
-    viewer = await createViewer({model, folder, canvas: $('canvas'), stage: $('stage'), tooltip: $('partTip'), signal: request.signal, onState: syncState});
+    renderControls(model, folder);
+    $('canvas').replaceWith($('canvas').cloneNode());
+    viewer = await createViewer({model, folder, canvas: $('canvas'), stage: $('stage'), tooltip: $('partTip'), signal: request.signal, onState: syncState, onProgress: fraction => { if (!request.signal.aborted) status.progress(fraction); }});
     window.viewer = viewer;
     $('play').disabled = false;
     $('openPrint').disabled = false;
     $('sidebarBody').inert = false;
-    $('loading').hidden = true;
+    $('stage').setAttribute('aria-busy', 'false');
+    status.clear();
     document.body.dataset.ready = 'true';
   } catch (error) {
     if (request.signal.aborted) return;
-    $('loading').hidden = true;
-    $('error').style.display = 'block';
-    $('error').textContent = 'Không tải được model. ' + error.message;
+    $('stage').setAttribute('aria-busy', 'false');
+    status.error('Không tải được model.', {detail: error.message, retry});
     window.viewerErrors.push(String(error));
   }
 }
@@ -128,6 +130,7 @@ export async function showModel({model, folder}) {
 export function hideModel() {
   loading?.abort();
   loading = null;
+  status.clear();
   viewer?.dispose();
   viewer = null;
   window.viewer = null;

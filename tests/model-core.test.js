@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {sampleTrack, sampleAnimation, measurementLines, layerStarts} from '../viewer/model-core.js';
+import {sampleTrack, sampleAnimation, measurementLines, layerStarts, loadFraction} from '../viewer/model-core.js';
 
 const load = id => JSON.parse(readFileSync(new URL(`../models/${id}/model.json`, import.meta.url)));
 const battery = load('esp32-c3-supermini-18650');
@@ -93,4 +93,12 @@ test('print preview draws past layers opaque and darker than the full-colour cur
   assert.equal(current.material.color.getHexString(), '5aa7e8');
   assert.ok(past.material.color.r < current.material.color.r * .5 && past.material.color.b < current.material.color.b * .5);
   preview.dispose();
+});
+
+test('load progress is known only once every download reports a size', () => {
+  assert.equal(loadFraction([{loaded: 50, total: 100}, null]), null);
+  assert.equal(loadFraction([{loaded: 50, total: 100}, {loaded: 0, total: 0}]), null);
+  assert.equal(loadFraction([{loaded: 50, total: 100}, {loaded: 150, total: 300}]), .5);
+  assert.equal(loadFraction([{loaded: 120, total: 100}]), 1);
+  assert.equal(loadFraction([]), null);
 });

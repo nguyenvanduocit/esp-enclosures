@@ -1,7 +1,7 @@
 import * as THREE from './vendor/three.module.min.js';
 import {createPartDrag} from './part-drag.js';
 import {createDimensions} from './dimensions.js';
-import {clamp, sampleAnimation} from './model-core.js';
+import {clamp, loadFraction, sampleAnimation} from './model-core.js';
 import {readBuffer} from './resources.js';
 import {createScene} from './scene.js';
 
@@ -19,9 +19,14 @@ function stlGeometry(buffer) {
   return geometry;
 }
 
-export async function createViewer({model, folder, canvas, stage, tooltip, signal, onState}) {
+export async function createViewer({model, folder, canvas, stage, tooltip, signal, onState, onProgress}) {
   const sources = [...new Set(model.parts.flatMap(part => part.meshes.flatMap(mesh => mesh.src ? [mesh.src] : [])))];
-  const buffers = Object.fromEntries(await Promise.all(sources.map(async src => [src, await readBuffer(folder + src)])));
+  const downloads = sources.map(() => null);
+  const track = index => (loaded, total) => {
+    downloads[index] = {loaded, total};
+    onProgress?.(loadFraction(downloads));
+  };
+  const buffers = Object.fromEntries(await Promise.all(sources.map(async (src, index) => [src, await readBuffer(folder + src, track(index))])));
   signal.throwIfAborted();
   const sceneView = createScene({canvas, stage, camera: model.camera});
   const {scene, camera, controls} = sceneView;

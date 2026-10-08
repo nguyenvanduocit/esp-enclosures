@@ -24,6 +24,17 @@ export function measurementLines(measurement, visibility) {
   return measurement.variants?.find(variant => visibility[variant.whenHidden] === false)?.lines ?? measurement.lines;
 }
 
+// Overall download fraction, or null (indeterminate) until every download has reported a size.
+export function loadFraction(downloads) {
+  let loaded = 0, total = 0;
+  for (const download of downloads) {
+    if (!download?.total) return null;
+    loaded += Math.min(download.loaded, download.total);
+    total += download.total;
+  }
+  return total ? loaded / total : null;
+}
+
 // Vertex index where each layer's segments start in one toolpath type; LineSegments use two vertices per segment.
 export function layerStarts(layers, type) {
   const starts = [0];
