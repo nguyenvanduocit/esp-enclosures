@@ -68,5 +68,45 @@ class ModelValidation(unittest.TestCase):
             validate_model(self.model, self.folder)
 
 
+class AssetVersions(unittest.TestCase):
+    def test_transitive_changes_update_import_map_and_entry_together(self):
+        import re
+        import tempfile
+        from unittest.mock import patch
+        from build import version_assets
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'viewer').mkdir()
+            (root / 'viewer/app.js').write_text("import './dependency.js';")
+            dependency = root / 'viewer/dependency.js'
+            dependency.write_text('export const value = 1;')
+            (root / 'viewer/style.css').write_text('body {}')
+            index = root / 'index.html'
+            index.write_text('<link rel="stylesheet" href="viewer/style.css"><script type="module" src="viewer/app.js"></script>')
+            with patch('build.ROOT', root), patch('build.MODULES', ['viewer/dependency.js', 'viewer/app.js']):
+                version_assets()
+                first = index.read_text()
+                version_assets()
+                self.assertEqual(first, index.read_text())
+                dependency.write_text('export const value = 2;')
+                version_assets()
+            updated = index.read_text()
+            self.assertNotEqual(first, updated)
+            versions = re.findall(r'\?v=([a-f0-9]+)', updated)
+            self.assertEqual(len(versions), 4)
+            self.assertEqual(len(set(versions)), 1)
+            self.assertEqual(updated.count('type="importmap"'), 1)
+
+    def test_offline_export_embeds_versioned_entry_and_styles(self):
+        from build import offline_html
+        manifest, model = load_catalog()[0]
+        html = offline_html(manifest, model)
+        self.assertNotIn('type="importmap"', html)
+        self.assertNotIn('src="viewer/app.js', html)
+        self.assertNotIn('href="viewer/style.css', html)
+        self.assertIn('window.offlineAssets=', html)
+
+
 if __name__ == '__main__':
     unittest.main()

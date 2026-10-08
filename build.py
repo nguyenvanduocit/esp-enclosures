@@ -4,6 +4,7 @@
 # ///
 """Validate model data and package the shared app as offline model downloads."""
 import base64
+import hashlib
 import json
 import math
 import re
@@ -131,12 +132,28 @@ for (const [path, source] of modules) {
     boot += "await import(urls.get('viewer/app.js'));\n"
     boot += "for (const url of urls.values()) URL.revokeObjectURL(url);\n"
     html = (ROOT / 'index.html').read_text()
-    html = html.replace('<link rel="stylesheet" href="viewer/style.css">', '<style>' + (ROOT / 'viewer/style.css').read_text() + '</style>')
-    return html.replace('<script type="module" src="viewer/app.js"></script>', '<script type="module">' + boot.replace('</', '<\\/') + '</script>')
+    html = re.sub(r'<link rel="stylesheet" href="viewer/style.css(?:\?[^"]*)?">', lambda _: '<style>' + (ROOT / 'viewer/style.css').read_text() + '</style>', html)
+    html = re.sub(r'<script type="importmap">.*?</script>', '', html, flags=re.S)
+    return re.sub(r'<script type="module" src="viewer/app.js(?:\?[^"]*)?"></script>', lambda _: '<script type="module">' + boot.replace('</', '<\\/') + '</script>', html)
+
+
+def version_assets():
+    digest = hashlib.sha256()
+    for path in MODULES + ['viewer/style.css']:
+        digest.update((ROOT / path).read_bytes())
+    version = digest.hexdigest()[:12]
+    html = (ROOT / 'index.html').read_text()
+    html = re.sub(r'<script type="importmap">.*?</script>\n?', '', html, flags=re.S)
+    imports = {'./' + path: './' + path + '?v=' + version for path in MODULES}
+    importmap = '<script type="importmap">' + json.dumps({'imports': imports}, separators=(',', ':')) + '</script>\n'
+    html = re.sub(r'(<script type="module" src="viewer/app.js)(?:\?[^"]*)?("></script>)', lambda m: importmap + m[1] + '?v=' + version + m[2], html)
+    html = re.sub(r'(href="viewer/style.css)(?:\?[^"]*)?(")', lambda m: m[1] + '?v=' + version + m[2], html)
+    (ROOT / 'index.html').write_text(html)
 
 
 def build():
     models = load_catalog()
+    version_assets()
     for manifest, model in models:
         folder = manifest.parent
         target = folder / model['downloads']['bundle']

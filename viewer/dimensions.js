@@ -56,10 +56,10 @@ export function createDimensions(scene, model, parts) {
     return {spec, group, lines: spec.lines.map(() => makeLine(group, spec))};
   });
   return {
-    update({showCase, component, progress}) {
+    update({selected, progress}) {
       const visible = Object.fromEntries(Object.entries(parts).map(([id, part]) => [id, part.visible]));
       for (const {spec, group, lines} of entries) {
-        group.visible = (spec.kind === 'case' ? showCase : spec.id === component) && (!spec.visibleWith || visible[spec.visibleWith]);
+        group.visible = selected.has(spec.id) && (!spec.visibleWith || visible[spec.visibleWith]);
         const installed = model.parts.find(part => part.id === spec.followPart).position;
         group.position.copy(parts[spec.followPart].position).sub(new THREE.Vector3(...installed));
         const data = measurementLines(spec, visible);

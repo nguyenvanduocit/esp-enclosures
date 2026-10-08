@@ -65,12 +65,16 @@ function renderControls(model, folder) {
     button.onclick = () => viewer.setView(view.id);
     $('viewControls').append(button);
   }
-  const measures = model.measurements.filter(item => item.kind === 'component');
-  $('componentMeasure').replaceChildren(new Option('Chọn linh kiện', ''), ...measures.map(item => new Option(item.label, item.id)));
-  $('componentMeasure').hidden = measures.length === 0;
-  $('measure').parentElement.hidden = !model.measurements.some(item => item.kind === 'case');
+  $('measurementControls').replaceChildren();
+  for (const measurement of model.measurements) {
+    const label = element('label');
+    const input = element('input');
+    input.type = 'checkbox';
+    input.value = measurement.id;
+    label.append(input, document.createTextNode(measurement.label));
+    $('measurementControls').append(label);
+  }
   $('measureMenu').hidden = model.measurements.length === 0;
-  $('measure').checked = false;
   $('wireframe').checked = false;
   $('downloads').replaceChildren();
   for (const part of model.parts.filter(item => item.kind === 'print')) {
@@ -201,10 +205,8 @@ $('play').onclick = () => viewer.togglePlay();
 $('timeline').oninput = event => viewer.scrub(Number(event.target.value) / 1000);
 $('mode').onchange = event => { viewer.setMode(event.target.value); syncVisibility(); };
 $('wireframe').onchange = event => viewer.setWireframe(event.target.checked);
-const measure = () => viewer.setMeasurements($('measure').checked, $('componentMeasure').value);
-$('measure').onchange = measure;
-$('componentMeasure').onchange = measure;
-$('reset').onclick = () => { viewer.reset(); syncVisibility(); $('wireframe').checked = false; $('measure').checked = false; $('componentMeasure').value = ''; };
+$('measurementControls').onchange = () => viewer.setMeasurements([...$('measurementControls').querySelectorAll('input:checked')].map(input => input.value));
+$('reset').onclick = () => { viewer.reset(); syncVisibility(); $('wireframe').checked = false; for (const input of $('measurementControls').querySelectorAll('input')) input.checked = false; };
 $('openPrint').onclick = () => { viewer.pause(); $('printDialog').showModal(); };
 $('closePrint').onclick = () => $('printDialog').close();
 $('printDialog').addEventListener('click', event => {

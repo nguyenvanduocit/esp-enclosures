@@ -64,7 +64,6 @@ summary > .icon { color: var(--muted); }
 .panel { padding: 0 0 16px; }
 .panel label { display: flex; align-items: center; gap: 10px; min-height: 34px; cursor: pointer; color: #c9cecb; }
 .panel label:hover { color: var(--text); }
-.panel select { margin-top: 8px; }
 .panel hr { border: 0; border-top: 1px solid var(--divider); margin: 8px 0; }
 .views { display: flex; gap: 8px; margin-top: 12px; }
 .views button { flex: 1; }

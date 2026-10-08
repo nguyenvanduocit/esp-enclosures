@@ -65,7 +65,7 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
   }
   const dimensions = createDimensions(scene, model, parts);
   let animation = model.animations[0], time = 0, playing = false, opened = false, manualPose = false;
-  let measureProgress = 1, showCase = false, component = '', cameraOffset = new THREE.Vector3();
+  let measureProgress = 1, selectedMeasurements = new Set(), cameraOffset = new THREE.Vector3();
   let lastTime = 0, frameId;
   const state = () => ({playing, time, opened, animation: animation.id, manualPose});
   const notify = () => onState(state());
@@ -108,8 +108,7 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
     controls.target.set(...model.camera.target);
     for (const part of Object.values(parts)) part.visible = true;
     setWireframe(false);
-    showCase = false;
-    component = '';
+    selectedMeasurements.clear();
     controls.update();
     notify();
   }
@@ -133,7 +132,7 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
       if (next === 1) playing = false;
       setTime(next);
     }
-    dimensions.update({showCase, component, progress: measureProgress});
+    dimensions.update({selected: selectedMeasurements, progress: measureProgress});
     partDrag.update();
     if (!partDrag.activePart) controls.update();
     renderer.render(scene, camera);
@@ -150,7 +149,7 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
     setMode(id) { animation = model.animations.find(item => item.id === id); setOpen(false); for (const track of animation.tracks) parts[track.part].visible = true; },
     setOpen, reset, setWireframe,
     setVisible(id, value) { parts[id].visible = value; },
-    setMeasurements(caseVisible, componentId) { showCase = caseVisible; component = componentId; },
+    setMeasurements(ids) { selectedMeasurements = new Set(ids); },
     setView(id) { const view = model.camera.views.find(item => item.id === id); camera.position.set(...view.offset).add(controls.target); camera.lookAt(controls.target); controls.update(); },
     dispose() {
       cancelAnimationFrame(frameId);
