@@ -4,7 +4,7 @@ import json
 import math
 from pathlib import Path
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, ValidationError
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "model.schema.json"
@@ -134,11 +134,12 @@ def load_catalog():
     models = []
     for path in paths:
         manifest = local_file(ROOT, path)
-        models.append(
-            (
-                manifest,
-                validate_model(json.loads(manifest.read_text()), manifest.parent),
-            )
-        )
+        try:
+            model = validate_model(json.loads(manifest.read_text()), manifest.parent)
+        except ValidationError as error:
+            raise ValueError(f"{path}: {error.message}") from error
+        except ValueError as error:
+            raise ValueError(f"{path}: {error}") from error
+        models.append((manifest, model))
     unique_ids([model for _, model in models], "model")
     return models
