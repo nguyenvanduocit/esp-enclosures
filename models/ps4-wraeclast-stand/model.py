@@ -919,11 +919,6 @@ model = Model(
         "target": [0, -10, 120],
         "minDistance": 150,
         "maxDistance": 1900,
-        "views": [
-            {"id": "front", "label": "Trước", "offset": [0, -1050, 0.01]},
-            {"id": "side", "label": "Bên", "offset": [1050, 0, 0.01]},
-            {"id": "top", "label": "Trên", "offset": [0, -0.01, 1050]},
-        ],
     },
     grid={"size": 500, "divisions": 50},
     print_info={

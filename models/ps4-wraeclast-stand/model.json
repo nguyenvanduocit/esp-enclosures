@@ -24,36 +24,7 @@
       120
     ],
     "minDistance": 150,
-    "maxDistance": 1900,
-    "views": [
-      {
-        "id": "front",
-        "label": "Trước",
-        "offset": [
-          0,
-          -1050,
-          0.01
-        ]
-      },
-      {
-        "id": "side",
-        "label": "Bên",
-        "offset": [
-          1050,
-          0,
-          0.01
-        ]
-      },
-      {
-        "id": "top",
-        "label": "Trên",
-        "offset": [
-          0,
-          -0.01,
-          1050
-        ]
-      }
-    ]
+    "maxDistance": 1900
   },
   "grid": {
     "size": 500,
@@ -62,6 +33,41 @@
   "printInfo": {
     "summary": "≈ 907 g PLA cho 2 bộ, 2 bệ tay cầm và coupon · in coupon trước · chưa in thử",
     "sections": [
+      {
+        "title": "Cấu hình in",
+        "rows": [
+          [
+            "Máy / nhựa",
+            "Bambu Lab P1S · nozzle 0,4 mm · PLA"
+          ],
+          [
+            "Bàn in",
+            "Textured PEI Plate"
+          ],
+          [
+            "Layer / lớp đầu",
+            "0,16 / 0,2 mm"
+          ],
+          [
+            "Thành",
+            "2 vòng"
+          ],
+          [
+            "Infill",
+            "15% grid"
+          ],
+          [
+            "Support",
+            "Tắt"
+          ],
+          [
+            "Brim",
+            "Tự động"
+          ]
+        ],
+        "notes": [],
+        "links": []
+      },
       {
         "title": "Thứ tự in",
         "rows": [
