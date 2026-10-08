@@ -21,12 +21,13 @@ export function createPrintPreview(data) {
       }
     }
     const attribute = new THREE.BufferAttribute(positions, 3);
-    const line = opacity => {
+    const line = color => {
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', attribute);
-      return new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color: type.color, transparent: opacity < 1, opacity}));
+      return new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color}));
     };
-    const past = line(.4), current = line(1);
+    // Opaque darkened colour: stacked translucent layers would saturate back to the full colour.
+    const past = line(new THREE.Color(type.color).multiplyScalar(.35)), current = line(type.color);
     group.add(past, current);
     return {id: type.id, starts, past, current};
   });

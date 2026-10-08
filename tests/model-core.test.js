@@ -80,3 +80,17 @@ test('sliced models ship toolpaths for every layer', () => {
     assert.ok(total > 1000);
   }
 });
+
+test('print preview draws past layers opaque and darker than the full-colour current layer', async () => {
+  const {createPrintPreview} = await import('../viewer/print-preview.js');
+  const color = '#5aa7e8';
+  const preview = createPrintPreview({
+    bed: [100, 100], unit: 1, types: [{id: 'solid', color}],
+    layers: [0, 1, 2].map(z => ({z, paths: {solid: [[0, 0, 10, 0, 10, 10]]}}))
+  });
+  const [past, current] = preview.group.children.filter(child => child.isLineSegments);
+  assert.equal(past.material.transparent, false);
+  assert.equal(current.material.color.getHexString(), '5aa7e8');
+  assert.ok(past.material.color.r < current.material.color.r * .5 && past.material.color.b < current.material.color.b * .5);
+  preview.dispose();
+});
