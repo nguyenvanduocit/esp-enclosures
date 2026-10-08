@@ -1,0 +1,25 @@
+[project]
+name = "printkit"
+version = "0.1.0"
+description = "Design, verify, slice and preview 3D-printed models"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "cadquery==2.8.0",
+    "trimesh==5.1.1",
+    "scipy==1.18.1",
+    "numpy==2.5.3",
+    "jsonschema==4.23.0",
+]
+
+[project.scripts]
+printkit = "printkit.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
