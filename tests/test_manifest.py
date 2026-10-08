@@ -1,4 +1,6 @@
-from printkit.manifest import Box, Drag, Model, Solid, dim, render
+import pytest
+
+from printkit.manifest import Box, Drag, Model, Print, Solid, dim, print_rows, render
 
 
 def make_model():
@@ -168,3 +170,55 @@ def test_pulse_rests_then_holds_then_returns():
         (0.97, rest),
         (1, rest),
     ]
+
+
+def test_print_rows_defaults():
+    assert print_rows(Print()) == [
+        ["Máy / nhựa", "Bambu Lab P1S · nozzle 0,4 mm · PLA"],
+        ["Layer / lớp đầu", "0,16 / 0,2 mm"],
+        ["Thành", "2 vòng"],
+        ["Infill", "15% grid"],
+        ["Support", "Tắt"],
+        ["Brim", "Tự động"],
+    ]
+
+
+def test_print_rows_custom_and_extra():
+    rows = print_rows(
+        Print(
+            walls=3,
+            infill=(15, "gyroid"),
+            supports=True,
+            brim=4,
+            extra={"wall_generator": "arachne", "outer_wall_speed": 60},
+        )
+    )
+    assert ["Infill", "15% gyroid"] in rows and ["Support", "Bật"] in rows
+    assert ["Brim", "4 mm, viền ngoài"] in rows
+    assert rows[-2:] == [["wall_generator", "arachne"], ["outer_wall_speed", "60"]]
+    assert ["Brim", "Không"] in print_rows(Print(brim=0))
+
+
+def test_print_rejects_unknown_brim():
+    with pytest.raises(ValueError, match="brim"):
+        Print(brim="ears")
+
+
+def test_render_puts_print_settings_first():
+    model = make_model()
+
+    @model.part("body", "Thân", color="#367c85")
+    def body():
+        return None
+
+    model.animation(
+        "open",
+        "Mở",
+        duration=1,
+        open_pose={"body": (0, 0, 1)},
+        tracks={"body": [(0, (0, 0, 0)), (1, (0, 0, 0))]},
+        camera=[(0, (0, 0, 0)), (1, (0, 0, 0))],
+        measure_reveal=(0.3, 0.6),
+    )
+    sections = render(model, {}, "../../model.schema.json")["printInfo"]["sections"]
+    assert sections[0]["title"] == "Cấu hình in" and sections[0]["rows"] == print_rows(Print())

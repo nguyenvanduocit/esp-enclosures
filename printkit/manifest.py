@@ -1,7 +1,7 @@
 """Model declarations and their model.json rendering. No CAD or file I/O here."""
 
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cache
 
 SCHEMA_VERSION = 1
@@ -52,6 +52,56 @@ class ReferencePart:
     drag: Drag | None
 
 
+PRINTER_LABEL = "Bambu Lab P1S · nozzle 0,4 mm"
+
+
+@dataclass(frozen=True)
+class Print:
+    """Plate-wide slicer settings; slicer.process_settings maps them to Bambu Studio keys.
+
+    `brim` is 'auto', 0 for no brim, or a width in mm for an outer brim. `extra` holds raw
+    Bambu Studio process keys for anything the named fields do not cover."""
+
+    layer: float = 0.16
+    first_layer: float = 0.2
+    walls: int = 2
+    infill: tuple = (15, "grid")
+    supports: bool = False
+    brim: object = "auto"
+    filament: str = "PLA"
+    extra: dict = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.brim != "auto" and (isinstance(self.brim, (str, bool)) or self.brim < 0):
+            raise ValueError(f"brim must be 'auto', 0 or a width in mm, got {self.brim!r}")
+
+
+def vn(value):
+    """Number in Vietnamese notation: 0.16 → '0,16'."""
+    return f"{value:g}".replace(".", ",")
+
+
+def print_rows(settings):
+    density, pattern = settings.infill
+    if settings.brim == "auto":
+        brim = "Tự động"
+    else:
+        brim = f"{vn(settings.brim)} mm, viền ngoài" if settings.brim else "Không"
+    rows = [
+        ["Máy / nhựa", f"{PRINTER_LABEL} · {settings.filament}"],
+        ["Layer / lớp đầu", f"{vn(settings.layer)} / {vn(settings.first_layer)} mm"],
+        ["Thành", f"{settings.walls} vòng"],
+        ["Infill", f"{vn(density)}% {pattern}"],
+        ["Support", "Bật" if settings.supports else "Tắt"],
+        ["Brim", brim],
+    ]
+    rows += [
+        [key, vn(value) if isinstance(value, (int, float)) and not isinstance(value, bool) else str(value)]
+        for key, value in settings.extra.items()
+    ]
+    return rows
+
+
 def dim(anchor_a, anchor_b, offset, name, label_offset=(0, 0, 0), prefix=""):
     """Measurement line drawn `offset` away from the two anchor points it measures."""
     length = math.dist(anchor_a, anchor_b)
@@ -89,8 +139,10 @@ class Model:
         camera,
         grid,
         print_info,
+        print=Print(),
     ):
         self.id = id
+        self.print_settings = print
         self.info = {
             "category": category,
             "status": status,
@@ -236,12 +288,23 @@ def render(model, poses, schema_ref):
                 "maxDistance": part.drag.max_distance,
             }
         parts.append(item)
+    declared = model.info["printInfo"]
+    info = {
+        **model.info,
+        "printInfo": {
+            "summary": declared["summary"],
+            "sections": [
+                {"title": "Cấu hình in", "rows": print_rows(model.print_settings), "notes": [], "links": []},
+                *declared["sections"],
+            ],
+        },
+    }
     return clean(
         {
             "$schema": schema_ref,
             "schemaVersion": SCHEMA_VERSION,
             "units": "mm",
-            **model.info,
+            **info,
             "id": model.id,
             "parts": parts,
             "measurements": model.measurements,

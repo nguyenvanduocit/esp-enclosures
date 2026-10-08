@@ -54,49 +54,59 @@
     "summary": "≈ 40–50 g PLA · chưa in thử",
     "sections": [
       {
-        "title": "Cấu hình in thử",
+        "title": "Cấu hình in",
         "rows": [
           [
-            "Máy / vật liệu",
-            "Chọn đúng máy · nozzle 0,4 mm · PLA thường"
+            "Máy / nhựa",
+            "Bambu Lab P1S · nozzle 0,4 mm · PLA"
           ],
           [
             "Layer / lớp đầu",
-            "0,16 / 0,20 mm"
+            "0,16 / 0,2 mm"
           ],
           [
             "Thành",
-            "Arachne · 3 wall loops"
-          ],
-          [
-            "Lớp đặc trên / dưới",
-            "5 / 5"
+            "3 vòng"
           ],
           [
             "Infill",
-            "15% Gyroid"
+            "15% gyroid"
           ],
           [
-            "Thành ngoài / cầu",
-            "60 / 25 mm/s"
+            "Support",
+            "Tắt"
           ],
           [
-            "Support / brim",
-            "Tắt ban đầu"
+            "Brim",
+            "Tự động"
           ],
           [
-            "Scale / đơn vị",
-            "100% / mm"
+            "top_shell_layers",
+            "5"
           ],
           [
-            "Bù lỗ / biên XY",
-            "0 / 0 mm"
+            "bottom_shell_layers",
+            "5"
           ],
           [
-            "Nhiệt, quạt, flow, bù chân voi",
-            "Theo preset nhựa và bàn in"
+            "wall_generator",
+            "arachne"
+          ],
+          [
+            "outer_wall_speed",
+            "60"
+          ],
+          [
+            "bridge_speed",
+            "25"
           ]
         ],
+        "notes": [],
+        "links": []
+      },
+      {
+        "title": "Lưu ý khi in",
+        "rows": [],
         "notes": [
           "Arachne hỗ trợ gờ mỏng; kiểm tra đường nhựa sau khi Slice. Không scale hộp để chỉnh độ chặt ngàm.",
           "Thân: đáy xuống bàn, miệng hướng lên.",

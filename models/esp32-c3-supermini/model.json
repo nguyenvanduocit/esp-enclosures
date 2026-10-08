@@ -54,6 +54,37 @@
     "summary": "Chưa in thử",
     "sections": [
       {
+        "title": "Cấu hình in",
+        "rows": [
+          [
+            "Máy / nhựa",
+            "Bambu Lab P1S · nozzle 0,4 mm · PLA"
+          ],
+          [
+            "Layer / lớp đầu",
+            "0,16 / 0,2 mm"
+          ],
+          [
+            "Thành",
+            "2 vòng"
+          ],
+          [
+            "Infill",
+            "15% grid"
+          ],
+          [
+            "Support",
+            "Tắt"
+          ],
+          [
+            "Brim",
+            "Tự động"
+          ]
+        ],
+        "notes": [],
+        "links": []
+      },
+      {
         "title": "Độ vừa",
         "rows": [],
         "notes": [

@@ -6,7 +6,7 @@ from functools import cache
 
 import cadquery as cq
 
-from printkit import Box, Drag, Model, Solid, dim, pulse
+from printkit import Box, Drag, Model, Print, Solid, dim, pulse
 from printkit.checks import CheckFailed, clear
 from printkit.library.electronics import SUPERMINI_PCB, esp32_c3_supermini
 from printkit.shapes import block, box_solid, rounded
@@ -35,13 +35,8 @@ CONVERTER = [Box('module_pcb', (24, 34, 1), (14, 14, 6.5), '#27729a'),
 CONVERTER += [Box(f'pad_{x}_{y}', (3, 4, .1), (x, y, 7.05), '#cba35e') for x in (5, 23) for y in (1, 27)]
 
 PRINT_INFO = {'summary': '≈ 40–50 g PLA · chưa in thử', 'sections': [
-    {'title': 'Cấu hình in thử',
-     'rows': [['Máy / vật liệu', 'Chọn đúng máy · nozzle 0,4 mm · PLA thường'],
-              ['Layer / lớp đầu', '0,16 / 0,20 mm'], ['Thành', 'Arachne · 3 wall loops'],
-              ['Lớp đặc trên / dưới', '5 / 5'], ['Infill', '15% Gyroid'],
-              ['Thành ngoài / cầu', '60 / 25 mm/s'], ['Support / brim', 'Tắt ban đầu'],
-              ['Scale / đơn vị', '100% / mm'], ['Bù lỗ / biên XY', '0 / 0 mm'],
-              ['Nhiệt, quạt, flow, bù chân voi', 'Theo preset nhựa và bàn in']],
+    {'title': 'Lưu ý khi in',
+     'rows': [],
      'notes': ['Arachne hỗ trợ gờ mỏng; kiểm tra đường nhựa sau khi Slice. Không scale hộp để chỉnh độ chặt ngàm.',
                'Thân: đáy xuống bàn, miệng hướng lên.',
                'Nắp và nút USB: mặt ngoài xuống bàn, phần gài hướng lên.',
@@ -73,7 +68,10 @@ model = Model(
     camera={'position': [145, -196, 158], 'target': [0, 0, 16], 'minDistance': 55, 'maxDistance': 550,
             'views': [{'id': 'front', 'label': 'Trước', 'offset': [0, -285, 0.01]},
                       {'id': 'top', 'label': 'Trên', 'offset': [0, -0.01, 285]}]},
-    grid={'size': 180, 'divisions': 36}, print_info=PRINT_INFO)
+    grid={'size': 180, 'divisions': 36}, print_info=PRINT_INFO,
+    print=Print(layer=0.16, first_layer=0.2, walls=3, infill=(15, 'gyroid'), supports=False, brim='auto',
+                extra={'top_shell_layers': 5, 'bottom_shell_layers': 5, 'wall_generator': 'arachne',
+                       'outer_wall_speed': 60, 'bridge_speed': 25}))
 
 
 @model.part('base', 'Thân', color='#367c85', drag=Drag((0, 0, -1), 60))
