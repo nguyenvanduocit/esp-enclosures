@@ -66,14 +66,27 @@ def screw_clear():
 
 | API | Ý nghĩa |
 |---|---|
-| `model.part` | Chi tiết in; hàm dựng chạy một lần và có thể gọi lại trong kiểm tra. `max_overhang_mm2` đặt trần diện tích overhang (mm²); vượt trần thì `cad` lỗi |
+| `model.part` | Chi tiết in; hàm dựng chạy một lần và có thể gọi lại trong kiểm tra. Trả về khối CadQuery hoặc `manifold3d.Manifold` (chi tiết nghệ thuật). `max_overhang_mm2` đặt trần diện tích overhang (mm²); vượt trần thì `cad` lỗi. `core=` trả về lõi CadQuery của chi tiết Manifold để đưa vào STEP. `assembled=False` chỉ xuất STL (coupon thử), không vào viewer và STEP |
+| `model.copy(id, label, of=…, rotation=…, position=…)` | Bản sao của chi tiết `of` dời bằng phép quay Euler XYZ rồi tịnh tiến; dùng chung STL, có vị trí riêng trong viewer và STEP |
 | `model.reference` | Linh kiện tham khảo: `Box` thành khối hộp của viewer, `Solid` thành `reference/<name>.stl` |
 | `dim(a, b, offset, name)` | Đường đo cách hai điểm neo một đoạn `offset`; nhãn tính từ độ dài thật |
 | `model.animation` | Keyframe là độ dịch so với vị trí lắp, `time` từ 0 đến 1, bắt đầu và kết thúc ở vị trí lắp; `pulse(value)` sinh keyframe nghỉ, di chuyển tới `value`, giữ, rồi về |
-| `model.check` | Ném `CheckFailed` khi sai; trả về dict để ghi số đo vào `verification.json` |
+| `model.check` | Ném `CheckFailed` khi sai; trả về dict để ghi số đo vào `verification.json`. `checks.overlap`/`clear` nhận CadQuery lẫn Manifold |
 
 `Drag(axis, max_distance)`: `axis` là vector đơn vị trong hệ tọa độ thế giới; `max_distance` là khoảng kéo tối đa. Đường đo khai báo ở tư thế lắp kín; `follow` chỉ dịch chuyển đường đo cùng chi tiết; `variants` chọn bộ đường đo khác khi một chi tiết bị ẩn. Chưa mô phỏng va chạm khi kéo và chưa kiểm chứng độ vừa bằng bản in thật.
 
 `Print(layer, first_layer, walls, infill=(mật độ %, kiểu), supports, brim='auto'|0|mm, filament='PLA', extra={khóa Bambu Studio: giá trị})` khai báo cấu hình slice chung cho cả bàn in, truyền vào `Model(..., print=Print(...))`; `extra` nhận khóa process thô của Bambu Studio. `slice` báo lỗi nếu Bambu Studio không áp dụng đúng một thiết lập. Số liệu từng chi tiết trong **Kết quả slice** tính cho việc in riêng chi tiết đó nên không cộng lại thành số của cả bàn in.
+
+## Hình khối nghệ thuật
+
+`printkit/art.py` là các hàm thuần cho đá phong hóa, rune, xích và hình SDF (sọ…): primitive SDF, `smin`/`smax`, `level_set`, nhiễu `weathering`, `erode` (chỉ đẩy vào trong, có vùng che), `to_manifold`, `canonical_mesh`. STL của chi tiết Manifold giống hệt từng byte giữa các lần chạy. Ví dụ đầy đủ: `models/ps4-wraeclast-stand/`; quy trình, cạm bẫy và cách kiểm chứng: `.claude/skills/procedural-art/SKILL.md`.
+
+```python
+@model.part('stone', 'Đá', color='#7a746b', core=lambda: blank())
+def stone():
+    return art.erode(art.to_manifold(blank()), seed=11, amplitude=1.0).simplify(art.SIMPLIFY_TOL)
+
+model.copy('stoneBack', 'Đá sau', of='stone', rotation=(0, 0, 180))
+```
 
 ZIP offline chứa cả `model.py` để đọc; chạy lại nó cần bộ công cụ `printkit` trong repo này (không nằm trong ZIP).
