@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1c1e20">
 <title>Bàn in</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23232527'/%3E%3Cpath d='m16 5 10 6v11l-10 5-10-5V11zM6 11l10 6 10-6M16 17v10' fill='none' stroke='%23b7cebf' stroke-width='1.5'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="viewer/style.css?v=adf6d1788a8d">
+<link rel="stylesheet" href="viewer/style.css?v=c66e471f0e4e">
 </head>
 <body>
 <section id="gallery" class="gallery">
@@ -19,12 +19,14 @@
 <aside aria-label="Điều khiển">
 <div class="sidebar-header"><a href="#" class="back-link" aria-label="Về danh sách" title="Về danh sách"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12"/></svg></a><h1 id="modelTitle"></h1></div>
 <div class="sidebar-body" id="sidebarBody">
+<details class="menu animation-menu" id="animationMenu" open>
+<summary><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z"/></svg>Animation</summary>
 <div class="playback">
 <button id="play" disabled aria-label="Phát" aria-pressed="false" title="Phát"><svg class="icon play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z" fill="currentColor" stroke="none"/></svg><svg class="icon pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke-width="3"/></svg></button>
 <select id="mode" aria-label="Animation"></select>
 <input class="timeline" id="timeline" aria-label="Tua animation" type="range" min="0" max="1000" value="0">
 <button id="reset" aria-label="Đặt lại" title="Đặt lại"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8 M3 4v6h6"/></svg></button>
-</div>
+</div></details>
 <details class="menu" id="displayMenu"><summary><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 9-5 9 5-9 5Z M3 12l9 5 9-5 M3 17l9 5 9-5"/></svg>Hiển thị</summary><div class="panel">
 <div id="partControls"></div>
 <hr>
@@ -46,7 +48,7 @@
 <div class="print-info"><p class="material-total" id="printSummary"></p><div id="printSections"></div></div></dialog>
 
 <p id="appError" role="alert" hidden></p>
-<script type="importmap">{"imports":{"./viewer/vendor/three.module.min.js":"./viewer/vendor/three.module.min.js?v=adf6d1788a8d","./viewer/vendor/OrbitControls.js":"./viewer/vendor/OrbitControls.js?v=adf6d1788a8d","./viewer/resources.js":"./viewer/resources.js?v=adf6d1788a8d","./viewer/model-core.js":"./viewer/model-core.js?v=adf6d1788a8d","./viewer/part-drag.js":"./viewer/part-drag.js?v=adf6d1788a8d","./viewer/dimensions.js":"./viewer/dimensions.js?v=adf6d1788a8d","./viewer/renderer.js":"./viewer/renderer.js?v=adf6d1788a8d","./viewer/app.js":"./viewer/app.js?v=adf6d1788a8d"}}</script>
-<script type="module" src="viewer/app.js?v=adf6d1788a8d"></script>
+<script type="importmap">{"imports":{"./viewer/vendor/three.module.min.js":"./viewer/vendor/three.module.min.js?v=c66e471f0e4e","./viewer/vendor/OrbitControls.js":"./viewer/vendor/OrbitControls.js?v=c66e471f0e4e","./viewer/resources.js":"./viewer/resources.js?v=c66e471f0e4e","./viewer/model-core.js":"./viewer/model-core.js?v=c66e471f0e4e","./viewer/part-drag.js":"./viewer/part-drag.js?v=c66e471f0e4e","./viewer/dimensions.js":"./viewer/dimensions.js?v=c66e471f0e4e","./viewer/renderer.js":"./viewer/renderer.js?v=c66e471f0e4e","./viewer/app.js":"./viewer/app.js?v=c66e471f0e4e"}}</script>
+<script type="module" src="viewer/app.js?v=c66e471f0e4e"></script>
 </body>
 </html>

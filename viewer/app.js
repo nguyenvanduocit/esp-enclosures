@@ -201,6 +201,18 @@ function showError(error) {
   window.viewerErrors.push(String(error));
 }
 
+const mobileLayout = matchMedia('(max-width:600px)');
+const controlMenus = [...document.querySelectorAll('#sidebarBody > details')];
+function syncControlLayout() {
+  if (mobileLayout.matches) for (const menu of controlMenus) menu.open = false;
+  else $('animationMenu').open = true;
+}
+for (const menu of controlMenus) menu.addEventListener('toggle', () => {
+  if (mobileLayout.matches && menu.open) for (const other of controlMenus) if (other !== menu) other.open = false;
+});
+mobileLayout.addEventListener('change', syncControlLayout);
+syncControlLayout();
+
 $('play').onclick = () => viewer.togglePlay();
 $('timeline').oninput = event => viewer.scrub(Number(event.target.value) / 1000);
 $('mode').onchange = event => { viewer.setMode(event.target.value); syncVisibility(); };
