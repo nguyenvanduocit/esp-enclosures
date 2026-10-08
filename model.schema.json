@@ -1,0 +1,573 @@
+{
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "units": {
+      "const": "mm"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "minLength": 1
+    },
+    "thumbnail": {
+      "$ref": "#/$defs/path"
+    },
+    "dimensions": {
+      "$ref": "#/$defs/vec3"
+    },
+    "camera": {
+      "type": "object",
+      "properties": {
+        "position": {
+          "$ref": "#/$defs/vec3"
+        },
+        "target": {
+          "$ref": "#/$defs/vec3"
+        },
+        "minDistance": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maxDistance": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "views": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "offset": {
+                "$ref": "#/$defs/vec3"
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "offset"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "position",
+        "target",
+        "minDistance",
+        "maxDistance",
+        "views"
+      ],
+      "additionalProperties": false
+    },
+    "grid": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "divisions": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "size",
+        "divisions"
+      ],
+      "additionalProperties": false
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/part"
+      },
+      "minItems": 1
+    },
+    "measurements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/measurement"
+      },
+      "minItems": 0
+    },
+    "animations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/animation"
+      },
+      "minItems": 1
+    },
+    "downloads": {
+      "type": "object",
+      "properties": {
+        "bundle": {
+          "$ref": "#/$defs/path"
+        },
+        "step": {
+          "$ref": "#/$defs/path"
+        }
+      },
+      "required": [
+        "bundle",
+        "step"
+      ],
+      "additionalProperties": false
+    },
+    "printInfo": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/section"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "summary",
+        "sections"
+      ],
+      "additionalProperties": false
+    },
+    "$schema": {
+      "const": "../model.schema.json"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "units",
+    "title",
+    "description",
+    "category",
+    "status",
+    "thumbnail",
+    "dimensions",
+    "camera",
+    "grid",
+    "parts",
+    "measurements",
+    "animations",
+    "downloads",
+    "printInfo"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nguyenvanduocit.github.io/esp-enclosures/model.schema.json",
+  "title": "Enclosure model v1",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_./-]+$"
+    },
+    "vec3": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    },
+    "mesh": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "src": {
+              "$ref": "#/$defs/path"
+            },
+            "color": {
+              "$ref": "#/$defs/color"
+            }
+          },
+          "required": [
+            "src",
+            "color"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "primitive": {
+              "enum": [
+                "box"
+              ]
+            },
+            "size": {
+              "$ref": "#/$defs/vec3"
+            },
+            "position": {
+              "$ref": "#/$defs/vec3"
+            },
+            "color": {
+              "$ref": "#/$defs/color"
+            }
+          },
+          "required": [
+            "primitive",
+            "size",
+            "position",
+            "color"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "part": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "print",
+            "reference"
+          ]
+        },
+        "position": {
+          "$ref": "#/$defs/vec3",
+          "description": "Installed world position in millimetres."
+        },
+        "rotation": {
+          "$ref": "#/$defs/vec3",
+          "description": "Installed Euler XYZ rotation in degrees."
+        },
+        "meshes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mesh"
+          },
+          "minItems": 1
+        },
+        "drag": {
+          "type": "object",
+          "properties": {
+            "axis": {
+              "$ref": "#/$defs/vec3"
+            },
+            "maxDistance": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "axis",
+            "maxDistance"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind",
+        "position",
+        "rotation",
+        "meshes"
+      ],
+      "additionalProperties": false
+    },
+    "line": {
+      "type": "object",
+      "properties": {
+        "a": {
+          "$ref": "#/$defs/vec3"
+        },
+        "b": {
+          "$ref": "#/$defs/vec3"
+        },
+        "anchorA": {
+          "$ref": "#/$defs/vec3"
+        },
+        "anchorB": {
+          "$ref": "#/$defs/vec3"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "labelOffset": {
+          "$ref": "#/$defs/vec3"
+        }
+      },
+      "required": [
+        "a",
+        "b",
+        "anchorA",
+        "anchorB",
+        "label",
+        "labelOffset"
+      ],
+      "additionalProperties": false
+    },
+    "measurement": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "case",
+            "component"
+          ]
+        },
+        "followPart": {
+          "$ref": "#/$defs/id",
+          "description": "Follow only this part’s translation offset; endpoints describe the closed assembly."
+        },
+        "visibleWith": {
+          "$ref": "#/$defs/id"
+        },
+        "color": {
+          "$ref": "#/$defs/color"
+        },
+        "labelWidth": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/line"
+          },
+          "minItems": 1
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "whenHidden": {
+                "$ref": "#/$defs/id"
+              },
+              "lines": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/line"
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "whenHidden",
+              "lines"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind",
+        "followPart",
+        "color",
+        "labelWidth",
+        "lines"
+      ],
+      "additionalProperties": false
+    },
+    "keyframe": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "value": {
+          "$ref": "#/$defs/vec3",
+          "description": "World-space translation offset from the installed pose, in millimetres."
+        }
+      },
+      "required": [
+        "time",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "keys": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/keyframe"
+      },
+      "minItems": 2
+    },
+    "animation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "duration": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "openPose": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/vec3"
+          },
+          "minProperties": 1
+        },
+        "tracks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "part": {
+                "$ref": "#/$defs/id"
+              },
+              "keyframes": {
+                "$ref": "#/$defs/keys"
+              }
+            },
+            "required": [
+              "part",
+              "keyframes"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "camera": {
+          "$ref": "#/$defs/keys"
+        },
+        "measureReveal": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "duration",
+        "openPose",
+        "tracks",
+        "camera",
+        "measureReveal"
+      ],
+      "additionalProperties": false
+    },
+    "section": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "minItems": 0
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "pattern": "^https://"
+              }
+            },
+            "required": [
+              "label",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "title",
+        "rows",
+        "notes",
+        "links"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

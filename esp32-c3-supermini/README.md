@@ -9,13 +9,11 @@ Outer dimensions: **26.4 × 32 × 20.2 mm**. All model dimensions are millimetre
 - `enclosure.step`: assembled enclosure with separate base and lid solids.
 - `model.py`: editable CadQuery source; change dimensions near the top.
 - `verification.json`: geometry checks from the latest export.
-- `viewer.html`: offline 3D viewer with rotation, zoom, opening/closing animation,
-  a timeline and animated dimensions. Open it directly in a WebGL-capable browser.
-  Enclosure dimensions use the assembled mesh bounds. Both the height label and
-  its dimension line stay at 20.2 mm throughout the exploded-view animation.
-  Blue dimensions show the PCB's 18 × 22.5 × 1.6 mm outline and thickness,
-  excluding headers and the USB connector, and follow the PCB during animation.
-  Use the Hide lid button in the viewport or the lid visibility checkbox.
+- `model.json`: parts, installed transforms, measurements and animation data for
+  the shared viewer. Case height stays 20.2 mm during disassembly; PCB dimensions
+  exclude headers and USB. Hide the lid under **Hiển thị**.
+- `viewer.html`: compatibility redirect to the shared app. The ZIP contains an
+  offline `index.html` that opens directly in a WebGL-capable browser.
 
 The board outline is assumed to be 18 × 22.5 mm, with 1.6 mm PCB thickness.
 The [board manual](https://www.makerguides.com/wp-content/uploads/2025/04/ESP32-C3-SuperMini-Manual.pdf)
@@ -36,3 +34,5 @@ Regenerate and verify: `uv run --python 3.12 --with cadquery==2.8.0 --with trime
 Regenerate the preview with the same command, replacing `model.py` with `render_preview.py`.
 Both parts are designed to print in their exported orientations. Physical fit and
 printing have not been tested; inspect the sliced layers before printing.
+
+Viewer dùng [app chung](../#model/esp32-c3-supermini). `model.json` khai báo chi tiết, số đo và animation theo [schema](../model.schema.json). ZIP có `index.html` để xem offline. Chạy `uv run ../build.py` để kiểm tra dữ liệu và đóng gói lại.

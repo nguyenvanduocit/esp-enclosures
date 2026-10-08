@@ -1,26 +1,4 @@
 [
-  {
-    "id": "esp32-c3-supermini-18650",
-    "title": "ESP32-C3 + 18650",
-    "description": "Pin tháo rời, hai nắp độc lập và nút bịt USB.",
-    "category": "Hộp điện tử",
-    "dimensions": "60 × 85,2 × 27,2 mm",
-    "parts": 4,
-    "status": "Chưa in thử",
-    "thumbnail": "esp32-c3-supermini-18650/thumbnail.png",
-    "viewer": "esp32-c3-supermini-18650/viewer.html",
-    "download": "esp32-c3-supermini-18650/esp32-c3-supermini-18650.zip"
-  },
-  {
-    "id": "esp32-c3-supermini",
-    "title": "ESP32-C3 SuperMini",
-    "description": "Hộp gọn cho bo đã hàn chân, cấp nguồn qua USB-C.",
-    "category": "Hộp điện tử",
-    "dimensions": "26,4 × 32 × 20,2 mm",
-    "parts": 2,
-    "status": "Chưa in thử",
-    "thumbnail": "esp32-c3-supermini/thumbnail.png",
-    "viewer": "esp32-c3-supermini/viewer.html",
-    "download": "esp32-c3-supermini/esp32-c3-supermini-enclosure.zip"
-  }
+  "esp32-c3-supermini-18650/model.json",
+  "esp32-c3-supermini/model.json"
 ]

@@ -3,100 +3,52 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#111c24">
-<meta name="description" content="Bộ sưu tập model in 3D: xem mô hình, thông số và tải file in.">
-<title>Model in 3D</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23367c85'/%3E%3Cpath d='M10 14l10-5 10 5v13l-10 5-10-5zM10 14l10 5 10-5M20 19v13' fill='none' stroke='%23eee4cb' stroke-width='2'/%3E%3C/svg%3E">
-<style>
-:root{color-scheme:dark;--bg:#111c24;--surface:#182a32;--border:#2b4048;--text:#e8f0ed;--muted:#a4b8bb;--accent:#65c3b4}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:'Avenir Next','Segoe UI',sans-serif}a{color:inherit;text-decoration:none}button,input{font:inherit}a,button,input{touch-action:manipulation}:focus-visible{outline:2px solid var(--accent);outline-offset:5px}[hidden]{display:none!important}.page{max-width:1240px;margin:auto;padding:0 36px}header{display:flex;align-items:center;justify-content:space-between;height:88px;border-bottom:1px solid var(--border)}.brand{display:flex;align-items:center;gap:12px;font-size:.9rem;font-weight:650}.brand svg{width:28px;height:28px;color:var(--accent)}.repo{font-size:.85rem;color:var(--muted)}.repo:hover{color:var(--accent)}.intro{padding:56px 0 30px}.eyebrow{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}h1{font-size:clamp(2rem,5vw,3rem);font-weight:600;letter-spacing:-.04em;margin:0 0 12px}.intro p:last-child{margin:0;color:var(--muted);font-size:.95rem;line-height:1.6}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 24px}.count{font-size:.85rem;color:var(--muted)}.search{position:relative;width:280px}.search svg{position:absolute;width:18px;height:18px;left:14px;top:14px;color:var(--muted)}input{width:100%;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);padding:12px 14px 12px 42px;font-size:.875rem}input::placeholder{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.card{border:1px solid var(--border);border-radius:14px;background:var(--surface);overflow:hidden;transition:border-color .2s}.card:hover{border-color:#558b88}.model-link{display:block}.thumbnail{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--bg)}.thumbnail img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}.model-link:hover img{transform:scale(1.025)}.open-label{position:absolute;bottom:18px;right:18px;border:1px solid #416962;background:#182a32e8;color:var(--accent);padding:8px 12px;border-radius:6px;font-size:.8rem}.card-body{padding:22px 24px 18px}.category{font-size:.7rem;color:var(--accent);margin:0 0 8px}h2{font-size:1.25rem;letter-spacing:-.025em;font-weight:600;margin:0 0 8px}.description{font-size:.85rem;line-height:1.6;color:var(--muted);margin:0 0 18px}.spec{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0;font:.75rem Menlo,Consolas,monospace;color:var(--text)}.spec span{color:var(--muted)}.card-footer{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:16px 24px;border-top:1px solid var(--border);font-size:.78rem}.status{color:var(--muted)}.status::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#efb96e;margin-right:8px}.download{color:var(--accent)}.download:hover{text-decoration:underline}footer{padding:30px 0 36px;margin-top:32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:16px;font-size:.75rem;color:var(--muted)}.empty{padding:48px 0;color:var(--muted)}.empty button{display:block;margin-top:16px}.text-button{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:6px;padding:9px 12px;cursor:pointer}.text-button:hover{border-color:var(--accent)}body:has(dialog[open]){overflow:hidden}dialog{inset:0;margin:0;padding:0;border:0;max-width:none;max-height:none;width:100%;height:100dvh;background:var(--bg);color:var(--text)}dialog[open]{display:flex;flex-direction:column}.viewer-bar{display:flex;align-items:center;gap:20px;min-height:64px;padding:12px 24px;border-bottom:1px solid var(--border)}.viewer-bar h2{margin:0;font-size:.9rem;flex:1}.viewer-actions{display:flex;align-items:center;gap:20px;font-size:.8rem;color:var(--accent)}.viewer-host{flex:1;min-height:0}.viewer-host iframe{border:0;width:100%;height:100%;display:block}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-@media(min-width:1500px){.page{max-width:1440px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:640px){.page{padding:0 20px}header{height:72px}.intro{padding:36px 0 26px}.toolbar{align-items:flex-start;flex-direction:column-reverse;gap:16px}.search{width:100%}.grid{grid-template-columns:1fr;gap:20px}.card-body{padding:20px}.card-footer{padding:15px 20px}.viewer-bar{gap:12px;flex-wrap:wrap;padding:10px 14px}.viewer-bar h2{font-size:.8rem}.viewer-actions{width:100%;justify-content:flex-end;font-size:.75rem;gap:18px}footer{flex-direction:column;gap:10px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
+<meta name="theme-color" content="#1c1e20">
+<title>Bàn in</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23232527'/%3E%3Cpath d='m16 5 10 6v11l-10 5-10-5V11zM6 11l10 6 10-6M16 17v10' fill='none' stroke='%23b7cebf' stroke-width='1.5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="viewer/style.css">
 </head>
 <body>
-<div class="page">
-<header><a class="brand" href="./" aria-label="Trang chủ model in 3D"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m16 3 12 7v13l-12 7-12-7V10zM4 10l12 7 12-7M16 17v13"/></svg>Bàn in</a><a class="repo" href="https://github.com/nguyenvanduocit/esp-enclosures" target="_blank" rel="noopener">GitHub ↗</a></header>
-<main>
-<div class="intro"><p class="eyebrow">Bộ sưu tập</p><h1>Model in 3D</h1><p>Chọn một mẫu để xem 3D, thông số và tải file in.</p></div>
-<div class="toolbar"><span class="count" id="count" role="status">2 model</span><label class="search" hidden><span class="sr-only">Tìm model</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="search" type="search" placeholder="Tìm model…" autocomplete="off"></label></div>
-<div class="grid" id="models"><article class="card" data-id="esp32-c3-supermini-18650">
-  <a class="model-link" href="esp32-c3-supermini-18650/viewer.html" aria-labelledby="title-esp32-c3-supermini-18650">
-    <div class="thumbnail"><img src="esp32-c3-supermini-18650/thumbnail.png" alt="Mô hình ESP32-C3 + 18650 khi tách nắp" width="960" height="720" loading="lazy"><span class="open-label">Xem 3D ↗</span></div>
-    <div class="card-body"><p class="category">Hộp điện tử</p><h2 id="title-esp32-c3-supermini-18650">ESP32-C3 + 18650</h2><p class="description">Pin tháo rời, hai nắp độc lập và nút bịt USB.</p><p class="spec">60 × 85,2 × 27,2 mm<span>4 chi tiết</span></p></div>
-  </a>
-  <div class="card-footer"><span class="status">Chưa in thử</span><a class="download" href="esp32-c3-supermini-18650/esp32-c3-supermini-18650.zip" download aria-label="Tải ZIP ESP32-C3 + 18650">Tải ZIP ↓</a></div>
-</article>
-<article class="card" data-id="esp32-c3-supermini">
-  <a class="model-link" href="esp32-c3-supermini/viewer.html" aria-labelledby="title-esp32-c3-supermini">
-    <div class="thumbnail"><img src="esp32-c3-supermini/thumbnail.png" alt="Mô hình ESP32-C3 SuperMini khi tách nắp" width="960" height="720" loading="lazy"><span class="open-label">Xem 3D ↗</span></div>
-    <div class="card-body"><p class="category">Hộp điện tử</p><h2 id="title-esp32-c3-supermini">ESP32-C3 SuperMini</h2><p class="description">Hộp gọn cho bo đã hàn chân, cấp nguồn qua USB-C.</p><p class="spec">26,4 × 32 × 20,2 mm<span>2 chi tiết</span></p></div>
-  </a>
-  <div class="card-footer"><span class="status">Chưa in thử</span><a class="download" href="esp32-c3-supermini/esp32-c3-supermini-enclosure.zip" download aria-label="Tải ZIP ESP32-C3 SuperMini">Tải ZIP ↓</a></div>
-</article></div>
-<div class="empty" id="empty" hidden><p>Không tìm thấy model.</p><button class="text-button" id="clearSearch">Xóa tìm kiếm</button></div>
-</main>
-<footer><span>STL · STEP · Viewer 3D</span><span>Trạng thái in được ghi trên từng mẫu.</span></footer>
+<section id="gallery" class="gallery">
+<header class="gallery-header"><h1>Bàn in</h1><a href="https://github.com/nguyenvanduocit/esp-enclosures" target="_blank" rel="noopener">GitHub ↗</a></header>
+<div class="gallery-tools"><label><span class="sr-only">Tìm model</span><input id="search" type="search" placeholder="Tìm model…" autocomplete="off"></label></div>
+<div id="cards" class="cards"></div>
+<p id="empty" class="empty" hidden>Không tìm thấy model.</p>
+</section>
+<div id="workspace" hidden>
+<aside aria-label="Điều khiển">
+<div class="sidebar-header"><a href="#" class="back-link" aria-label="Về danh sách" title="Về danh sách"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12"/></svg></a><h1 id="modelTitle"></h1></div>
+<div class="sidebar-body" id="sidebarBody">
+<div class="playback">
+<button id="play" disabled aria-label="Phát" aria-pressed="false" title="Phát"><svg class="icon play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z" fill="currentColor" stroke="none"/></svg><svg class="icon pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke-width="3"/></svg></button>
+<select id="mode" aria-label="Animation"></select>
+<button id="assembly">Tách rời</button>
+<input class="timeline" id="timeline" aria-label="Tua animation" type="range" min="0" max="1000" value="0">
+<button id="reset" aria-label="Đặt lại" title="Đặt lại"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8 M3 4v6h6"/></svg></button>
 </div>
-<dialog id="viewerDialog" aria-labelledby="viewerTitle">
-<div class="viewer-bar"><button class="text-button" id="backToGallery" autofocus>← Gallery</button><h2 id="viewerTitle"></h2><div class="viewer-actions"><a id="directViewer" target="_blank" rel="noopener">Mở tab riêng ↗</a><a id="modelDownload" download>Tải ZIP ↓</a></div></div>
-<div class="viewer-host" id="viewerHost"></div>
-</dialog>
-<script>
-const cards=[...document.querySelectorAll('.card')];
-const search=document.getElementById('search');
-const dialog=document.getElementById('viewerDialog');
-const host=document.getElementById('viewerHost');
-const byId=new Map(cards.map(card=>[card.dataset.id,card]));
-const normalize=text=>text.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
-const searchText=new Map(cards.map(card=>[card,normalize(card.textContent+' '+card.dataset.id)]));
-let openedFromGallery=false;
-let opener=null;
-let activeId=null;
-document.querySelector('.search').hidden=false;
-function filterModels(){
- const query=normalize(search.value.trim());let count=0;
- for(const card of cards){card.hidden=!searchText.get(card).includes(query);if(!card.hidden)count++}
- document.getElementById('count').textContent=query?`${count} / ${cards.length} model`:`${cards.length} model`;
- document.getElementById('empty').hidden=count!==0;
-}
-search.addEventListener('input',filterModels);
-document.getElementById('clearSearch').onclick=()=>{search.value='';filterModels();search.focus()};
-function syncViewer(){
- const id=location.hash.startsWith('#model/')?location.hash.slice(7):null;
- const card=byId.get(id);
- if(!card){
-  if(dialog.open)dialog.close();host.replaceChildren();activeId=null;
-  if(opener){opener.focus({preventScroll:true});opener=null}
-  return;
- }
- if(activeId===id)return;
- activeId=id;
- const link=card.querySelector('.model-link');
- const title=card.querySelector('h2').textContent;
- document.getElementById('viewerTitle').textContent=title;
- document.getElementById('directViewer').href=link.href;
- document.getElementById('modelDownload').href=card.querySelector('.download').href;
- const frame=document.createElement('iframe');frame.title='Viewer 3D · '+title;frame.src=link.href;
- host.replaceChildren(frame);
- if(!dialog.open)dialog.showModal();
-}
-for(const card of cards){
- const link=card.querySelector('.model-link');
- link.addEventListener('click',event=>{
-  if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
-  event.preventDefault();opener=link;openedFromGallery=true;location.hash='model/'+card.dataset.id;
- });
-}
-function closeViewer(){
- if(openedFromGallery){openedFromGallery=false;history.back()}
- else{history.replaceState(null,'',location.pathname+location.search);syncViewer()}
-}
-document.getElementById('backToGallery').onclick=closeViewer;
-dialog.addEventListener('cancel',event=>{event.preventDefault();closeViewer()});
-window.addEventListener('hashchange',syncViewer);
-syncViewer();
-</script>
+<details class="menu" id="displayMenu"><summary><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 9-5 9 5-9 5Z M3 12l9 5 9-5 M3 17l9 5 9-5"/></svg>Hiển thị</summary><div class="panel">
+<div id="partControls"></div>
+<hr>
+<label><input id="wireframe" type="checkbox">Lưới</label>
+<div class="views" id="viewControls"></div>
+</div></details>
+<details class="menu" id="measureMenu"><summary><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m3 15 12-12 6 6-12 12Z M12 6l3 3 M9 9l2 2 M6 12l3 3"/></svg>Đo</summary><div class="panel">
+<label><input id="measure" type="checkbox">Vỏ hộp</label>
+<select id="componentMeasure" aria-label="Đo linh kiện"></select>
+</div></details>
+</div>
+<div class="sidebar-footer"><button id="openPrint"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4 M4 16v5h16v-5"/></svg>In & tải</button></div>
+</aside>
+<main aria-label="Mô hình 3D"><div class="canvas-wrap" id="stage"><canvas class="scene" id="canvas" tabindex="0" aria-label="Mô hình 3D. Kéo chi tiết để tháo; kéo nền để xoay."></canvas><div id="partTip" class="part-tip" hidden></div><div id="loading">Đang tải…</div><div id="error" role="alert"></div></div>
+</main>
+</div>
+<dialog id="printDialog" aria-labelledby="printTitle"><div class="dialog-header"><h2 id="printTitle">In 3D</h2><button id="closePrint" aria-label="Đóng"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12 M6 18 18 6"/></svg></button></div>
+<h3>STL</h3><div class="downloads" id="downloads"></div>
+<a class="bundle" id="bundleDownload" download>Tải tất cả (.zip)</a>
+<a class="bundle" id="stepDownload" download>STEP</a>
+<div class="print-info"><p class="material-total" id="printSummary"></p><div id="printSections"></div></div></dialog>
+
+<p id="appError" role="alert" hidden></p>
+<script type="module" src="viewer/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,836 @@
+{
+  "$schema": "../model.schema.json",
+  "schemaVersion": 1,
+  "units": "mm",
+  "category": "Hộp điện tử",
+  "status": "Chưa in thử",
+  "thumbnail": "thumbnail.png",
+  "id": "esp32-c3-supermini",
+  "title": "ESP32-C3 SuperMini",
+  "description": "Hộp gọn cho bo đã hàn chân, cấp nguồn qua USB-C.",
+  "dimensions": [
+    26.4,
+    32,
+    20.2
+  ],
+  "camera": {
+    "position": [
+      63,
+      -88,
+      69
+    ],
+    "target": [
+      0,
+      0,
+      12
+    ],
+    "minDistance": 28,
+    "maxDistance": 230,
+    "views": [
+      {
+        "id": "front",
+        "label": "Trước",
+        "offset": [
+          0,
+          -115,
+          0.01
+        ]
+      },
+      {
+        "id": "top",
+        "label": "Trên",
+        "offset": [
+          0,
+          -0.01,
+          115
+        ]
+      }
+    ]
+  },
+  "grid": {
+    "size": 100,
+    "divisions": 20
+  },
+  "parts": [
+    {
+      "id": "base",
+      "label": "Thân",
+      "kind": "print",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "base.stl",
+          "color": "#367c85"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          -1
+        ],
+        "maxDistance": 35
+      }
+    },
+    {
+      "id": "lid",
+      "label": "Nắp",
+      "kind": "print",
+      "position": [
+        0,
+        0,
+        20.2
+      ],
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "lid.stl",
+          "color": "#ded4ba"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 65
+      }
+    },
+    {
+      "id": "board",
+      "label": "ESP32",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "primitive": "box",
+          "size": [
+            18.0,
+            22.5,
+            1.5999999999999996
+          ],
+          "position": [
+            0.0,
+            0.0,
+            12.600000000000001
+          ],
+          "color": "#214f55"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            9.0,
+            7.2,
+            3.200000000000001
+          ],
+          "position": [
+            0.0,
+            -9.15,
+            15.0
+          ],
+          "color": "#c3cbd0"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            5.0,
+            5.0,
+            1.0
+          ],
+          "position": [
+            0.0,
+            0.0,
+            13.9
+          ],
+          "color": "#24343c"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            2.5,
+            3.3999999999999995,
+            1.1999999999999993
+          ],
+          "position": [
+            4.3,
+            7.9,
+            14.0
+          ],
+          "color": "#d2bda0"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            2.540000000000001,
+            20.32,
+            2.5
+          ],
+          "position": [
+            -7.62,
+            0.0,
+            10.55
+          ],
+          "color": "#27343c"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000006,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -8.89,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000006,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -6.35,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000001,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -3.8099999999999996,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000001,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -1.27,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000001,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            1.27,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6399999999999997,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            3.81,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000006,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            6.35,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000006,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            8.89,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            2.540000000000001,
+            20.32,
+            2.5
+          ],
+          "position": [
+            7.62,
+            0.0,
+            10.55
+          ],
+          "color": "#27343c"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000006,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -8.89,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000006,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -6.35,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000001,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -3.8099999999999996,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000001,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -1.27,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000001,
+            11.5
+          ],
+          "position": [
+            7.62,
+            1.27,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6399999999999997,
+            11.5
+          ],
+          "position": [
+            7.62,
+            3.81,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000006,
+            11.5
+          ],
+          "position": [
+            7.62,
+            6.35,
+            9.05
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.6400000000000006,
+            0.6400000000000006,
+            11.5
+          ],
+          "position": [
+            7.62,
+            8.89,
+            9.05
+          ],
+          "color": "#c99b49"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 50
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "id": "case",
+      "label": "Vỏ hộp",
+      "kind": "case",
+      "followPart": "base",
+      "color": "#efb96e",
+      "labelWidth": 20,
+      "lines": [
+        {
+          "a": [
+            -13.2,
+            -20.0,
+            0
+          ],
+          "b": [
+            13.2,
+            -20.0,
+            0
+          ],
+          "anchorA": [
+            -13.2,
+            -16.0,
+            0
+          ],
+          "anchorB": [
+            13.2,
+            -16.0,
+            0
+          ],
+          "label": "26.4 mm · Rộng",
+          "labelOffset": [
+            0,
+            -2.4,
+            0
+          ]
+        },
+        {
+          "a": [
+            17.2,
+            -16.0,
+            0
+          ],
+          "b": [
+            17.2,
+            16.0,
+            0
+          ],
+          "anchorA": [
+            13.2,
+            -16.0,
+            0
+          ],
+          "anchorB": [
+            13.2,
+            16.0,
+            0
+          ],
+          "label": "32 mm · Dài",
+          "labelOffset": [
+            4.8,
+            0,
+            0
+          ]
+        },
+        {
+          "a": [
+            -17.2,
+            -16.0,
+            0
+          ],
+          "b": [
+            -17.2,
+            -16.0,
+            20.2
+          ],
+          "anchorA": [
+            -13.2,
+            -16.0,
+            0
+          ],
+          "anchorB": [
+            -13.2,
+            -16.0,
+            20.2
+          ],
+          "label": "20.2 mm · Cao vỏ",
+          "labelOffset": [
+            -5.6,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "board",
+      "label": "PCB ESP32",
+      "kind": "component",
+      "followPart": "board",
+      "visibleWith": "board",
+      "color": "#83caff",
+      "labelWidth": 20,
+      "lines": [
+        {
+          "a": [
+            -9.0,
+            -16.25,
+            13.4
+          ],
+          "b": [
+            9.0,
+            -16.25,
+            13.4
+          ],
+          "anchorA": [
+            -9.0,
+            -11.25,
+            13.4
+          ],
+          "anchorB": [
+            9.0,
+            -11.25,
+            13.4
+          ],
+          "label": "18 mm · PCB rộng",
+          "labelOffset": [
+            0,
+            -5,
+            2
+          ]
+        },
+        {
+          "a": [
+            14.0,
+            -11.25,
+            13.4
+          ],
+          "b": [
+            14.0,
+            11.25,
+            13.4
+          ],
+          "anchorA": [
+            9.0,
+            -11.25,
+            13.4
+          ],
+          "anchorB": [
+            9.0,
+            11.25,
+            13.4
+          ],
+          "label": "22.5 mm · PCB dài",
+          "labelOffset": [
+            8,
+            0,
+            3
+          ]
+        },
+        {
+          "a": [
+            -14.0,
+            11.25,
+            11.8
+          ],
+          "b": [
+            -14.0,
+            11.25,
+            13.4
+          ],
+          "anchorA": [
+            -9.0,
+            11.25,
+            11.8
+          ],
+          "anchorB": [
+            -9.0,
+            11.25,
+            13.4
+          ],
+          "label": "1.6 mm · PCB dày",
+          "labelOffset": [
+            -8,
+            0,
+            3
+          ]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "id": "explode",
+      "label": "Mở hộp",
+      "duration": 10,
+      "openPose": {
+        "lid": [
+          0,
+          0,
+          32
+        ],
+        "board": [
+          0,
+          0,
+          15
+        ]
+      },
+      "tracks": [
+        {
+          "part": "lid",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                32
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                0,
+                32
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "board",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                15
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                0,
+                15
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.08,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            14
+          ]
+        },
+        {
+          "time": 0.72,
+          "value": [
+            0,
+            0,
+            14
+          ]
+        },
+        {
+          "time": 0.97,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "measureReveal": [
+        0.34,
+        0.64
+      ]
+    }
+  ],
+  "downloads": {
+    "bundle": "esp32-c3-supermini-enclosure.zip",
+    "step": "enclosure.step"
+  },
+  "printInfo": {
+    "summary": "Chưa in thử",
+    "sections": [
+      {
+        "title": "Độ vừa",
+        "rows": [],
+        "notes": [
+          "Bo và linh kiện là mô hình tham khảo. Đo bo thực và in thử để kiểm tra độ vừa."
+        ],
+        "links": []
+      }
+    ]
+  }
+}

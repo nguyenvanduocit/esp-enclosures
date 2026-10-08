@@ -1,9 +1,10 @@
 // Pointer interaction for the viewer; part axes are in world coordinates.
 export function createPartDrag({THREE, scene, camera, controls, canvas, parts, tooltip, onStart, onMove}) {
+  const events = new AbortController();
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
   const owner = new WeakMap();
-  const arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(), 15, 0x65e6cb, 3, 1.5);
+  const arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(), 15, 0xb7cebf, 3, 1.5);
   arrow.visible = false;
   for (const mesh of [arrow.line, arrow.cone]) {
     mesh.material.depthTest = false;
@@ -41,7 +42,7 @@ export function createPartDrag({THREE, scene, camera, controls, canvas, parts, t
     }
     hovered = part;
     if (part) for (const {material} of part.materials) {
-      material.emissive.setHex(0x65c3b4);
+      material.emissive.setHex(0xb7cebf);
       material.emissiveIntensity = .38;
     }
     canvas.style.cursor = part ? 'grab' : '';
@@ -105,7 +106,7 @@ export function createPartDrag({THREE, scene, camera, controls, canvas, parts, t
     canvas.style.cursor = 'grabbing';
     lastPointer = {x: event.clientX, y: event.clientY};
     update();
-  }, true);
+  }, {capture: true, signal: events.signal});
 
   canvas.addEventListener('pointermove', event => {
     if (event.pointerType === 'touch') return;
@@ -123,22 +124,23 @@ export function createPartDrag({THREE, scene, camera, controls, canvas, parts, t
     drag.part.object.position.copy(drag.part.home).addScaledVector(drag.part.axis, amount);
     onMove(drag.part, amount);
     update();
-  }, true);
+  }, {capture: true, signal: events.signal});
 
   for (const type of ['pointerup', 'pointercancel']) canvas.addEventListener(type, event => {
     if (!drag || event.pointerId !== drag.pointerId) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     finish(type === 'pointercancel');
-  }, true);
-  canvas.addEventListener('lostpointercapture', () => finish());
-  canvas.addEventListener('pointerleave', () => { if (!drag) hover(null); });
-  window.addEventListener('blur', () => { finish(); hover(null); });
+  }, {capture: true, signal: events.signal});
+  canvas.addEventListener('lostpointercapture', () => finish(), {signal: events.signal});
+  canvas.addEventListener('pointerleave', () => { if (!drag) hover(null); }, {signal: events.signal});
+  window.addEventListener('blur', () => { finish(); hover(null); }, {signal: events.signal});
   window.addEventListener('keydown', event => {
     if (event.key === 'Escape' && drag) { event.preventDefault(); finish(true); hover(null); }
-  });
+  }, {signal: events.signal});
   return {
     update,
+    dispose() { finish(); hover(null); events.abort(); scene.remove(arrow); for (const mesh of [arrow.line, arrow.cone]) { mesh.geometry.dispose(); mesh.material.dispose(); } },
     reset() { finish(); hover(null); },
     get activePart() { return drag?.part.id ?? null; },
     get hoveredPart() { return hovered?.id ?? null; }

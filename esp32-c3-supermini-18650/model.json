@@ -1,0 +1,1768 @@
+{
+  "$schema": "../model.schema.json",
+  "schemaVersion": 1,
+  "units": "mm",
+  "category": "Hộp điện tử",
+  "status": "Chưa in thử",
+  "thumbnail": "thumbnail.png",
+  "id": "esp32-c3-supermini-18650",
+  "title": "ESP32-C3 + 18650",
+  "description": "Pin tháo rời, hai nắp độc lập và nút bịt USB.",
+  "dimensions": [
+    60,
+    85.2,
+    27.2
+  ],
+  "camera": {
+    "position": [
+      145,
+      -196,
+      158
+    ],
+    "target": [
+      0,
+      0,
+      16
+    ],
+    "minDistance": 55,
+    "maxDistance": 550,
+    "views": [
+      {
+        "id": "front",
+        "label": "Trước",
+        "offset": [
+          0,
+          -285,
+          0.01
+        ]
+      },
+      {
+        "id": "top",
+        "label": "Trên",
+        "offset": [
+          0,
+          -0.01,
+          285
+        ]
+      }
+    ]
+  },
+  "grid": {
+    "size": 180,
+    "divisions": 36
+  },
+  "parts": [
+    {
+      "id": "base",
+      "label": "Thân",
+      "kind": "print",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "base.stl",
+          "color": "#367c85"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          -1
+        ],
+        "maxDistance": 60
+      }
+    },
+    {
+      "id": "batteryLid",
+      "label": "Nắp pin",
+      "kind": "print",
+      "position": [
+        -15.8,
+        0,
+        27.2
+      ],
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "battery_lid.stl",
+          "color": "#c9dba7"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 100
+      }
+    },
+    {
+      "id": "electronicsLid",
+      "label": "Nắp mạch",
+      "kind": "print",
+      "position": [
+        14.3,
+        0,
+        27.2
+      ],
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "electronics_lid.stl",
+          "color": "#ded4ba"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 100
+      }
+    },
+    {
+      "id": "usbCap",
+      "label": "Bịt USB",
+      "kind": "print",
+      "position": [
+        14,
+        -43.2,
+        18.3
+      ],
+      "rotation": [
+        -90,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "usb_cap.stl",
+          "color": "#e4ab64"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          -1,
+          0
+        ],
+        "maxDistance": 60
+      }
+    },
+    {
+      "id": "board",
+      "label": "ESP32",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/pcb.stl",
+          "color": "#214f55"
+        },
+        {
+          "src": "reference/usb.stl",
+          "color": "#c3cbd0"
+        },
+        {
+          "src": "reference/chip.stl",
+          "color": "#24343c"
+        },
+        {
+          "src": "reference/antenna.stl",
+          "color": "#d2bda0"
+        },
+        {
+          "src": "reference/header_-1.stl",
+          "color": "#27343c"
+        },
+        {
+          "src": "reference/pin_-1_0.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_-1_1.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_-1_2.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_-1_3.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_-1_4.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_-1_5.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_-1_6.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_-1_7.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/header_1.stl",
+          "color": "#27343c"
+        },
+        {
+          "src": "reference/pin_1_0.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_1_1.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_1_2.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_1_3.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_1_4.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_1_5.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_1_6.stl",
+          "color": "#c99b49"
+        },
+        {
+          "src": "reference/pin_1_7.stl",
+          "color": "#c99b49"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 90
+      }
+    },
+    {
+      "id": "cell",
+      "label": "Pin",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/cell.stl",
+          "color": "#87b483"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 90
+      }
+    },
+    {
+      "id": "holder",
+      "label": "Khay",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/holder.stl",
+          "color": "#303d46"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 90
+      }
+    },
+    {
+      "id": "converter",
+      "label": "Mạch nguồn",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/module_pcb.stl",
+          "color": "#27729a"
+        },
+        {
+          "src": "reference/inductor.stl",
+          "color": "#485760"
+        },
+        {
+          "src": "reference/regulator.stl",
+          "color": "#202c34"
+        },
+        {
+          "src": "reference/pad_5_1.stl",
+          "color": "#cba35e"
+        },
+        {
+          "src": "reference/pad_5_27.stl",
+          "color": "#cba35e"
+        },
+        {
+          "src": "reference/pad_23_1.stl",
+          "color": "#cba35e"
+        },
+        {
+          "src": "reference/pad_23_27.stl",
+          "color": "#cba35e"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 90
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "id": "case",
+      "label": "Vỏ hộp",
+      "kind": "case",
+      "followPart": "base",
+      "color": "#efb96e",
+      "labelWidth": 32,
+      "lines": [
+        {
+          "a": [
+            -30.0,
+            -50.0,
+            0
+          ],
+          "b": [
+            30.0,
+            -50.0,
+            0
+          ],
+          "anchorA": [
+            -30.0,
+            -42.0,
+            0
+          ],
+          "anchorB": [
+            30.0,
+            -42.0,
+            0
+          ],
+          "label": "60 mm · Rộng",
+          "labelOffset": [
+            0,
+            -4.8,
+            0
+          ]
+        },
+        {
+          "a": [
+            38.0,
+            -43.2,
+            0
+          ],
+          "b": [
+            38.0,
+            42.0,
+            0
+          ],
+          "anchorA": [
+            30.0,
+            -43.2,
+            0
+          ],
+          "anchorB": [
+            30.0,
+            42.0,
+            0
+          ],
+          "label": "85.2 mm · Dài",
+          "labelOffset": [
+            9.6,
+            0,
+            0
+          ]
+        },
+        {
+          "a": [
+            -38.0,
+            -42.0,
+            0
+          ],
+          "b": [
+            -38.0,
+            -42.0,
+            27.2
+          ],
+          "anchorA": [
+            -30.0,
+            -42.0,
+            0
+          ],
+          "anchorB": [
+            -30.0,
+            -42.0,
+            27.2
+          ],
+          "label": "27.2 mm · Cao vỏ",
+          "labelOffset": [
+            -11.2,
+            0,
+            0
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "whenHidden": "usbCap",
+          "lines": [
+            {
+              "a": [
+                -30.0,
+                -50.0,
+                0
+              ],
+              "b": [
+                30.0,
+                -50.0,
+                0
+              ],
+              "anchorA": [
+                -30.0,
+                -42.0,
+                0
+              ],
+              "anchorB": [
+                30.0,
+                -42.0,
+                0
+              ],
+              "label": "60 mm · Rộng",
+              "labelOffset": [
+                0,
+                -4.8,
+                0
+              ]
+            },
+            {
+              "a": [
+                38.0,
+                -42.0,
+                0
+              ],
+              "b": [
+                38.0,
+                42.0,
+                0
+              ],
+              "anchorA": [
+                30.0,
+                -42.0,
+                0
+              ],
+              "anchorB": [
+                30.0,
+                42.0,
+                0
+              ],
+              "label": "84 mm · Dài",
+              "labelOffset": [
+                9.6,
+                0,
+                0
+              ]
+            },
+            {
+              "a": [
+                -38.0,
+                -42.0,
+                0
+              ],
+              "b": [
+                -38.0,
+                -42.0,
+                27.2
+              ],
+              "anchorA": [
+                -30.0,
+                -42.0,
+                0
+              ],
+              "anchorB": [
+                -30.0,
+                -42.0,
+                27.2
+              ],
+              "label": "27.2 mm · Cao vỏ",
+              "labelOffset": [
+                -11.2,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "board",
+      "label": "PCB ESP32",
+      "kind": "component",
+      "followPart": "board",
+      "visibleWith": "board",
+      "color": "#83caff",
+      "labelWidth": 32,
+      "lines": [
+        {
+          "a": [
+            5.0,
+            -42.75,
+            13.6
+          ],
+          "b": [
+            23.0,
+            -42.75,
+            13.6
+          ],
+          "anchorA": [
+            5.0,
+            -37.75,
+            13.6
+          ],
+          "anchorB": [
+            23.0,
+            -37.75,
+            13.6
+          ],
+          "label": "18 mm · PCB rộng",
+          "labelOffset": [
+            0,
+            -5,
+            2
+          ]
+        },
+        {
+          "a": [
+            28.0,
+            -37.75,
+            13.6
+          ],
+          "b": [
+            28.0,
+            -15.25,
+            13.6
+          ],
+          "anchorA": [
+            23.0,
+            -37.75,
+            13.6
+          ],
+          "anchorB": [
+            23.0,
+            -15.25,
+            13.6
+          ],
+          "label": "22.5 mm · PCB dài",
+          "labelOffset": [
+            13,
+            0,
+            3
+          ]
+        },
+        {
+          "a": [
+            0.0,
+            -15.25,
+            12
+          ],
+          "b": [
+            0.0,
+            -15.25,
+            13.6
+          ],
+          "anchorA": [
+            5.0,
+            -15.25,
+            12
+          ],
+          "anchorB": [
+            5.0,
+            -15.25,
+            13.6
+          ],
+          "label": "1.6 mm · PCB dày",
+          "labelOffset": [
+            -14,
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "id": "holder",
+      "label": "Khay",
+      "kind": "component",
+      "followPart": "holder",
+      "visibleWith": "holder",
+      "color": "#83caff",
+      "labelWidth": 32,
+      "lines": [
+        {
+          "a": [
+            -27.5,
+            -42.5,
+            20.8
+          ],
+          "b": [
+            -5.5,
+            -42.5,
+            20.8
+          ],
+          "anchorA": [
+            -27.5,
+            -37.5,
+            20.8
+          ],
+          "anchorB": [
+            -5.5,
+            -37.5,
+            20.8
+          ],
+          "label": "22 mm · Khay rộng",
+          "labelOffset": [
+            0,
+            -5,
+            2
+          ]
+        },
+        {
+          "a": [
+            -0.5,
+            -37.5,
+            20.8
+          ],
+          "b": [
+            -0.5,
+            37.5,
+            20.8
+          ],
+          "anchorA": [
+            -5.5,
+            -37.5,
+            20.8
+          ],
+          "anchorB": [
+            -5.5,
+            37.5,
+            20.8
+          ],
+          "label": "75 mm · Khay dài",
+          "labelOffset": [
+            13,
+            0,
+            3
+          ]
+        },
+        {
+          "a": [
+            -32.5,
+            37.5,
+            2.8
+          ],
+          "b": [
+            -32.5,
+            37.5,
+            20.8
+          ],
+          "anchorA": [
+            -27.5,
+            37.5,
+            2.8
+          ],
+          "anchorB": [
+            -27.5,
+            37.5,
+            20.8
+          ],
+          "label": "18 mm · Khay cao",
+          "labelOffset": [
+            -14,
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "id": "converter",
+      "label": "Mạch nguồn",
+      "kind": "component",
+      "followPart": "converter",
+      "visibleWith": "converter",
+      "color": "#83caff",
+      "labelWidth": 32,
+      "lines": [
+        {
+          "a": [
+            2.0,
+            -8.0,
+            10.5
+          ],
+          "b": [
+            26.0,
+            -8.0,
+            10.5
+          ],
+          "anchorA": [
+            2.0,
+            -3.0,
+            10.5
+          ],
+          "anchorB": [
+            26.0,
+            -3.0,
+            10.5
+          ],
+          "label": "24 mm · Nguồn rộng",
+          "labelOffset": [
+            0,
+            -5,
+            2
+          ]
+        },
+        {
+          "a": [
+            31.0,
+            -3.0,
+            10.5
+          ],
+          "b": [
+            31.0,
+            31.0,
+            10.5
+          ],
+          "anchorA": [
+            26.0,
+            -3.0,
+            10.5
+          ],
+          "anchorB": [
+            26.0,
+            31.0,
+            10.5
+          ],
+          "label": "34 mm · Nguồn dài",
+          "labelOffset": [
+            13,
+            0,
+            3
+          ]
+        },
+        {
+          "a": [
+            -3.0,
+            31.0,
+            6
+          ],
+          "b": [
+            -3.0,
+            31.0,
+            10.5
+          ],
+          "anchorA": [
+            2.0,
+            31.0,
+            6
+          ],
+          "anchorB": [
+            2.0,
+            31.0,
+            10.5
+          ],
+          "label": "4.5 mm · Nguồn cao",
+          "labelOffset": [
+            -14,
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cell",
+      "label": "Pin",
+      "kind": "component",
+      "followPart": "cell",
+      "visibleWith": "cell",
+      "color": "#83caff",
+      "labelWidth": 32,
+      "lines": [
+        {
+          "a": [
+            -25.75,
+            -37.65,
+            22.35
+          ],
+          "b": [
+            -7.25,
+            -37.65,
+            22.35
+          ],
+          "anchorA": [
+            -25.75,
+            -32.65,
+            22.35
+          ],
+          "anchorB": [
+            -7.25,
+            -32.65,
+            22.35
+          ],
+          "label": "Ø18.5 mm · Pin",
+          "labelOffset": [
+            0,
+            -5,
+            2
+          ]
+        },
+        {
+          "a": [
+            -2.25,
+            -32.65,
+            22.35
+          ],
+          "b": [
+            -2.25,
+            32.65,
+            22.35
+          ],
+          "anchorA": [
+            -7.25,
+            -32.65,
+            22.35
+          ],
+          "anchorB": [
+            -7.25,
+            32.65,
+            22.35
+          ],
+          "label": "65.3 mm · Pin dài",
+          "labelOffset": [
+            13,
+            0,
+            3
+          ]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "id": "explode",
+      "label": "Mở hộp",
+      "duration": 10,
+      "openPose": {
+        "batteryLid": [
+          0,
+          0,
+          65
+        ],
+        "electronicsLid": [
+          0,
+          0,
+          65
+        ],
+        "board": [
+          0,
+          0,
+          24
+        ],
+        "converter": [
+          0,
+          0,
+          20
+        ],
+        "cell": [
+          0,
+          0,
+          27
+        ],
+        "usbCap": [
+          0,
+          -24,
+          0
+        ]
+      },
+      "tracks": [
+        {
+          "part": "batteryLid",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                65
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                0,
+                65
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "electronicsLid",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                65
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                0,
+                65
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "board",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                24
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                0,
+                24
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "converter",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                20
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                0,
+                20
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "cell",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                27
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                0,
+                27
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "usbCap",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                -24,
+                0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                -24,
+                0
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.08,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            25
+          ]
+        },
+        {
+          "time": 0.72,
+          "value": [
+            0,
+            0,
+            25
+          ]
+        },
+        {
+          "time": 0.97,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "measureReveal": [
+        0.34,
+        0.64
+      ]
+    },
+    {
+      "id": "battery",
+      "label": "Thay pin",
+      "duration": 10,
+      "openPose": {
+        "batteryLid": [
+          0,
+          0,
+          65
+        ],
+        "cell": [
+          0,
+          0,
+          40
+        ]
+      },
+      "tracks": [
+        {
+          "part": "batteryLid",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.256,
+              "value": [
+                0,
+                0,
+                65
+              ]
+            },
+            {
+              "time": 0.8325,
+              "value": [
+                0,
+                0,
+                65
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "cell",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.224,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                40
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                0,
+                40
+              ]
+            },
+            {
+              "time": 0.8575,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.08,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            25
+          ]
+        },
+        {
+          "time": 0.72,
+          "value": [
+            0,
+            0,
+            25
+          ]
+        },
+        {
+          "time": 0.97,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "measureReveal": [
+        0.34,
+        0.64
+      ]
+    },
+    {
+      "id": "usb",
+      "label": "Bịt USB",
+      "duration": 10,
+      "openPose": {
+        "usbCap": [
+          0,
+          -24,
+          0
+        ]
+      },
+      "tracks": [
+        {
+          "part": "usbCap",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                -24,
+                0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                -24,
+                0
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.08,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.72,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.97,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "measureReveal": [
+        0.34,
+        0.64
+      ]
+    }
+  ],
+  "downloads": {
+    "bundle": "esp32-c3-supermini-18650.zip",
+    "step": "enclosure.step"
+  },
+  "printInfo": {
+    "summary": "≈ 40–50 g PLA · chưa in thử",
+    "sections": [
+      {
+        "title": "Cấu hình in thử",
+        "rows": [
+          [
+            "Máy / vật liệu",
+            "Chọn đúng máy · nozzle 0,4 mm · PLA thường"
+          ],
+          [
+            "Layer / lớp đầu",
+            "0,16 / 0,20 mm"
+          ],
+          [
+            "Thành",
+            "Arachne · 3 wall loops"
+          ],
+          [
+            "Lớp đặc trên / dưới",
+            "5 / 5"
+          ],
+          [
+            "Infill",
+            "15% Gyroid"
+          ],
+          [
+            "Thành ngoài / cầu",
+            "60 / 25 mm/s"
+          ],
+          [
+            "Support / brim",
+            "Tắt ban đầu"
+          ],
+          [
+            "Scale / đơn vị",
+            "100% / mm"
+          ],
+          [
+            "Bù lỗ / biên XY",
+            "0 / 0 mm"
+          ],
+          [
+            "Nhiệt, quạt, flow, bù chân voi",
+            "Theo preset nhựa và bàn in"
+          ]
+        ],
+        "notes": [
+          "Arachne hỗ trợ gờ mỏng; kiểm tra đường nhựa sau khi Slice. Không scale hộp để chỉnh độ chặt ngàm.",
+          "Thân: đáy xuống bàn, miệng hướng lên.",
+          "Nắp và nút USB: mặt ngoài xuống bàn, phần gài hướng lên.",
+          "Xem cầu 8 mm ở cửa dây, Z ≈ 10 mm, và rãnh nắp pin rộng 1,2 mm, sâu 0,4 mm. Chỉ thêm support cục bộ nếu cầu thử bị võng.",
+          "Nếu nắp cong góc: thêm outer brim 3–5 mm."
+        ],
+        "links": [
+          {
+            "label": "Arachne",
+            "url": "https://wiki.bambulab.com/en/software/bambu-studio/wall-generator"
+          },
+          {
+            "label": "Bù chân voi",
+            "url": "https://wiki.bambulab.com/en/software/bambu-studio/parameter/elephant-foot"
+          }
+        ]
+      },
+      {
+        "title": "Nhựa & chi phí",
+        "rows": [
+          [
+            "Thân",
+            "34,6 g"
+          ],
+          [
+            "Nắp pin",
+            "6,0 g"
+          ],
+          [
+            "Nắp mạch",
+            "6,5 g"
+          ],
+          [
+            "Nút USB",
+            "0,8 g"
+          ],
+          [
+            "Tổng nếu in đặc",
+            "47,9 g"
+          ]
+        ],
+        "notes": [
+          "Tính từ thể tích CAD với PLA 1,24 g/cm³. Infill giảm phần ruột; brim và nhựa mồi cộng thêm.",
+          "Ví dụ cuộn 300.000đ/kg: khoảng 12.000–15.000đ/bộ, chưa tính điện và in lỗi. Bambu Studio cho số ước tính theo cấu hình sau khi Slice."
+        ],
+        "links": [
+          {
+            "label": "PLA 1,24 g/cm³",
+            "url": "https://store.bblcdn.com/s7/default/b189de92249a4b9ebed28b8ea1f080f0/Bambu_PLA_Basic_Technical_Data_Sheet.pdf"
+          }
+        ]
+      },
+      {
+        "title": "Độ vừa",
+        "rows": [],
+        "notes": [
+          "4 STL kín, mỗi file một khối.",
+          "Không cạnh/đỉnh lỗi, mặt tự giao, mặt trùng hoặc tam giác suy biến; hướng mặt nhất quán.",
+          "Thành/đáy 2 mm; nắp 1,8 mm; gờ nhỏ nhất 1 mm. Kiểm tra gờ và gân cài còn đủ trong Preview.",
+          "Mép cài nắp 1,2 mm, sâu 2,4 mm. Khe hở 0,2 mm mỗi bên; gân dôi 0,08 mm. In thử để chỉnh độ chặt.",
+          "Nút USB sâu 1,7 mm, cách cổng trên bo 1,05 mm theo model; không có gioăng kín nước.",
+          "Đo khay, pin và module thực trước khi in. Linh kiện trên bo là hình minh họa; chưa chừa giắc Dupont.",
+          "Khay và bo cần cố định thêm. Cửa dây 8 × 6 mm; chưa có rãnh hoặc kẹp dây."
+        ],
+        "links": []
+      }
+    ]
+  }
+}

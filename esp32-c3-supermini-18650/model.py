@@ -3,7 +3,6 @@
 All units mm. Run with CadQuery 2.8.0 and trimesh 5.1.1.
 Hardware envelopes are assumptions; see README before printing.
 """
-import base64
 import json
 from pathlib import Path
 
@@ -231,14 +230,10 @@ def export_and_verify():
         independent_lids_clear=True, continuous_battery_removal_clear=True, usb_12x6_clear=True,
         usb_cap_without_ribs_clear=True, continuous_usb_cap_withdrawal_clear=True,
         usb_cap_clears_board_socket=True, step_four_valid_solids=True)
-    # Reference meshes are embedded in the viewer and are not parts to print.
-    assets = []
+    reference_dir = OUT / "reference"
+    reference_dir.mkdir(exist_ok=True)
     for group, name, shape, color in refs:
-        path = OUT/f".reference-{name}.stl"
-        cq.exporters.export(shape, str(path), tolerance=.04, angularTolerance=.15)
-        assets.append({"group":group,"name":name,"color":color,"stl":base64.b64encode(path.read_bytes()).decode()})
-        path.unlink()
-    (OUT/"reference.json").write_text(json.dumps(assets,separators=(",",":")))
+        cq.exporters.export(shape, str(reference_dir / f"{name}.stl"), tolerance=.04, angularTolerance=.15)
     (OUT/"verification.json").write_text(json.dumps(report,indent=2)+"\n")
     print(json.dumps(report,indent=2))
 
