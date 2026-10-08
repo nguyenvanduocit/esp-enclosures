@@ -4,6 +4,14 @@ Thân hộp 60 × 84 × 27,2 mm cho bo đã hàn hai hàng chân hướng xuốn
 
 Mở `viewer.html` trực tiếp bằng trình duyệt có WebGL. File chạy offline, có xoay/zoom, animation mở–đóng và chế độ **Thay pin**. Các nút trên model ẩn từng nắp và nút bịt USB; menu **Đo linh kiện** chọn PCB, viên pin, khay hoặc mạch nguồn. Số đo vỏ luôn tính khi lắp kín, không cộng khoảng bóc tách. Chế độ **Mở/đóng nút bịt USB** chỉ di chuyển nút bịt; chế độ thay pin giữ nó tại chỗ.
 
+## Kéo từng chi tiết
+
+Rê chuột lên chi tiết để làm sáng nó và hiện mũi tên. Giữ chuột trái rồi kéo theo mũi tên để tháo, kéo ngược để lắp lại. Nắp, bo, khay và pin di chuyển theo trục đứng; nút bịt USB đi ra trước; thân hộp đi xuống. ESP32 và toàn bộ chân pin di chuyển cùng nhau.
+
+Kéo vùng trống hoặc giữ Alt khi kéo để xoay góc nhìn. Thả chuột giữ nguyên vị trí chi tiết; Esc hủy lượt kéo đang thực hiện. **Đóng hộp** hoặc **Đặt lại** đưa các phần về vị trí lắp. Khi kéo, animation tạm dừng; bấm **Phát** sau đó bắt đầu lại chu kỳ từ trạng thái đóng. Nếu nhìn thẳng dọc hướng tháo, kéo lên/xuống màn hình để di chuyển chi tiết theo trục đó. Cảm ứng giữ thao tác xoay/chụm để zoom.
+
+Đây là thao tác bóc tách minh họa, không mô phỏng va chạm trong lúc kéo. Số đo vỏ giữ kích thước lắp kín; số đo linh kiện đi theo linh kiện.
+
 ## Linh kiện và giả định
 
 | Linh kiện | Kích thước dùng trong CAD (mm) | Nguồn / độ chắc chắn |
@@ -35,7 +43,7 @@ Nút bịt USB che toàn bộ lỗ 14 × 14,2 mm ở mặt trước. Mặt ngoà
 - `usb_cap.stl`: nút bịt USB, mặt ngoài phẳng đặt trên bàn in, phần gài hướng lên; không cần in lại thân hoặc hai nắp.
 - `enclosure.step`: bốn chi tiết ở vị trí lắp kín; không chứa linh kiện tham khảo.
 - `model.py`: nguồn CAD; `reference.json` là mesh minh họa cho viewer, không phải chi tiết cần in.
-- `viewer-template.html`, `build_viewer.py`, `vendor/`: nguồn viewer offline; Three.js 0.169.0, MIT.
+- `viewer-template.html`, `part-drag.js`, `build_viewer.py`, `vendor/`: nguồn viewer offline; Three.js 0.169.0, MIT.
 
 ```sh
 uv run --python 3.12 --with cadquery==2.8.0 --with trimesh==5.1.1 python model.py
