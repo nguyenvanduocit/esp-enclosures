@@ -9,6 +9,7 @@ dependencies = [
     "scipy==1.18.1",
     "numpy==2.5.3",
     "jsonschema==4.23.0",
+    "manifold3d==3.5.4",
 ]
 
 [project.scripts]
