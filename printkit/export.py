@@ -67,7 +67,11 @@ def write_outputs(model, out):
     installed, poses, parts, printability = {}, {}, {}, {}
     for part in model.parts:
         if isinstance(part, PrintPart):
-            shape = single_solid(part.id, part.build())
+            try:
+                built = part.build()
+            except Exception as error:
+                raise ModelError(f'{part.id}: {type(error).__name__}: {error}') from error
+            shape = single_solid(part.id, built)
             installed[part.id] = shape
             path = out / f'{part.id}.stl'
             mesh = printable_mesh(part.id, rotated(shape, part.print_rotation), path)

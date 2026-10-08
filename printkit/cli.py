@@ -4,6 +4,7 @@ import importlib.util
 import json
 import os
 import re
+import shutil
 import struct
 import sys
 import zlib
@@ -14,7 +15,7 @@ from printkit import bundle
 from printkit.catalog import ROOT
 from printkit.export import ModelError, export
 
-ID_PATTERN = re.compile(r'^[a-z][a-z0-9-]*$')
+ID_PATTERN = re.compile(r'[a-z][a-z0-9-]*')
 TEMPLATE = '''"""{id}: describe the object here. Millimetres, Z up."""
 from printkit import Drag, Model, pulse
 from printkit.shapes import block
@@ -49,7 +50,7 @@ def placeholder_png():
 
 
 def scaffold(model_id):
-    if not ID_PATTERN.match(model_id):
+    if not ID_PATTERN.fullmatch(model_id):
         raise ValueError(f'invalid model id {model_id!r}: use lowercase letters, digits and hyphens')
     folder = ROOT / 'models' / model_id
     if folder.exists():
@@ -58,10 +59,15 @@ def scaffold(model_id):
     (folder / 'model.py').write_text(TEMPLATE.format(id=model_id))
     (folder / 'README.md').write_text(f'# {model_id}\n\nMở model trong [app chung](../../#model/{model_id}).\n')
     (folder / 'thumbnail.png').write_bytes(placeholder_png())
+    try:
+        cad(model_id)
+    except Exception:
+        shutil.rmtree(folder)
+        raise
     catalog = ROOT / 'models.json'
     paths = json.loads(catalog.read_text())
     catalog.write_text(json.dumps(paths + [f'models/{model_id}/model.json'], indent=2) + '\n')
-    print(f'{model_id}: scaffolded; next run `uv run printkit cad {model_id}`')
+    print(f'{model_id}: scaffolded and built; edit models/{model_id}/model.py, then run `uv run printkit cad {model_id}`')
 
 
 def load_model(path):
@@ -73,6 +79,8 @@ def load_model(path):
 
 def cad(model_id):
     folder = ROOT / 'models' / model_id
+    if not (folder / 'model.py').is_file():
+        raise ModelError(f'{folder / "model.py"} not found; create it with `printkit new {model_id}`')
     model = load_model(folder / 'model.py')
     if model.id != model_id:
         raise ModelError(f'{folder / "model.py"} declares id {model.id!r}, expected {model_id!r}')
