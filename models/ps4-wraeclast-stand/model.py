@@ -2022,7 +2022,10 @@ def step_solids():
 
 @model.check("model_json_poses_match")
 def poses_match():
-    """The viewer pose model.json gets maps each STL onto the CAD shape, for every part and copy."""
+    """Poses from printkit.pose, as export computes them, put each print mesh onto its CAD shape (bounds).
+
+    This guards the model's rotations (the multi-axis chain, the back-set copies); printkit's
+    own pose maths is covered by tests/test_export.py against the written model.json and STL."""
     poses, drift = {}, {}
     for name, (translation, _) in print_meshes().items():
         poses[name] = installed_pose(PRINT_ROTATION.get(name, (0, 0, 0)), translation)

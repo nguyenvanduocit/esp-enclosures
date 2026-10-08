@@ -215,11 +215,11 @@ def test_failed_slice_writes_nothing(tmp_path):
     assert list(tmp_path.iterdir()) == []
 
 
-def art_demo(coupon=True, copy_core=True):
+def art_demo(coupon=True):
     """demo() plus a Manifold part with a core, a copy of it, and a print-only coupon."""
     model = demo()
 
-    @model.part('stone', 'Đá', color='#8a8a80', core=lambda: block(6, 6, 6, x=30) if copy_core else None)
+    @model.part('stone', 'Đá', color='#8a8a80', core=lambda: block(6, 6, 6, x=30))
     def stone():
         return art.erode(art.box((27, -3, 0), (33, 3, 6)), seed=5, amplitude=0.5)
 
@@ -289,3 +289,21 @@ def test_oblique_drag_survives_six_decimal_rounding(tmp_path):
     model.animations[0]['openPose']['tilted'] = [65 * a for a in axis]
     manifest, _ = export(model, tmp_path, '../../model.schema.json')
     assert next(part for part in manifest['parts'] if part['id'] == 'tilted')['drag']['axis'] == [0.34202, 0.0, 0.939693]
+
+
+def test_written_poses_place_oblique_mesh_parts_and_copies(tmp_path):
+    """Read model.json and the STL back, apply the three.js pose, and land on the installed shape."""
+    model = demo()
+    rod = art.box((0, 0, 0), (30, 4, 2)).transform(
+        np.hstack([euler_xyz_matrix((-90, 45, 90)), np.array([[40.0], [5.0], [20.0]])]))
+    model.part('rod', 'Thanh', color='#3d3d42', print_rotation=(45, -90, 0), core=lambda: block(1, 1, 1, x=40, z=20))(
+        lambda: rod)
+    copy = model.copy('rodBack', 'Thanh sau', of='rod', rotation=(0, 0, 180))
+    manifest, _ = export(model, tmp_path, '../../model.schema.json')
+    import trimesh
+    stl = trimesh.load_mesh(tmp_path / 'rod.stl')
+    for part_id, shape in (('rod', rod), ('rodBack', copy())):
+        pose = next(part for part in manifest['parts'] if part['id'] == part_id)
+        world = stl.vertices @ euler_xyz_matrix(pose['rotation']).T + np.array(pose['position'])
+        expected = np.asarray(shape.to_mesh().vert_properties)[:, :3]
+        assert np.allclose(np.sort(world, axis=0), np.sort(expected, axis=0), atol=1e-4)

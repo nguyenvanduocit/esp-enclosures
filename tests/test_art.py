@@ -73,3 +73,9 @@ def test_canonical_mesh_ignores_input_order():
     first, second = art.canonical_mesh(plate), art.canonical_mesh(shuffled)
     assert np.array_equal(first[0], second[0]) and np.array_equal(first[1], second[1])
     assert first[2] == 0
+
+
+def test_erode_stays_inside_a_curved_shape():
+    sphere = art.level_set(lambda p: art.length(p[0], p[1], p[2] - 10) - 8, (-9, -9, 1, 9, 9, 19), 0.5)
+    eroded = art.erode(sphere, seed=7, amplitude=1.0)
+    assert (eroded - sphere).volume() < 0.05 and eroded.volume() < sphere.volume() - 1
