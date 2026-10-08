@@ -101,3 +101,32 @@ def test_invalid_solid_is_rejected(tmp_path):
     with pytest.raises(ModelError, match='split'):
         export(model, tmp_path, '../model.schema.json')
     assert list(tmp_path.iterdir()) == []
+
+
+def test_non_check_errors_are_reported_with_check_name(tmp_path):
+    model = demo()
+
+    @model.check('Broken lookup')
+    def broken():
+        raise KeyError('x')
+
+    @model.check('Second failure')
+    def second():
+        raise CheckFailed('also bad')
+
+    with pytest.raises(ModelError) as error:
+        export(model, tmp_path, '../model.schema.json')
+    message = str(error.value)
+    assert 'Broken lookup: KeyError' in message
+    assert 'Second failure: also bad' in message
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_export_replaces_existing_files_and_reference_dir(tmp_path):
+    export(demo(), tmp_path, '../model.schema.json')
+    (tmp_path / 'base.stl').write_bytes(b'old')
+    (tmp_path / 'reference').mkdir()
+    (tmp_path / 'reference' / 'stale.stl').write_bytes(b'old')
+    export(demo(), tmp_path, '../model.schema.json')
+    assert (tmp_path / 'base.stl').read_bytes() != b'old'
+    assert not (tmp_path / 'reference').exists()

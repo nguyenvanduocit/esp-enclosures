@@ -1,5 +1,6 @@
 """Build a declared model, verify it, and replace its generated files atomically."""
 import json
+import os
 import shutil
 import tempfile
 from pathlib import Path
@@ -43,6 +44,8 @@ def run_checks(model):
             results[name] = check() or True
         except CheckFailed as error:
             failures.append(f'{name}: {error}')
+        except Exception as error:
+            failures.append(f'{name}: {type(error).__name__}: {error}')
     if failures:
         raise ModelError('Checks failed:\n' + '\n'.join(failures))
     return results
@@ -88,18 +91,31 @@ def write_assembly(model, installed, out):
 
 
 def replace_generated(folder, out):
+    """Swap `out` into `folder` file by file (os.replace; `out` shares the folder's filesystem),
+    then delete generated files the new set no longer contains."""
     folder.mkdir(parents=True, exist_ok=True)
+    fresh = {path.name for path in out.iterdir()}
+    for path in out.iterdir():
+        if path.is_dir():
+            shutil.rmtree(folder / path.name, ignore_errors=True)
+        os.replace(path, folder / path.name)
     for pattern in GENERATED:
         for path in folder.glob(pattern):
-            path.unlink()
-    shutil.rmtree(folder / 'reference', ignore_errors=True)
-    for path in out.iterdir():
-        shutil.move(str(path), folder / path.name)
+            if path.name not in fresh:
+                path.unlink()
+    if 'reference' not in fresh:
+        shutil.rmtree(folder / 'reference', ignore_errors=True)
 
 
 def export(model, folder, schema_ref):
-    """Write all generated files for `model` into `folder`; on any failure nothing changes."""
-    with tempfile.TemporaryDirectory() as scratch:
+    """Write all generated files for `model` into `folder`.
+
+    Build, check and validation steps run in a scratch directory beside `folder`; if any of them
+    fails, `folder` is left untouched (and is not created). Only after all pass does the replace
+    step swap the new files in one by one."""
+    folder = Path(folder)
+    folder.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=folder.parent) as scratch:
         out = Path(scratch)
         installed, poses, parts = write_outputs(model, out)
         report = {'units': 'mm', 'dimensions': model.info['dimensions'], 'parts': parts,
@@ -108,5 +124,5 @@ def export(model, folder, schema_ref):
         manifest = validate_data(render(model, poses, schema_ref))
         (out / 'model.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
         (out / 'verification.json').write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n')
-        replace_generated(Path(folder), out)
+        replace_generated(folder, out)
     return manifest, report
