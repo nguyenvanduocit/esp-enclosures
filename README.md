@@ -22,12 +22,15 @@ Các file khác trong `models/<id>/` là file sinh ra (`*.stl`, `reference/`, `a
 ```sh
 uv run printkit new <id>     # tạo models/<id>/ từ mẫu chạy được, dựng luôn, rồi thêm vào models.json
 uv run printkit cad <id>     # dựng CAD, chạy kiểm tra, ghi STL/STEP/model.json/verification.json
+uv run printkit slice <id>   # như cad, rồi slice tất cả chi tiết in trên một bàn P1S bằng Bambu Studio
 uv run printkit build        # kiểm tra mọi model, gắn phiên bản JS/CSS, đóng gói ZIP offline
 uv run pytest && node --test tests/*.test.js
 python3 -m http.server 8000  # mở http://localhost:8000
 ```
 
 `cad` chỉ ghi file khi mọi bước đều qua: BRep hợp lệ và một khối, STL kín, mọi `@model.check` không va chạm, `max_overhang_mm2` (nếu khai báo) không bị vượt, STEP đọc lại đúng số khối. Lỗi thì giữ nguyên file cũ. Khi ghi, `cad` chỉ xóa file mà lần chạy trước đã sinh ra (theo `model.json` cũ); file khác trong thư mục model được giữ nguyên.
+
+`slice` ghi thêm `print/<id>.gcode.3mf` (mở trong Bambu Studio, gửi thẳng sang P1S) và `print/layers.json` (đường chạy đầu in từng lớp cho viewer), cùng khối `print` và mục **Kết quả slice** trong `model.json` với khối lượng nhựa và thời gian thật. `cad` chạy riêng sẽ xóa `print/` của lần slice trước vì nó không còn khớp hình học. Cần cài Bambu Studio: `brew install --cask bambu-studio`.
 
 `cad` in cảnh báo hướng in ra stderr, dạng `warning: lid: set print_rotation to (0, 0, 180) …`: giá trị gợi ý là `print_rotation` tuyệt đối, dán thẳng vào `model.py`. Cùng thông tin nằm trong `verification.json`: khối `printability` (mỗi chi tiết có `overhang_mm2`, `bridges`, xếp hạng 6 hướng in `orientations`) và danh sách `warnings`.
 
@@ -68,5 +71,7 @@ def screw_clear():
 | `model.check` | Ném `CheckFailed` khi sai; trả về dict để ghi số đo vào `verification.json` |
 
 `Drag(axis, max_distance)`: `axis` là vector đơn vị trong hệ tọa độ thế giới; `max_distance` là khoảng kéo tối đa. Đường đo khai báo ở tư thế lắp kín; `follow` chỉ dịch chuyển đường đo cùng chi tiết; `variants` chọn bộ đường đo khác khi một chi tiết bị ẩn. Chưa mô phỏng va chạm khi kéo và chưa kiểm chứng độ vừa bằng bản in thật.
+
+`Print(layer, first_layer, walls, infill=(mật độ %, kiểu), supports, brim='auto'|0|mm, filament='PLA', extra={khóa Bambu Studio: giá trị})` khai báo cấu hình slice chung cho cả bàn in, truyền vào `Model(..., print=Print(...))`; `extra` nhận khóa process thô của Bambu Studio. `slice` báo lỗi nếu Bambu Studio không áp dụng đúng một thiết lập. Số liệu từng chi tiết trong **Kết quả slice** tính cho việc in riêng chi tiết đó nên không cộng lại thành số của cả bàn in.
 
 ZIP offline chứa cả `model.py` để đọc; chạy lại nó cần bộ công cụ `printkit` trong repo này (không nằm trong ZIP).

@@ -28,6 +28,8 @@ def offline_html(manifest, model):
         local_file(folder, model["thumbnail"]),
         local_file(folder, model["downloads"]["step"]),
     ]
+    if "print" in model:
+        paths += [local_file(folder, model["print"]["project"]), local_file(folder, model["print"]["layers"])]
     paths += [
         local_file(folder, mesh["src"])
         for part in model["parts"]

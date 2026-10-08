@@ -1,3 +1,5 @@
 *.stl binary
 *.step binary
 viewer/vendor/* linguist-vendored=true
+*.3mf binary
+models/*/print/layers.json -diff linguist-generated

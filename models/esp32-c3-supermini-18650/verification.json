@@ -388,5 +388,35 @@
       ]
     }
   },
-  "warnings": []
+  "warnings": [],
+  "print": {
+    "project": "print/esp32-c3-supermini-18650.gcode.3mf",
+    "layers": "print/layers.json",
+    "slicer": "Bambu Studio 02.08.02.61",
+    "seconds": 5902,
+    "grams": 46.97,
+    "layerCount": 158,
+    "parts": [
+      {
+        "id": "base",
+        "seconds": 4510,
+        "grams": 33.84
+      },
+      {
+        "id": "batteryLid",
+        "seconds": 656,
+        "grams": 6.07
+      },
+      {
+        "id": "electronicsLid",
+        "seconds": 702,
+        "grams": 6.51
+      },
+      {
+        "id": "usbCap",
+        "seconds": 163,
+        "grams": 0.82
+      }
+    ]
+  }
 }

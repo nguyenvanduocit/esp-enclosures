@@ -102,6 +102,35 @@ def print_rows(settings):
     return rows
 
 
+def duration_vn(seconds):
+    hours, minutes = divmod(round(seconds / 60), 60)
+    return f"{hours} giờ {minutes} phút" if hours else f"{minutes} phút"
+
+
+def grams_vn(grams):
+    return f"{vn(round(grams, 1))} g"
+
+
+def slice_section(model, sliced):
+    """Per-part rows are each part printed alone, so they do not sum to the plate row."""
+    labels = {part.id: part.label for part in model.parts}
+    rows = [
+        [f"{labels[item['id']]} (in riêng)", f"{grams_vn(item['grams'])} · {duration_vn(item['seconds'])}"]
+        for item in sliced["parts"]
+    ]
+    rows.append(["Cả bàn in", f"{grams_vn(sliced['grams'])} · {duration_vn(sliced['seconds'])} · {sliced['layerCount']} lớp"])
+    return {
+        "title": "Kết quả slice",
+        "rows": rows,
+        "notes": [
+            f"{sliced['slicer']} với cấu hình ở trên. Số liệu từng chi tiết tính cho việc in riêng chi tiết đó "
+            "(mỗi lần gồm nhựa và thời gian mồi/kết thúc), nên không cộng lại thành số của cả bàn in.",
+            "Mở file .gcode.3mf trong Bambu Studio để xem preview hoặc gửi sang máy in.",
+        ],
+        "links": [],
+    }
+
+
 def dim(anchor_a, anchor_b, offset, name, label_offset=(0, 0, 0), prefix=""):
     """Measurement line drawn `offset` away from the two anchor points it measures."""
     length = math.dist(anchor_a, anchor_b)
@@ -270,7 +299,7 @@ def _meshes(part):
     ]
 
 
-def render(model, poses, schema_ref):
+def render(model, poses, schema_ref, sliced=None):
     parts = []
     for part in model.parts:
         position, rotation = poses.get(part.id, ([0, 0, 0], [0, 0, 0]))
@@ -289,16 +318,18 @@ def render(model, poses, schema_ref):
             }
         parts.append(item)
     declared = model.info["printInfo"]
-    info = {
-        **model.info,
-        "printInfo": {
-            "summary": declared["summary"],
-            "sections": [
-                {"title": "Cấu hình in", "rows": print_rows(model.print_settings), "notes": [], "links": []},
-                *declared["sections"],
-            ],
-        },
-    }
+    summary = declared["summary"]
+    sections = [
+        {"title": "Cấu hình in", "rows": print_rows(model.print_settings), "notes": [], "links": []},
+        *declared["sections"],
+    ]
+    if sliced:
+        summary = (
+            f"{grams_vn(sliced['grams'])} {model.print_settings.filament} · "
+            f"{duration_vn(sliced['seconds'])} · Bambu P1S"
+        )
+        sections.append(slice_section(model, sliced))
+    info = {**model.info, "printInfo": {"summary": summary, "sections": sections}}
     return clean(
         {
             "$schema": schema_ref,
@@ -310,5 +341,6 @@ def render(model, poses, schema_ref):
             "measurements": model.measurements,
             "animations": model.animations,
             "downloads": {"bundle": f"{model.id}.zip", "step": "assembly.step"},
+            **({"print": sliced} if sliced else {}),
         }
     )

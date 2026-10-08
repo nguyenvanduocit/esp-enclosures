@@ -43,10 +43,11 @@ Nút bịt USB che toàn bộ lỗ 14 × 14,2 mm ở mặt trước. Mặt ngoà
 - `usbCap.stl`: nút bịt USB, mặt ngoài phẳng đặt trên bàn in, phần gài hướng lên; không cần in lại thân hoặc hai nắp.
 - `assembly.step`: bốn chi tiết ở vị trí lắp kín; không chứa linh kiện tham khảo.
 - `model.py`: nguồn duy nhất; `reference/` chứa mesh minh họa cho viewer, không phải chi tiết cần in.
+- `print/esp32-c3-supermini-18650.gcode.3mf`: bàn in bốn chi tiết đã slice, mở trong Bambu Studio và gửi thẳng sang P1S. `print/layers.json` là đường chạy đầu in cho viewer.
 - `model.json`, `verification.json`: sinh ra từ `model.py`, không sửa tay. `model.json` theo [schema chung](../../model.schema.json); viewer dùng nguồn chung ở `../../viewer/`.
 
 ```sh
-uv run printkit cad esp32-c3-supermini-18650
+uv run printkit slice esp32-c3-supermini-18650
 uv run printkit build
 ```
 

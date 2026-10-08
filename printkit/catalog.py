@@ -44,6 +44,10 @@ def validate_data(model):
         for mesh in part["meshes"]:
             if "src" not in mesh and any(size <= 0 for size in mesh["size"]):
                 raise ValueError("Primitive sizes must be positive")
+    if "print" in model:
+        printed = {part["id"] for part in model["parts"] if part["kind"] == "print"}
+        if {item["id"] for item in model["print"]["parts"]} - printed:
+            raise ValueError("Print stats reference a part that is not printed")
     for measure in model["measurements"]:
         refs = [
             measure["followPart"],
@@ -106,7 +110,10 @@ def validate_data(model):
 
 
 def validate_files(model, folder):
-    for path in [model["thumbnail"], model["downloads"]["step"]]:
+    paths = [model["thumbnail"], model["downloads"]["step"]]
+    if "print" in model:
+        paths += [model["print"]["project"], model["print"]["layers"]]
+    for path in paths:
         local_file(folder, path)
     for part in model["parts"]:
         for mesh in part["meshes"]:

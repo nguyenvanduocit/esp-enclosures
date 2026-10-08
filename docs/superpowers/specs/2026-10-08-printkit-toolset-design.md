@@ -231,8 +231,11 @@ Phases run in order; each starts only after the previous one meets its acceptanc
 - Collision simulation while dragging in the viewer.
 - Renaming the GitHub repository (owner action).
 
-## Deviations recorded during P1/P2
+## Deviations recorded during implementation
 
 - `checks.sweep` is not implemented: sweeps are built inside the models; add it when a third model needs it.
 - The 18650 cell stays in its model; it moves to the library when a second model uses it.
 - `esp-enclosures` URL references in `index.html`, `model.schema.json` and `README.md` stay until the owner renames the GitHub repository.
+- Presets are flattened from the installed Bambu Studio at slice time instead of exported files under `printers/` (spike: system presets passed directly are silently ignored).
+- `printkit slice` runs CAD and slicing in one atomic run and `printkit cad` alone removes print outputs, so model.json has one writer and never shows toolpaths for outdated geometry.
+- Per-part `supports` overrides are not implemented (a one-plate CLI slice cannot apply per-object settings).

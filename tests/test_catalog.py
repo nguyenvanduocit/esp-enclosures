@@ -128,3 +128,19 @@ def test_catalog_errors_start_with_manifest_path(broken_catalog, change):
     message = str(error.value)
     assert message.startswith("models/esp32-c3-supermini-18650/model.json: ")
     assert len(message) < 300
+
+
+def test_print_block_parts_must_be_print_parts(battery_model):
+    model, folder = battery_model
+    model['print'] = {'project': 'base.stl', 'layers': 'base.stl', 'slicer': 'Bambu Studio x', 'seconds': 1,
+                      'grams': 1, 'layerCount': 1, 'parts': [{'id': 'board', 'seconds': 1, 'grams': 1}]}
+    with pytest.raises(ValueError, match='Print stats'):
+        validate_model(model, folder)
+
+
+def test_print_files_must_exist(battery_model):
+    model, folder = battery_model
+    model['print'] = {'project': 'print/missing.gcode.3mf', 'layers': 'print/layers.json', 'slicer': 'Bambu Studio x',
+                      'seconds': 1, 'grams': 1, 'layerCount': 1, 'parts': []}
+    with pytest.raises(ValueError, match='Missing or invalid asset'):
+        validate_model(model, folder)

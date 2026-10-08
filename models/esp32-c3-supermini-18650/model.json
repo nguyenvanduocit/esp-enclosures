@@ -51,7 +51,7 @@
     "divisions": 36
   },
   "printInfo": {
-    "summary": "≈ 40–50 g PLA · chưa in thử",
+    "summary": "47 g PLA · 1 giờ 38 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -126,41 +126,6 @@
         ]
       },
       {
-        "title": "Nhựa & chi phí",
-        "rows": [
-          [
-            "Thân",
-            "34,6 g"
-          ],
-          [
-            "Nắp pin",
-            "6,0 g"
-          ],
-          [
-            "Nắp mạch",
-            "6,5 g"
-          ],
-          [
-            "Nút USB",
-            "0,8 g"
-          ],
-          [
-            "Tổng nếu in đặc",
-            "47,9 g"
-          ]
-        ],
-        "notes": [
-          "Tính từ thể tích CAD với PLA 1,24 g/cm³. Infill giảm phần ruột; brim và nhựa mồi cộng thêm.",
-          "Ví dụ cuộn 300.000đ/kg: khoảng 12.000–15.000đ/bộ, chưa tính điện và in lỗi. Bambu Studio cho số ước tính theo cấu hình sau khi Slice."
-        ],
-        "links": [
-          {
-            "label": "PLA 1,24 g/cm³",
-            "url": "https://store.bblcdn.com/s7/default/b189de92249a4b9ebed28b8ea1f080f0/Bambu_PLA_Basic_Technical_Data_Sheet.pdf"
-          }
-        ]
-      },
-      {
         "title": "Độ vừa",
         "rows": [],
         "notes": [
@@ -171,6 +136,36 @@
           "Nút USB sâu 1,7 mm, cách cổng trên bo 1,05 mm theo model; không có gioăng kín nước.",
           "Đo khay, pin và module thực trước khi in. Linh kiện trên bo là hình minh họa; chưa chừa giắc Dupont.",
           "Khay và bo cần cố định thêm. Cửa dây 8 × 6 mm; chưa có rãnh hoặc kẹp dây."
+        ],
+        "links": []
+      },
+      {
+        "title": "Kết quả slice",
+        "rows": [
+          [
+            "Thân (in riêng)",
+            "33,8 g · 1 giờ 15 phút"
+          ],
+          [
+            "Nắp pin (in riêng)",
+            "6,1 g · 11 phút"
+          ],
+          [
+            "Nắp mạch (in riêng)",
+            "6,5 g · 12 phút"
+          ],
+          [
+            "Bịt USB (in riêng)",
+            "0,8 g · 3 phút"
+          ],
+          [
+            "Cả bàn in",
+            "47 g · 1 giờ 38 phút · 158 lớp"
+          ]
+        ],
+        "notes": [
+          "Bambu Studio 02.08.02.61 với cấu hình ở trên. Số liệu từng chi tiết tính cho việc in riêng chi tiết đó (mỗi lần gồm nhựa và thời gian mồi/kết thúc), nên không cộng lại thành số của cả bàn in.",
+          "Mở file .gcode.3mf trong Bambu Studio để xem preview hoặc gửi sang máy in."
         ],
         "links": []
       }
@@ -2064,5 +2059,35 @@
   "downloads": {
     "bundle": "esp32-c3-supermini-18650.zip",
     "step": "assembly.step"
+  },
+  "print": {
+    "project": "print/esp32-c3-supermini-18650.gcode.3mf",
+    "layers": "print/layers.json",
+    "slicer": "Bambu Studio 02.08.02.61",
+    "seconds": 5902,
+    "grams": 46.97,
+    "layerCount": 158,
+    "parts": [
+      {
+        "id": "base",
+        "seconds": 4510,
+        "grams": 33.84
+      },
+      {
+        "id": "batteryLid",
+        "seconds": 656,
+        "grams": 6.07
+      },
+      {
+        "id": "electronicsLid",
+        "seconds": 702,
+        "grams": 6.51
+      },
+      {
+        "id": "usbCap",
+        "seconds": 163,
+        "grams": 0.82
+      }
+    ]
   }
 }

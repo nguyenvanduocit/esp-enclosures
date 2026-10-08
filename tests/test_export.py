@@ -179,3 +179,36 @@ def test_orientation_warning_is_absolute_print_rotation(tmp_path):
     _, report = export(demo(), tmp_path, '../../model.schema.json')
     assert report['printability']['lid']['warning'].startswith('set print_rotation to (0, 0, 180)')
     assert report['warnings'][0].startswith('lid: set print_rotation to (0, 0, 180)')
+
+
+def fake_slicer(model, out):
+    (out / 'print').mkdir()
+    (out / 'print' / f'{model.id}.gcode.3mf').write_bytes(b'PK')
+    (out / 'print' / 'layers.json').write_text('{}')
+    return {'project': f'print/{model.id}.gcode.3mf', 'layers': 'print/layers.json', 'slicer': 'Bambu Studio test',
+            'seconds': 60, 'grams': 1.5, 'layerCount': 3,
+            'parts': [{'id': part.id, 'seconds': 30, 'grams': 0.75} for part in model.parts if hasattr(part, 'build')]}
+
+
+def test_slice_writes_print_block_and_files(tmp_path):
+    manifest, _ = export(demo(), tmp_path, '../../model.schema.json', slicer=fake_slicer)
+    assert manifest['print']['project'] == 'print/demo.gcode.3mf'
+    assert (tmp_path / 'print' / 'demo.gcode.3mf').exists() and (tmp_path / 'print' / 'layers.json').exists()
+
+
+def test_cad_after_slice_removes_print_outputs(tmp_path):
+    export(demo(), tmp_path, '../../model.schema.json', slicer=fake_slicer)
+    manifest, _ = export(demo(), tmp_path, '../../model.schema.json')
+    assert 'print' not in manifest
+    assert not (tmp_path / 'print').exists()
+
+
+def test_failed_slice_writes_nothing(tmp_path):
+    from printkit.slicer import SliceError
+
+    def broken(model, out):
+        raise SliceError('Bambu Studio exited 239: process not compatible')
+
+    with pytest.raises(SliceError, match='239'):
+        export(demo(), tmp_path, '../../model.schema.json', slicer=broken)
+    assert list(tmp_path.iterdir()) == []

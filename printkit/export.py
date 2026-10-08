@@ -116,6 +116,8 @@ def previous_outputs(folder):
         manifest = json.loads((folder / 'model.json').read_text())
         sources = [mesh['src'] for part in manifest['parts'] for mesh in part['meshes'] if 'src' in mesh]
         names = {'model.json', 'verification.json', manifest['downloads']['step'], *sources}
+        if 'print' in manifest:
+            names |= {manifest['print']['project'], manifest['print']['layers']}
     except (OSError, ValueError, KeyError, TypeError):
         return set()
     root = folder.resolve()
@@ -139,12 +141,15 @@ def replace_generated(folder, out):
             stale.parent.rmdir()
 
 
-def export(model, folder, schema_ref):
+def export(model, folder, schema_ref, slicer=None):
     """Write all generated files for `model` into `folder`.
 
     Build, check and validation steps run in a scratch directory beside `folder`; if any of them
     fails, `folder` is left untouched (and is not created). Only after all pass does the replace
-    step swap the new files in one by one."""
+    step swap the new files in one by one.
+
+    `slicer(model, out)` writes into `out/print/` and returns the model.json `print` block; without
+    it, print files from an earlier run are removed as stale."""
     folder = Path(folder)
     folder.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=folder.parent) as scratch:
@@ -154,7 +159,10 @@ def export(model, folder, schema_ref):
         report = {'units': 'mm', 'dimensions': model.info['dimensions'], 'parts': parts,
                   'checks': run_checks(model), 'printability': printability, 'warnings': warnings}
         write_assembly(model, installed, out)
-        manifest = validate_data(render(model, poses, schema_ref))
+        sliced = slicer(model, out) if slicer else None
+        if sliced:
+            report['print'] = sliced
+        manifest = validate_data(render(model, poses, schema_ref, sliced))
         (out / 'model.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
         (out / 'verification.json').write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n')
         replace_generated(folder, out)

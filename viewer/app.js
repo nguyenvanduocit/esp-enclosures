@@ -87,6 +87,8 @@ function renderControls(model, folder) {
   setDownload($('bundleDownload'), folder + model.downloads.bundle, 'application/zip');
   $('bundleDownload').hidden = !!window.offlineAssets;
   setDownload($('stepDownload'), folder + model.downloads.step, 'application/step');
+  $('projectDownload').hidden = !model.print;
+  if (model.print) setDownload($('projectDownload'), folder + model.print.project, 'application/vnd.ms-package.3dmanufacturing-3dmodel+xml');
   $('printSummary').textContent = model.printInfo.summary;
   $('printSections').replaceChildren();
   for (const section of model.printInfo.sections) {

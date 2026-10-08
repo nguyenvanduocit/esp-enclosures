@@ -222,3 +222,26 @@ def test_render_puts_print_settings_first():
     )
     sections = render(model, {}, "../../model.schema.json")["printInfo"]["sections"]
     assert sections[0]["title"] == "Cấu hình in" and sections[0]["rows"] == print_rows(Print())
+
+
+SLICED = {'project': 'print/demo.gcode.3mf', 'layers': 'print/layers.json', 'slicer': 'Bambu Studio 02.08.02.61',
+          'seconds': 3881, 'grams': 46.08, 'layerCount': 158, 'parts': [{'id': 'body', 'seconds': 2405, 'grams': 34.6}]}
+
+
+def test_render_sliced_summary_and_section():
+    model = make_model()
+
+    @model.part('body', 'Thân', color='#367c85')
+    def body():
+        return None
+
+    model.animation('open', 'Mở', duration=1, open_pose={'body': (0, 0, 1)},
+                    tracks={'body': [(0, (0, 0, 0)), (1, (0, 0, 0))]},
+                    camera=[(0, (0, 0, 0)), (1, (0, 0, 0))], measure_reveal=(0.3, 0.6))
+    data = render(model, {}, '../../model.schema.json', SLICED)
+    assert data['print'] == SLICED
+    assert data['printInfo']['summary'] == '46,1 g PLA · 1 giờ 5 phút · Bambu P1S'
+    section = data['printInfo']['sections'][-1]
+    assert section['title'] == 'Kết quả slice'
+    assert section['rows'] == [['Thân (in riêng)', '34,6 g · 40 phút'], ['Cả bàn in', '46,1 g · 1 giờ 5 phút · 158 lớp']]
+    assert 'print' not in render(model, {}, '../../model.schema.json')

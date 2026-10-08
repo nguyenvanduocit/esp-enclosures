@@ -139,6 +139,33 @@
       ],
       "additionalProperties": false
     },
+    "print": {
+      "type": "object",
+      "description": "Bambu Studio slice of all print parts on one plate.",
+      "properties": {
+        "project": {"$ref": "#/$defs/path"},
+        "layers": {"$ref": "#/$defs/path"},
+        "slicer": {"type": "string", "minLength": 1},
+        "seconds": {"type": "number", "minimum": 0},
+        "grams": {"type": "number", "exclusiveMinimum": 0},
+        "layerCount": {"type": "integer", "minimum": 1},
+        "parts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"$ref": "#/$defs/id"},
+              "seconds": {"type": "number", "minimum": 0},
+              "grams": {"type": "number", "exclusiveMinimum": 0}
+            },
+            "required": ["id", "seconds", "grams"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["project", "layers", "slicer", "seconds", "grams", "layerCount", "parts"],
+      "additionalProperties": false
+    },
     "printInfo": {
       "type": "object",
       "properties": {
