@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1c1e20">
 <title>Bàn in</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23232527'/%3E%3Cpath d='m16 5 10 6v11l-10 5-10-5V11zM6 11l10 6 10-6M16 17v10' fill='none' stroke='%23b7cebf' stroke-width='1.5'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="viewer/style.css?v=07bd27e814a1">
+<link rel="stylesheet" href="viewer/style.css?v=019cd95619b9">
 </head>
 <body>
 <section id="gallery" class="gallery">
@@ -35,6 +35,16 @@
 </div></details>
 <details class="menu" id="measureMenu"><summary><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="m3 15 12-12 6 6-12 12Z M12 6l3 3 M9 9l2 2 M6 12l3 3"/></svg>Đo</summary><div class="panel" id="measurementControls">
 </div></details>
+<details class="menu" id="printMenu" hidden><summary><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6 M6 18H4v-7h16v7h-2 M8 14h8v7H8Z"/></svg>Mô phỏng in</summary><div class="panel">
+<label><input id="printPreview" type="checkbox">Xem đường in theo lớp</label>
+<div class="print-playback">
+<button id="printPlay" disabled aria-label="Phát" aria-pressed="false" title="Phát"><svg class="icon play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z" fill="currentColor" stroke="none"/></svg><svg class="icon pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke-width="3"/></svg></button>
+<input class="timeline" id="printLayer" type="range" min="1" max="1" value="1" disabled aria-label="Lớp in">
+</div>
+<p class="print-layer" id="printLayerLabel"></p>
+<div id="printTypes"></div>
+<p class="print-stats" id="printStats"></p>
+</div></details>
 </div>
 <div class="sidebar-footer"><button id="openPrint"><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4 M4 16v5h16v-5"/></svg>In & tải</button></div>
 </aside>
@@ -49,7 +59,7 @@
 <div class="print-info"><p class="material-total" id="printSummary"></p><div id="printSections"></div></div></dialog>
 
 <p id="appError" role="alert" hidden></p>
-<script type="importmap">{"imports":{"./viewer/vendor/three.module.min.js":"./viewer/vendor/three.module.min.js?v=07bd27e814a1","./viewer/vendor/OrbitControls.js":"./viewer/vendor/OrbitControls.js?v=07bd27e814a1","./viewer/resources.js":"./viewer/resources.js?v=07bd27e814a1","./viewer/model-core.js":"./viewer/model-core.js?v=07bd27e814a1","./viewer/part-drag.js":"./viewer/part-drag.js?v=07bd27e814a1","./viewer/dimensions.js":"./viewer/dimensions.js?v=07bd27e814a1","./viewer/renderer.js":"./viewer/renderer.js?v=07bd27e814a1","./viewer/app.js":"./viewer/app.js?v=07bd27e814a1"}}</script>
-<script type="module" src="viewer/app.js?v=07bd27e814a1"></script>
+<script type="importmap">{"imports":{"./viewer/vendor/three.module.min.js":"./viewer/vendor/three.module.min.js?v=019cd95619b9","./viewer/vendor/OrbitControls.js":"./viewer/vendor/OrbitControls.js?v=019cd95619b9","./viewer/resources.js":"./viewer/resources.js?v=019cd95619b9","./viewer/model-core.js":"./viewer/model-core.js?v=019cd95619b9","./viewer/print-preview.js":"./viewer/print-preview.js?v=019cd95619b9","./viewer/part-drag.js":"./viewer/part-drag.js?v=019cd95619b9","./viewer/dimensions.js":"./viewer/dimensions.js?v=019cd95619b9","./viewer/renderer.js":"./viewer/renderer.js?v=019cd95619b9","./viewer/app.js":"./viewer/app.js?v=019cd95619b9"}}</script>
+<script type="module" src="viewer/app.js?v=019cd95619b9"></script>
 </body>
 </html>

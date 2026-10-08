@@ -1,5 +1,6 @@
 import {readJSON, downloadURL} from './resources.js';
 import {createViewer} from './renderer.js';
+import {createPrintPreview} from './print-preview.js';
 
 const $ = id => document.getElementById(id);
 window.viewerErrors = [];
@@ -7,6 +8,7 @@ window.addEventListener('error', event => window.viewerErrors.push(event.message
 window.addEventListener('unhandledrejection', event => window.viewerErrors.push(String(event.reason)));
 const normalize = text => text.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
 let catalog = [], viewer = null, loading = null, activeId = null, resources = [], thumbnails = [];
+let preview = null, printTimer = null, activeEntry = null;
 
 function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -120,6 +122,7 @@ function renderControls(model, folder) {
     }
     $('printSections').append(details);
   }
+  renderPrintControls(model);
 }
 
 function setDownload(link, path, type) {
@@ -137,16 +140,79 @@ function syncState(state) {
   $('mode').value = state.animation;
 }
 
+function renderPrintControls(model) {
+  $('printMenu').hidden = !model.print;
+  $('printPreview').checked = false;
+  $('printTypes').replaceChildren();
+  $('printLayerLabel').textContent = '';
+  $('printStats').textContent = model.print ? model.printInfo.summary : '';
+  $('printPlay').disabled = $('printLayer').disabled = true;
+}
+
+function showLayer(index) {
+  preview.setLayer(index);
+  $('printLayer').value = String(preview.layer + 1);
+  $('printLayerLabel').textContent = `Lớp ${preview.layer + 1}/${preview.layerCount} · Z ${preview.zOf(preview.layer).toLocaleString('vi')} mm`;
+}
+
+function stopPrintPlay() {
+  clearInterval(printTimer);
+  printTimer = null;
+  $('printPlay').setAttribute('aria-pressed', 'false');
+}
+
+async function setPreview(on) {
+  stopPrintPlay();
+  if (!on) {
+    viewer?.setPrintPreview(null);
+    preview?.dispose();
+    preview = null;
+    $('printTypes').replaceChildren();
+    $('printLayerLabel').textContent = '';
+    $('printPlay').disabled = $('printLayer').disabled = true;
+    return;
+  }
+  const entry = activeEntry;
+  $('printPreview').disabled = true;
+  try {
+    const data = await readJSON(entry.folder + entry.model.print.layers);
+    if (entry !== activeEntry || !$('printPreview').checked) return;
+    preview = createPrintPreview(data);
+    viewer.setPrintPreview(preview);
+    $('printLayer').max = String(preview.layerCount);
+    $('printPlay').disabled = $('printLayer').disabled = false;
+    for (const type of preview.types) {
+      const label = element('label'), input = element('input'), swatch = element('span', undefined, 'swatch');
+      input.type = 'checkbox';
+      input.checked = true;
+      input.onchange = () => preview.setTypeVisible(type.id, input.checked);
+      swatch.style.background = type.color;
+      label.append(input, swatch, document.createTextNode(type.label));
+      $('printTypes').append(label);
+    }
+    showLayer(preview.layerCount - 1);
+  } catch (error) {
+    $('printPreview').checked = false;
+    showError(error);
+  } finally {
+    $('printPreview').disabled = false;
+  }
+}
+
 function syncVisibility() {
   for (const input of $('partControls').querySelectorAll('input')) input.checked = viewer.parts[input.dataset.part].visible;
 }
 
 function clearViewer() {
   loading?.abort();
+  stopPrintPlay();
+  preview?.dispose();
+  preview = null;
   viewer?.dispose();
   viewer = null;
   window.viewer = null;
   activeId = null;
+  activeEntry = null;
   $('printDialog').close();
   document.body.dataset.ready = 'false';
   for (const resource of [...resources, ...thumbnails]) resource.dispose();
@@ -170,6 +236,7 @@ async function route() {
     return;
   }
   activeId = id;
+  activeEntry = entry;
   loading = new AbortController();
   const request = loading;
   $('loading').hidden = false;
@@ -220,7 +287,18 @@ $('timeline').oninput = event => viewer.scrub(Number(event.target.value) / 1000)
 $('mode').onchange = event => { viewer.setMode(event.target.value); syncVisibility(); };
 $('wireframe').onchange = event => viewer.setWireframe(event.target.checked);
 $('measurementControls').onchange = () => viewer.setMeasurements([...$('measurementControls').querySelectorAll('input:checked')].map(input => input.value));
-$('reset').onclick = () => { viewer.reset(); syncVisibility(); $('wireframe').checked = false; for (const input of $('measurementControls').querySelectorAll('input')) input.checked = false; };
+$('reset').onclick = () => { if (preview) { $('printPreview').checked = false; setPreview(false); } viewer.reset(); syncVisibility(); $('wireframe').checked = false; for (const input of $('measurementControls').querySelectorAll('input')) input.checked = false; };
+$('printPreview').onchange = event => setPreview(event.target.checked);
+$('printLayer').oninput = event => { stopPrintPlay(); showLayer(Number(event.target.value) - 1); };
+$('printPlay').onclick = () => {
+  if (printTimer) return stopPrintPlay();
+  if (preview.layer === preview.layerCount - 1) showLayer(0);
+  $('printPlay').setAttribute('aria-pressed', 'true');
+  printTimer = setInterval(() => {
+    if (preview.layer === preview.layerCount - 1) return stopPrintPlay();
+    showLayer(preview.layer + 1);
+  }, 1000 / 15);
+};
 $('openPrint').onclick = () => { viewer.pause(); $('printDialog').showModal(); };
 $('closePrint').onclick = () => $('printDialog').close();
 $('printDialog').addEventListener('click', event => {

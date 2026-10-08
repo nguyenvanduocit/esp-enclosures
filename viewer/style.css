@@ -144,3 +144,10 @@ input[type=search] { width: 240px; height: 36px; border: 1px solid var(--border)
   .gallery-tools label, input[type=search] { width: 100%; }
   .cards { grid-template-columns: 1fr; gap: 16px; }
 }
+.print-playback { display: grid; grid-template-columns: 36px 1fr; gap: 8px; align-items: center; margin: 8px 0; }
+#printPlay { padding: 0; background: var(--accent); color: #1d2a23; border-color: transparent; }
+#printPlay:disabled { opacity: .45; }
+#printPlay .pause-icon, #printPlay[aria-pressed=true] .play-icon { display: none; }
+#printPlay[aria-pressed=true] .pause-icon { display: block; }
+.print-layer, .print-stats { margin: 4px 0 8px; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.swatch { width: 12px; height: 12px; border-radius: 2px; flex: none; }

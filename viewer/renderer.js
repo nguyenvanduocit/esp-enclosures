@@ -113,6 +113,30 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
     notify();
   }
   function setWireframe(value) { for (const part of Object.values(parts)) part.traverse(mesh => { if (mesh.isMesh) mesh.material.wireframe = value; }); }
+  let preview = null, saved = null;
+  function setPrintPreview(next) {
+    if (preview) scene.remove(preview.group);
+    if (next && !preview) {
+      playing = false;
+      saved = {visible: Object.fromEntries(Object.entries(parts).map(([id, part]) => [id, part.visible])),
+               position: camera.position.clone(), target: controls.target.clone(), maxDistance: controls.maxDistance};
+      for (const part of Object.values(parts)) part.visible = false;   // hidden parts are not draggable (part-drag.js:33)
+      grid.visible = false;
+      controls.maxDistance = Math.max(controls.maxDistance, 900);
+      camera.position.set(170, -260, 230);
+      controls.target.set(0, 0, 10);
+    } else if (!next && preview) {
+      for (const [id, visible] of Object.entries(saved.visible)) parts[id].visible = visible;
+      grid.visible = true;
+      controls.maxDistance = saved.maxDistance;
+      camera.position.copy(saved.position);
+      controls.target.copy(saved.target);
+    }
+    preview = next;
+    if (preview) scene.add(preview.group);
+    controls.update();
+    notify();
+  }
   const resize = () => {
     const rect = stage.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
@@ -132,7 +156,7 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
       if (next === 1) playing = false;
       setTime(next);
     }
-    dimensions.update({selected: selectedMeasurements, progress: measureProgress});
+    dimensions.update({selected: preview ? new Set() : selectedMeasurements, progress: measureProgress});
     partDrag.update();
     if (!partDrag.activePart) controls.update();
     renderer.render(scene, camera);
@@ -147,7 +171,7 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
     pause() { playing = false; notify(); },
     scrub(value) { playing = false; setTime(value); },
     setMode(id) { animation = model.animations.find(item => item.id === id); setOpen(false); for (const track of animation.tracks) parts[track.part].visible = true; },
-    setOpen, reset, setWireframe,
+    setOpen, reset, setWireframe, setPrintPreview,
     setVisible(id, value) { parts[id].visible = value; },
     setMeasurements(ids) { selectedMeasurements = new Set(ids); },
     setView(id) { const view = model.camera.views.find(item => item.id === id); camera.position.set(...view.offset).add(controls.target); camera.lookAt(controls.target); controls.update(); },
