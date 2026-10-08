@@ -1,8 +1,8 @@
 # ESP32-C3 SuperMini + 18650 — V2
 
-Hộp 60 × 84 × 27,2 mm cho bo đã hàn hai hàng chân hướng xuống, một viên 18650 tháo rời và module tăng/hạ áp mini. Có hai nắp độc lập; thay pin qua nắp bên trái. Không có khoang mạch sạc. Bản V1 nằm ở thư mục bên cạnh và được giữ nguyên.
+Thân hộp 60 × 84 × 27,2 mm cho bo đã hàn hai hàng chân hướng xuống, một viên 18650 tháo rời và module tăng/hạ áp mini. Có hai nắp độc lập; thay pin qua nắp bên trái. Không có khoang mạch sạc. Có nút bịt USB tháo rời; kích thước bao ngoài khi gắn nút là 60 × 85,2 × 27,2 mm. Bản V1 nằm ở thư mục bên cạnh và được giữ nguyên.
 
-Mở `viewer.html` trực tiếp bằng trình duyệt có WebGL. File chạy offline, có xoay/zoom, animation mở–đóng và chế độ **Thay pin**. Hai nút trên model ẩn từng nắp; menu **Đo linh kiện** chọn PCB, viên pin, khay hoặc mạch nguồn. Số đo vỏ luôn tính khi lắp kín, không cộng khoảng bóc tách.
+Mở `viewer.html` trực tiếp bằng trình duyệt có WebGL. File chạy offline, có xoay/zoom, animation mở–đóng và chế độ **Thay pin**. Các nút trên model ẩn từng nắp và nút bịt USB; menu **Đo linh kiện** chọn PCB, viên pin, khay hoặc mạch nguồn. Số đo vỏ luôn tính khi lắp kín, không cộng khoảng bóc tách. Chế độ **Mở/đóng nút bịt USB** chỉ di chuyển nút bịt; chế độ thay pin giữ nó tại chỗ.
 
 ## Linh kiện và giả định
 
@@ -25,12 +25,15 @@ Listing để đối chiếu: [TPS63020 của btsgo.vn trên Shopee](https://sho
 - Cửa đi dây 8 × 6 mm xuyên vách ngăn; có khoảng trống giữa hai bo. Chưa mô hình hóa dây, đầu nối và công tắc.
 - Hai nắp có mép cài sâu 2,4 mm, khe hở 0,2 mm mỗi bên và bốn gân ma sát dôi cục bộ 0,08 mm. Nắp pin có rãnh bám tay, thân có hõm móng tay; nắp mạch có ba khe thoáng. Các thông số lắp cần hiệu chỉnh theo máy in.
 
+Nút bịt USB che toàn bộ lỗ 14 × 14,2 mm ở mặt trước. Mặt ngoài 17 × 17,2 mm, dày 1,2 mm; phần gài 13,6 × 13,8 mm, sâu 1,7 mm, có bốn gân ma sát dôi 0,08 mm. Nút tì vào vỏ; trong model, đầu trong cách cổng USB trên bo 1,05 mm. Tháo nút bằng viền nhô trước khi cắm dây. Đây là nắp che cơ khí, không có gioăng kín nước. Cần in thử để chỉnh độ chặt.
+
 ## File in và tái tạo
 
 - `base.stl`: thân, mặt đáy trên bàn in.
 - `battery_lid.stl`: nắp pin, mặt ngoài trên bàn in, mép cài hướng lên.
 - `electronics_lid.stl`: nắp mạch, cùng hướng in với nắp pin.
-- `enclosure.step`: ba chi tiết ở vị trí lắp kín; không chứa linh kiện tham khảo.
+- `usb_cap.stl`: nút bịt USB, mặt ngoài phẳng đặt trên bàn in, phần gài hướng lên; không cần in lại thân hoặc hai nắp.
+- `enclosure.step`: bốn chi tiết ở vị trí lắp kín; không chứa linh kiện tham khảo.
 - `model.py`: nguồn CAD; `reference.json` là mesh minh họa cho viewer, không phải chi tiết cần in.
 - `viewer-template.html`, `build_viewer.py`, `vendor/`: nguồn viewer offline; Three.js 0.169.0, MIT.
 
@@ -39,4 +42,4 @@ uv run --python 3.12 --with cadquery==2.8.0 --with trimesh==5.1.1 python model.p
 python3 build_viewer.py
 ```
 
-Model kiểm tra BRep hợp lệ, STL kín/một khối, giao nhau giữa linh kiện–vỏ, nắp–nắp, cửa USB cho bao dây 12 × 6 mm, và hình quét liên tục của viên pin khi nhấc lên với nắp mạch vẫn đóng. Gân ma sát chủ đích được loại khỏi phép kiểm tra khe lắp nắp. STEP được đọc lại để xác nhận ba solid hợp lệ. Những phép kiểm tra này không thay thế việc thử độ vừa, tiếp điểm pin, độ bền ngàm và cách cố định bo trên bản in thật.
+Model kiểm tra BRep hợp lệ, STL kín/một khối, giao nhau giữa linh kiện–vỏ, nắp–nắp, cửa USB cho bao dây 12 × 6 mm, và hình quét liên tục của viên pin khi nhấc lên với nắp mạch vẫn đóng. Gân ma sát chủ đích được loại khỏi phép kiểm tra khe lắp nắp. Đường rút nút bịt theo phương thẳng ra trước cũng được kiểm tra bằng hình quét, bỏ qua gân ma sát chủ đích. STEP được đọc lại để xác nhận bốn solid hợp lệ. Những phép kiểm tra này không thay thế việc thử độ vừa, tiếp điểm pin, độ bền ngàm và cách cố định bo trên bản in thật.

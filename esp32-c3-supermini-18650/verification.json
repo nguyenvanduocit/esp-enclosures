@@ -5,6 +5,26 @@
     84.0,
     27.2
   ],
+  "outer_dimensions_with_usb_cap": [
+    60.0,
+    85.2,
+    27.2
+  ],
+  "usb_cap": {
+    "opening": [
+      14.0,
+      14.2
+    ],
+    "insert_depth": 1.7,
+    "clearance_per_side": 0.2,
+    "rib_interference": 0.08,
+    "installed_origin": [
+      14.0,
+      -43.2,
+      18.299999999999997
+    ],
+    "socket_clearance": 1.05
+  },
   "reference_envelopes": {
     "holder": [
       22,
@@ -77,6 +97,23 @@
         ]
       ],
       "volume_mm3": 5207.95
+    },
+    "usb_cap": {
+      "watertight": true,
+      "solid_count": 1,
+      "bounds_mm": [
+        [
+          -8.5,
+          -8.6,
+          -0.0
+        ],
+        [
+          8.5,
+          8.6,
+          2.9
+        ]
+      ],
+      "volume_mm3": 669.5
     }
   },
   "checks": {
@@ -87,6 +124,9 @@
     "independent_lids_clear": true,
     "continuous_battery_removal_clear": true,
     "usb_12x6_clear": true,
-    "step_three_valid_solids": true
+    "usb_cap_without_ribs_clear": true,
+    "continuous_usb_cap_withdrawal_clear": true,
+    "usb_cap_clears_board_socket": true,
+    "step_four_valid_solids": true
   }
 }

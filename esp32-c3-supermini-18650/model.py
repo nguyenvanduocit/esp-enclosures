@@ -17,6 +17,10 @@ DIVIDER_X = -1.5
 ESP_X, ESP_Y, ESP_Z = 14.0, -26.5, 12.0
 CELL_X, CELL_Z, CELL_D, CELL_L = -16.5, 13.1, 18.5, 65.3
 FIT, SKIRT_H, EPS = .2, 2.4, .02
+USB_BOTTOM, USB_W = ESP_Z-.8, 14.0
+USB_CAP_FACE_T, USB_CAP_DEPTH = 1.2, 1.7
+USB_CAP_CENTER_Z = (USB_BOTTOM+BASE_H)/2
+USB_CAP_FRONT_Y = -L/2-USB_CAP_FACE_T
 LIDS = {
     "battery_lid": {"center": -15.8, "cavity_center": -15.25, "cavity_width": 25.5},
     "electronics_lid": {"center": 14.3, "cavity_center": 13.75, "cavity_width": 28.5},
@@ -60,7 +64,7 @@ def make_base():
             base = base.union(block(1, 5, 8, x, y))
     for y in (-4.1, 32.1):
         base = base.union(block(12, 1, 8, 14, y))
-    base = base.cut(block(14, 10, BASE_H, ESP_X, -L/2, ESP_Z-.8))
+    base = base.cut(block(USB_W, 10, BASE_H, ESP_X, -L/2, USB_BOTTOM))
     # Fingernail recess under the removable battery cover.
     base = base.cut(block(8, 4, 1.1, CELL_X, -L/2, BASE_H-1))
     return base.clean()
@@ -93,6 +97,23 @@ def installed_lid(name, ribs=True):
                 rib = cq.Workplane("XY").circle(.35).extrude(SKIRT_H+EPS)
                 lid = lid.union(rib.translate((cx+side*(cw/2-.27), y, BASE_H-SKIRT_H)))
     return lid.clean()
+
+
+def installed_usb_cap(ribs=True):
+    """Removable cover gripping the enclosure opening, clear of the USB socket."""
+    opening_h = BASE_H-USB_BOTTOM
+    face = block(USB_W+3, USB_CAP_FACE_T, opening_h+3,
+                 ESP_X, -L/2-USB_CAP_FACE_T/2, USB_BOTTOM-1.5).edges("|Y").fillet(.8)
+    tongue = block(USB_W-2*FIT, USB_CAP_DEPTH+EPS, opening_h-2*FIT,
+                   ESP_X, -L/2+(USB_CAP_DEPTH-EPS)/2, USB_BOTTOM+FIT).edges("|Y").fillet(.5)
+    cap = face.union(tongue)
+    if ribs:
+        for side in (-1, 1):
+            for z in (USB_CAP_CENTER_Z-3, USB_CAP_CENTER_Z+3):
+                rib = cq.Workplane("XY").circle(.28).extrude(1.2+EPS)
+                rib = rib.rotate((0,0,0), (1,0,0), -90)
+                cap = cap.union(rib.translate((ESP_X+side*(USB_W/2-FIT), -L/2-EPS, z)))
+    return cap.clean()
 
 
 def reference_board():
@@ -140,8 +161,13 @@ def overlap(a, b):
 def export_and_verify():
     base = make_base()
     lids = {name: installed_lid(name) for name in LIDS}
+    usb_cap = installed_usb_cap()
     refs = reference_parts()
     report = {"units": "mm", "outer_dimensions": [W, L, HEIGHT],
+              "outer_dimensions_with_usb_cap": [W, L+USB_CAP_FACE_T, HEIGHT],
+              "usb_cap": {"opening": [USB_W, BASE_H-USB_BOTTOM], "insert_depth": USB_CAP_DEPTH,
+                          "clearance_per_side": FIT, "rib_interference": .08,
+                          "installed_origin": [ESP_X, USB_CAP_FRONT_Y, USB_CAP_CENTER_Z]},
               "reference_envelopes": {"holder": [22,75,18], "cell_diameter_length": [CELL_D,CELL_L],
                                       "converter": [24,34,4.5], "pcb": [18,22.5,1.6]},
               "parts": {}, "checks": {"physical_fit_tested": False,
@@ -149,6 +175,7 @@ def export_and_verify():
     printable = {"base": base}
     for name, lid in lids.items():
         printable[name] = lid.translate((-LIDS[name]["center"], 0, -HEIGHT)).rotate((0,0,0), (0,1,0), 180)
+    printable["usb_cap"] = usb_cap.translate((-ESP_X, -USB_CAP_FRONT_Y, -USB_CAP_CENTER_Z)).rotate((0,0,0), (1,0,0), 90)
     for name, shape in printable.items():
         assert shape.val().isValid() and len(shape.solids().vals()) == 1, name
         cq.exporters.export(shape, str(OUT/f"{name}.stl"), tolerance=.03, angularTolerance=.1)
@@ -165,8 +192,21 @@ def export_and_verify():
     envelopes += [("module_envelope", block(24,34,4.5,14,14,6)),
                   ("holder_envelope", block(22,75,18,CELL_X,z=2.8))]
     for name, shape in envelopes:
-        for case_name, case in {"base": base, **lids}.items():
+        for case_name, case in {"base": base, **lids, "usb_cap": usb_cap}.items():
             assert overlap(case, shape) < 1e-6, f"{case_name} intersects {name}"
+    assert overlap(base, installed_usb_cap(False)) < 1e-6, "USB cap tongue intersects base"
+    for name, lid in lids.items():
+        assert overlap(usb_cap, lid) < 1e-6, f"USB cap intersects {name}"
+    # Swept bounding prisms cover every point of the cap during straight withdrawal.
+    # Intentional friction ribs are omitted, as in the installed-fit test.
+    travel = 24
+    face_sweep = block(USB_W+3, USB_CAP_FACE_T+travel, BASE_H-USB_BOTTOM+3,
+                       ESP_X, -L/2-(USB_CAP_FACE_T+travel)/2, USB_BOTTOM-1.5)
+    tongue_sweep = block(USB_W-2*FIT, USB_CAP_DEPTH+EPS+travel, BASE_H-USB_BOTTOM-2*FIT,
+                         ESP_X, -L/2+(USB_CAP_DEPTH-EPS-travel)/2, USB_BOTTOM+FIT)
+    cap_sweep = face_sweep.union(tongue_sweep)
+    for name, obstacle in {"base": base, **lids}.items():
+        assert overlap(cap_sweep, obstacle) < 1e-6, f"USB cap withdrawal blocked by {name}"
     cell = next(shape for _, name, shape, _ in refs if name == "cell")
     holder = next(shape for _, name, shape, _ in refs if name == "holder")
     # Continuous vertical swept envelope contains every point during extraction.
@@ -174,16 +214,23 @@ def export_and_verify():
     for name, obstacle in (("base",base),("holder",holder),("electronics_lid",lids["electronics_lid"])):
         assert overlap(sweep, obstacle) < 1e-6, f"Battery removal blocked by {name}"
     cable = block(12, 12, 6, ESP_X, -44, ESP_Z+1.6-1.4)
+    # Cable access is checked with the removable cap taken out.
     for name, case in {"base": base, **lids}.items():
         assert overlap(case,cable) < 1e-6, f"USB cable blocked by {name}"
     assembly = cq.Assembly(name="esp32_c3_supermini_18650")
-    for name, part in {"base": base, **lids}.items():
+    usb_socket = next(shape for _, name, shape, _ in refs if name == "usb")
+    usb_gap = usb_socket.val().BoundingBox().ymin-usb_cap.val().BoundingBox().ymax
+    assert usb_gap > 1, "USB cap too close to board socket"
+    report["usb_cap"]["socket_clearance"] = round(usb_gap, 3)
+    for name, part in {"base": base, **lids, "usb_cap": usb_cap}.items():
         assembly.add(part, name=name)
     assembly.export(str(OUT/"enclosure.step"))
     reimport = cq.importers.importStep(str(OUT/"enclosure.step"))
-    assert len(reimport.solids().vals()) == 3 and all(s.isValid() for s in reimport.solids().vals())
+    assert len(reimport.solids().vals()) == 4 and all(s.isValid() for s in reimport.solids().vals())
     report["checks"].update(reference_envelopes_clear=True, lid_without_ribs_clear=True,
-        independent_lids_clear=True, continuous_battery_removal_clear=True, usb_12x6_clear=True, step_three_valid_solids=True)
+        independent_lids_clear=True, continuous_battery_removal_clear=True, usb_12x6_clear=True,
+        usb_cap_without_ribs_clear=True, continuous_usb_cap_withdrawal_clear=True,
+        usb_cap_clears_board_socket=True, step_four_valid_solids=True)
     # Reference meshes are embedded in the viewer and are not parts to print.
     assets = []
     for group, name, shape, color in refs:
