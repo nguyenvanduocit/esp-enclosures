@@ -1,16 +1,22 @@
-# Hộp in 3D cho ESP32-C3 SuperMini
+# Model in 3D
 
-Hai bản hộp cho bo đã hàn hai hàng chân hướng xuống, kèm STL, STEP, nguồn CadQuery và viewer 3D tương tác.
+[Gallery](https://nguyenvanduocit.github.io/esp-enclosures/) hiển thị thumbnail, kích thước và trạng thái in của từng mẫu. Chọn model để mở viewer; nút Gallery quay lại danh sách. Có tìm kiếm, link riêng dạng `#model/<id>` và tải ZIP.
 
-| Phiên bản | Kích thước ngoài | Viewer | Bộ file |
-|---|---|---|---|
-| V1 — ESP32-C3 | 26,4 × 32 × 20,2 mm | [Mở viewer](https://nguyenvanduocit.github.io/esp-enclosures/esp32-c3-supermini/viewer.html) | [Tải ZIP](https://nguyenvanduocit.github.io/esp-enclosures/esp32-c3-supermini/esp32-c3-supermini-enclosure.zip) |
-| V2 — ESP32-C3 + 18650 | 60 × 85,2 × 27,2 mm (gồm nút bịt USB) | [Mở viewer](https://nguyenvanduocit.github.io/esp-enclosures/esp32-c3-supermini-18650/viewer.html) | [Tải ZIP](https://nguyenvanduocit.github.io/esp-enclosures/esp32-c3-supermini-18650/esp32-c3-supermini-18650.zip) |
+| Model | Kích thước ngoài | Trạng thái |
+|---|---|---|
+| [ESP32-C3 + 18650](https://nguyenvanduocit.github.io/esp-enclosures/#model/esp32-c3-supermini-18650) | 60 × 85,2 × 27,2 mm, gồm nút USB | Chưa in thử |
+| [ESP32-C3 SuperMini](https://nguyenvanduocit.github.io/esp-enclosures/#model/esp32-c3-supermini) | 26,4 × 32 × 20,2 mm | Chưa in thử |
 
-[GitHub Pages](https://nguyenvanduocit.github.io/esp-enclosures/) mở viewer V2 qua `index.html`. Mỗi file `viewer.html` cũng chạy độc lập, không cần tải thư viện từ mạng. Viewer có xoay/zoom, animation mở–đóng, ẩn nắp và đo linh kiện. Chiều cao vỏ luôn đo khi lắp kín. Viewer V2 cho phép rê chuột chọn từng chi tiết và kéo theo hướng tháo cố định.
+## Thêm model
 
-V2 có hai nắp độc lập, khay 18650 mua sẵn và chỗ lắp module TPS63020; không có khoang mạch sạc. Nút bịt USB là chi tiết in riêng, có thể tháo khi cần cắm dây; thân hộp dài 84 mm khi tháo nút. Đã chừa lỗ luồn dây 8 × 6 mm qua vách ngăn, chưa có rãnh hoặc kẹp giữ dây.
+1. Tạo thư mục riêng chứa `viewer.html`, ảnh `thumbnail.png` tỉ lệ 4:3 và file ZIP để tải.
+2. Thêm một mục vào `models.json`, theo cấu trúc của mẫu có sẵn. `id` là duy nhất, dùng chữ thường, số và dấu gạch ngang. Đường dẫn tính từ thư mục gallery. Thứ tự trong JSON là thứ tự hiển thị.
+3. Chạy `python3 build_gallery.py`, rồi commit cả nguồn và `index.html` đã tạo. GitHub Pages phục vụ nhánh `main`, thư mục gốc.
 
-Đọc README trong từng thư mục để xem kích thước linh kiện giả định, hướng in và cách tái tạo model. Các kiểm tra hình học được lưu trong `verification.json`; cả hai bản chưa được in thử. Kích thước đúng biến thể module Shopee và độ vừa của linh kiện thực vẫn cần xác minh.
+`models.json` quản lý nội dung; `gallery-template.html` quản lý giao diện. Bộ dựng kiểm tra ID và sự tồn tại của thumbnail, viewer, ZIP. Không cần npm hoặc máy chủ ứng dụng. Gallery và từng viewer mở được bằng file HTML; trình duyệt cần WebGL để xem 3D.
 
-Thư viện Three.js và OrbitControls đi kèm theo giấy phép [MIT](https://nguyenvanduocit.github.io/esp-enclosures/esp32-c3-supermini-18650/vendor/LICENSE).
+## File thiết kế
+
+Mỗi thư mục model có README riêng cho kích thước linh kiện, hướng in và giả định lắp ráp. STL là các chi tiết in; STEP giữ hình học CAD. Viewer V2 có cấu hình Bambu Studio, ước tính nhựa và kiểm tra lưới. Độ vừa của linh kiện và ngàm vẫn cần kiểm chứng bằng bản in.
+
+Three.js và OrbitControls đi kèm theo giấy phép [MIT](esp32-c3-supermini-18650/vendor/LICENSE).
