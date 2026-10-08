@@ -65,6 +65,12 @@ def dim(anchor_a, anchor_b, offset, name, label_offset=(0, 0, 0), prefix=""):
     }
 
 
+def pulse(value):
+    """Keyframes that rest, move to `value`, hold, and return to rest."""
+    rest = (0, 0, 0)
+    return [(0, rest), (0.08, rest), (0.4, value), (0.72, value), (0.97, rest), (1, rest)]
+
+
 def keyframes(frames):
     return [{"time": time, "value": list(value)} for time, value in frames]
 

@@ -3,7 +3,7 @@ from functools import cache
 
 import cadquery as cq
 
-from printkit import Drag, Model, dim
+from printkit import Drag, Model, dim, pulse
 from printkit.checks import CheckFailed, clear
 from printkit.library.electronics import SUPERMINI_PCB, esp32_c3_supermini
 from printkit.shapes import block, box_solid, rounded
@@ -91,11 +91,6 @@ def lid():
 
 
 model.reference('board', 'ESP32', BOARD, drag=Drag((0, 0, 1), 50))
-
-
-def pulse(value):
-    rest = (0, 0, 0)
-    return [(0, rest), (0.08, rest), (0.4, value), (0.72, value), (0.97, rest), (1, rest)]
 
 
 model.measure('case', 'Vỏ hộp', kind='case', follow='base', label_width=20, lines=[

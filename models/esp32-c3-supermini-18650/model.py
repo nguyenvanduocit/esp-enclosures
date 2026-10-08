@@ -6,7 +6,7 @@ from functools import cache
 
 import cadquery as cq
 
-from printkit import Box, Drag, Model, Solid, dim
+from printkit import Box, Drag, Model, Solid, dim, pulse
 from printkit.checks import CheckFailed, clear
 from printkit.library.electronics import SUPERMINI_PCB, esp32_c3_supermini
 from printkit.shapes import block, box_solid, rounded
@@ -194,11 +194,6 @@ model.reference('board', 'ESP32', BOARD, drag=Drag((0, 0, 1), 90))
 model.reference('cell', 'Pin', [Solid('cell', CELL, '#87b483')], drag=Drag((0, 0, 1), 90))
 model.reference('holder', 'Khay', [Solid('holder', HOLDER, '#303d46')], drag=Drag((0, 0, 1), 90))
 model.reference('converter', 'Mạch nguồn', CONVERTER, drag=Drag((0, 0, 1), 90))
-
-
-def pulse(value):
-    rest = (0, 0, 0)
-    return [(0, rest), (0.08, rest), (0.4, value), (0.72, value), (0.97, rest), (1, rest)]
 
 
 def case_lines(front_y):

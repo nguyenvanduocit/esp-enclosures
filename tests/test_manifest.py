@@ -154,3 +154,17 @@ def test_checks_register_in_order():
         return {"gap_mm": 1.0}
 
     assert [name for name, _ in model.checks] == ["first", "second"]
+
+
+def test_pulse_rests_then_holds_then_returns():
+    from printkit import pulse
+
+    rest = (0, 0, 0)
+    assert pulse((0, 0, 20)) == [
+        (0, rest),
+        (0.08, rest),
+        (0.4, (0, 0, 20)),
+        (0.72, (0, 0, 20)),
+        (0.97, rest),
+        (1, rest),
+    ]
