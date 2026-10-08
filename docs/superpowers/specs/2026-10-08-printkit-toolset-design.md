@@ -230,3 +230,9 @@ Phases run in order; each starts only after the previous one meets its acceptanc
 - Automatic thumbnails.
 - Collision simulation while dragging in the viewer.
 - Renaming the GitHub repository (owner action).
+
+## Deviations recorded during P1/P2
+
+- `checks.sweep` is not implemented: sweeps are built inside the models; add it when a third model needs it.
+- The 18650 cell stays in its model; it moves to the library when a second model uses it.
+- `esp-enclosures` URL references in `index.html`, `model.schema.json` and `README.md` stay until the owner renames the GitHub repository.

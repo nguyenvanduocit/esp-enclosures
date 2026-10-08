@@ -20,16 +20,20 @@ Các file khác trong `models/<id>/` là file sinh ra (`*.stl`, `reference/`, `a
 ## Lệnh
 
 ```sh
-uv run printkit new <id>     # tạo models/<id>/ từ mẫu và thêm vào models.json
+uv run printkit new <id>     # tạo models/<id>/ từ mẫu chạy được, dựng luôn, rồi thêm vào models.json
 uv run printkit cad <id>     # dựng CAD, chạy kiểm tra, ghi STL/STEP/model.json/verification.json
 uv run printkit build        # kiểm tra mọi model, gắn phiên bản JS/CSS, đóng gói ZIP offline
 uv run pytest && node --test tests/*.test.js
 python3 -m http.server 8000  # mở http://localhost:8000
 ```
 
-`cad` chỉ ghi file khi mọi bước đều qua: BRep hợp lệ và một khối, STL kín, mọi `@model.check` không va chạm, STEP đọc lại đúng số khối. Lỗi thì giữ nguyên file cũ.
+`cad` chỉ ghi file khi mọi bước đều qua: BRep hợp lệ và một khối, STL kín, mọi `@model.check` không va chạm, `max_overhang_mm2` (nếu khai báo) không bị vượt, STEP đọc lại đúng số khối. Lỗi thì giữ nguyên file cũ. Khi ghi, `cad` chỉ xóa file mà lần chạy trước đã sinh ra (theo `model.json` cũ); file khác trong thư mục model được giữ nguyên.
+
+`cad` in cảnh báo hướng in ra stderr, dạng `warning: lid: set print_rotation to (0, 0, 180) …`: giá trị gợi ý là `print_rotation` tuyệt đối, dán thẳng vào `model.py`. Cùng thông tin nằm trong `verification.json`: khối `printability` (mỗi chi tiết có `overhang_mm2`, `bridges`, xếp hạng 6 hướng in `orientations`) và danh sách `warnings`.
 
 ## Khai báo model
+
+Tọa độ mm, trục Z hướng lên. `printkit new <id>` sinh `models/<id>/model.py` chạy được ngay; sửa file đó thay vì viết từ đầu.
 
 Dựng mỗi chi tiết **ở vị trí lắp**. `print_rotation` (Euler XYZ, độ) xoay chi tiết lên bàn in; printkit đặt nó xuống Z = 0, căn giữa XY, xuất STL theo hướng in và tính `position`/`rotation` cho viewer.
 
@@ -40,7 +44,8 @@ from printkit.checks import clear
 model = Model('wall-hook', title='Móc treo', description='…', category='Gia dụng', status='Bản nháp',
               thumbnail='thumbnail.png', dimensions=(W, L, H), camera={…}, grid={…}, print_info={…})
 
-@model.part('body', 'Thân', color='#367c85', drag=Drag((0, 0, 1), 30), print_rotation=(0, 180, 0))
+@model.part('body', 'Thân', color='#367c85', drag=Drag((0, 0, 1), 30), print_rotation=(0, 180, 0),
+            max_overhang_mm2=50)
 def body():
     return …  # CadQuery, vị trí lắp
 
@@ -56,10 +61,12 @@ def screw_clear():
 
 | API | Ý nghĩa |
 |---|---|
-| `model.part` | Chi tiết in; hàm dựng chạy một lần và có thể gọi lại trong kiểm tra |
+| `model.part` | Chi tiết in; hàm dựng chạy một lần và có thể gọi lại trong kiểm tra. `max_overhang_mm2` đặt trần diện tích overhang (mm²); vượt trần thì `cad` lỗi |
 | `model.reference` | Linh kiện tham khảo: `Box` thành khối hộp của viewer, `Solid` thành `reference/<name>.stl` |
 | `dim(a, b, offset, name)` | Đường đo cách hai điểm neo một đoạn `offset`; nhãn tính từ độ dài thật |
-| `model.animation` | Keyframe là độ dịch so với vị trí lắp, `time` từ 0 đến 1, bắt đầu và kết thúc ở vị trí lắp |
+| `model.animation` | Keyframe là độ dịch so với vị trí lắp, `time` từ 0 đến 1, bắt đầu và kết thúc ở vị trí lắp; `pulse(value)` sinh keyframe nghỉ, di chuyển tới `value`, giữ, rồi về |
 | `model.check` | Ném `CheckFailed` khi sai; trả về dict để ghi số đo vào `verification.json` |
 
-`drag.axis` là vector đơn vị trong hệ tọa độ thế giới; `maxDistance` là khoảng kéo tối đa. Đường đo khai báo ở tư thế lắp kín; `follow` chỉ dịch chuyển đường đo cùng chi tiết; `variants` chọn bộ đường đo khác khi một chi tiết bị ẩn. Chưa mô phỏng va chạm khi kéo và chưa kiểm chứng độ vừa bằng bản in thật.
+`Drag(axis, max_distance)`: `axis` là vector đơn vị trong hệ tọa độ thế giới; `max_distance` là khoảng kéo tối đa. Đường đo khai báo ở tư thế lắp kín; `follow` chỉ dịch chuyển đường đo cùng chi tiết; `variants` chọn bộ đường đo khác khi một chi tiết bị ẩn. Chưa mô phỏng va chạm khi kéo và chưa kiểm chứng độ vừa bằng bản in thật.
+
+ZIP offline chứa cả `model.py` để đọc; chạy lại nó cần bộ công cụ `printkit` trong repo này (không nằm trong ZIP).
