@@ -1,0 +1,1859 @@
+{
+  "$schema": "../../model.schema.json",
+  "schemaVersion": 1,
+  "units": "mm",
+  "category": "Giá đỡ",
+  "status": "Chưa in thử",
+  "thumbnail": "thumbnail.png",
+  "title": "PS4 · Phế tích Wraeclast",
+  "description": "Giá dựng đứng PS4 đời đầu và hai bệ tay cầm: cột khắc rune, sọ, xích gãy. Mọi hình khối sinh từ code.",
+  "dimensions": [
+    360.0,
+    305.0,
+    295.0
+  ],
+  "camera": {
+    "position": [
+      620,
+      -880,
+      540
+    ],
+    "target": [
+      0,
+      -10,
+      120
+    ],
+    "minDistance": 150,
+    "maxDistance": 1900,
+    "views": [
+      {
+        "id": "front",
+        "label": "Trước",
+        "offset": [
+          0,
+          -1050,
+          0.01
+        ]
+      },
+      {
+        "id": "side",
+        "label": "Bên",
+        "offset": [
+          1050,
+          0,
+          0.01
+        ]
+      },
+      {
+        "id": "top",
+        "label": "Trên",
+        "offset": [
+          0,
+          -0.01,
+          1050
+        ]
+      }
+    ]
+  },
+  "grid": {
+    "size": 500,
+    "divisions": 50
+  },
+  "printInfo": {
+    "summary": "≈ 907 g PLA cho 2 bộ, 2 bệ tay cầm và coupon · in coupon trước · chưa in thử",
+    "sections": [
+      {
+        "title": "Thứ tự in",
+        "rows": [
+          [
+            "1. Coupon thử khe",
+            "fitCoupon.stl · một lát của đế, ≈ 15–25 phút"
+          ],
+          [
+            "2. Đế",
+            "plinth.stl · in 2 cái"
+          ],
+          [
+            "3. Cột",
+            "pillar.stl ×2, stub.stl ×2"
+          ],
+          [
+            "4. Trang trí",
+            "skull.stl ×2, chain.stl ×2 · cần support"
+          ],
+          [
+            "5. Bệ tay cầm",
+            "altar.stl ×2 · không cần support"
+          ]
+        ],
+        "notes": [
+          "Lắp coupon lên máy thật trước: máy phải lọt khe 54 mm và nằm trên gân đỡ. Chỉnh máy in nếu quá chặt hoặc quá lỏng; không scale STL.",
+          "Hai bộ dùng chung STL; bộ sau xoay 180° quanh trục đứng nên cột cao nằm chéo góc.",
+          "Bệ tay cầm đứng riêng trên 4 chân cao su. Mộng 39,6 × 19,8 × 5,6 mm cắm vào hốc dưới đầu −X của đế (hở 0,2 mm) chỉ để định vị, không chịu lực."
+        ],
+        "links": []
+      },
+      {
+        "title": "Cấu hình in thử",
+        "rows": [
+          [
+            "Máy / vật liệu",
+            "Bambu A1 / P1S / X1C · nozzle 0,4 mm · PLA"
+          ],
+          [
+            "Layer / lớp đầu",
+            "0,20 / 0,20 mm"
+          ],
+          [
+            "Thành",
+            "Arachne · 3 wall loops"
+          ],
+          [
+            "Lớp đặc trên / dưới",
+            "5 / 4"
+          ],
+          [
+            "Infill",
+            "15% Gyroid"
+          ],
+          [
+            "Support",
+            "Đế, cột, bệ, coupon: tắt · Sọ, xích: tree"
+          ],
+          [
+            "Brim",
+            "Cột cao: 5 mm · còn lại tắt"
+          ],
+          [
+            "Scale / đơn vị",
+            "100% / mm"
+          ],
+          [
+            "Bù lỗ / biên XY",
+            "0 / 0 mm"
+          ],
+          [
+            "Nhiệt, quạt, flow, bù chân voi",
+            "Theo preset nhựa và bàn in"
+          ]
+        ],
+        "notes": [
+          "Hướng in giữ nguyên như trong file: đế, cột, bệ tay cầm, coupon đáy xuống bàn; sọ đáy phẳng xuống bàn; xích nằm ngang, các mắt nghiêng ±45°.",
+          "Móc treo xích có gân 45° bên dưới nên cột cao in đứng không cần support.",
+          "Hõm chân cao su Ø12 × 1,5 mm ở mặt dưới đế là cầu 12 mm. Nếu võng, chỉ bật support cho vùng đó.",
+          "Sọ: support cho hốc mắt, gò má và hàng răng. Xích: support cho nửa trên mỗi mắt; gỡ nhẹ tay vì dây Ø4 mm.",
+          "Bệ tay cầm: xem gờ chặn dày 6 mm và rãnh rune trong Preview. Hốc mộng ở đầu −X của đế là cầu rộng 40 mm."
+        ],
+        "links": [
+          {
+            "label": "Arachne",
+            "url": "https://wiki.bambulab.com/en/software/bambu-studio/wall-generator"
+          },
+          {
+            "label": "Bù chân voi",
+            "url": "https://wiki.bambulab.com/en/software/bambu-studio/parameter/elephant-foot"
+          }
+        ]
+      },
+      {
+        "title": "Nhựa & chi phí",
+        "rows": [
+          [
+            "Đế ×2",
+            "2 × 109,2 g"
+          ],
+          [
+            "Cột cao ×2",
+            "2 × 78,4 g"
+          ],
+          [
+            "Cột gãy ×2",
+            "2 × 40,5 g"
+          ],
+          [
+            "Sọ ×2",
+            "2 × 22,0 g"
+          ],
+          [
+            "Xích ×2",
+            "2 × 6,2 g"
+          ],
+          [
+            "Bệ tay cầm ×2",
+            "2 × 186,5 g"
+          ],
+          [
+            "Coupon thử khe",
+            "21,8 g"
+          ],
+          [
+            "Tổng 2 bộ + 2 bệ + coupon",
+            "≈ 907 g"
+          ],
+          [
+            "Nếu in đặc 100% (cùng số chi tiết)",
+            "2.647 g"
+          ]
+        ],
+        "notes": [
+          "Mọi số tính cho 2 bộ, 2 bệ tay cầm và 1 coupon. Ước tính từ thể tích và diện tích bề mặt CAD: vỏ 1,2 mm (3 thành) cộng 15% infill, PLA 1,24 g/cm³. Support, brim và nhựa mồi cộng thêm.",
+          "Ví dụ cuộn 300.000đ/kg: khoảng 272.000đ cho cùng số chi tiết, chưa tính điện và in lỗi. Bambu Studio cho số chính xác sau khi Slice."
+        ],
+        "links": [
+          {
+            "label": "PLA 1,24 g/cm³",
+            "url": "https://store.bblcdn.com/s7/default/b189de92249a4b9ebed28b8ea1f080f0/Bambu_PLA_Basic_Technical_Data_Sheet.pdf"
+          }
+        ]
+      },
+      {
+        "title": "Độ vừa",
+        "rows": [],
+        "notes": [
+          "Máy giả định: PS4 đời đầu CUH-1000A, 275 × 53 × 305 mm, 2,8 kg. Không dành cho PS4 Slim hoặc Pro.",
+          "Khe 54 mm, hở 0,5 mm mỗi bên. Máy tựa trên 4 gân đỡ; gầm máy cách bàn 20 mm, rãnh gió đáy cao 14 mm chạy suốt chiều sâu đế.",
+          "Hai cụm đế chỉ chiếm y = ±52,5…132,5 mm nên không che cổng trước, cổng sau và lỗ thoát nhiệt. Bệ tay cầm đặt cạnh máy (x = ±86…180 mm), cách vùng cổng 1 mm. Vị trí lưới hút gió ở hai mặt hông chưa đo trên máy thật.",
+          "Cột cắm hốc 34,4 mm (chân cột 34 mm, sâu 6 mm). Chốt Ø8 × 6 mm của cột gãy vào lỗ Ø8,4 × 7 mm dưới sọ.",
+          "Góc lật tối thiểu 23,96° kể cả khi bỏ qua khối lượng giá (30,07° với PLA đặc và 2 tay cầm), tính tới tâm 4 chân cao su mỗi đế. Bệ tay cầm không gắn cứng nên không được tính vào đa giác đỡ.",
+          "7 STL kín, mỗi file một khối, dưới 60.000 tam giác. STEP chỉ chứa phần cơ khí của 10 chi tiết in (chưa bào mòn, không có sọ).",
+          "Tay cầm giả định: DualShock 4, hộp bao 162 × 57 × 100 mm, 210 g (số công bố dao động 161–162 × 52–57 × 98–100 mm). Bệ chỉ dựa trên hộp bao này, không theo đường cong thật của tay cầm.",
+          "Tay cầm nghiêng 70°, mặt hướng ra ngoài, đầu (cổng micro-USB) hướng về đế; lưng tựa chỉ cao 60% chiều dài nên cổng sạc vẫn thông. Hai má hở 2 mm, gờ chặn trước hở 1 mm.",
+          "Lấy tay cầm: nhấc lên khỏi gờ chặn rồi kéo ra phía ngoài. Nhấc thẳng theo trục nghiêng chỉ được 19 mm rồi chạm sọ.",
+          "Chưa in thử, chưa thử tải trọng."
+        ],
+        "links": []
+      }
+    ]
+  },
+  "id": "ps4-wraeclast-stand",
+  "parts": [
+    {
+      "id": "plinth",
+      "label": "Đế trước",
+      "kind": "print",
+      "position": [
+        0.0,
+        -92.5,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "plinth.stl",
+          "color": "#7a746b"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          -1
+        ],
+        "maxDistance": 60
+      }
+    },
+    {
+      "id": "plinthBack",
+      "label": "Đế sau",
+      "kind": "print",
+      "position": [
+        0.0,
+        92.5,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        180.0
+      ],
+      "meshes": [
+        {
+          "src": "plinth.stl",
+          "color": "#7a746b"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          -1
+        ],
+        "maxDistance": 60
+      }
+    },
+    {
+      "id": "pillar",
+      "label": "Cột cao trước",
+      "kind": "print",
+      "position": [
+        68.651559,
+        -92.52379,
+        14.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "pillar.stl",
+          "color": "#7a746b"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 150
+      }
+    },
+    {
+      "id": "pillarBack",
+      "label": "Cột cao sau",
+      "kind": "print",
+      "position": [
+        -68.651559,
+        92.52379,
+        14.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        180.0
+      ],
+      "meshes": [
+        {
+          "src": "pillar.stl",
+          "color": "#7a746b"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 150
+      }
+    },
+    {
+      "id": "stub",
+      "label": "Cột gãy trước",
+      "kind": "print",
+      "position": [
+        -59.996881,
+        -92.465697,
+        14.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "stub.stl",
+          "color": "#7a746b"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 150
+      }
+    },
+    {
+      "id": "stubBack",
+      "label": "Cột gãy sau",
+      "kind": "print",
+      "position": [
+        59.996881,
+        92.465697,
+        14.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        180.0
+      ],
+      "meshes": [
+        {
+          "src": "stub.stl",
+          "color": "#7a746b"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 150
+      }
+    },
+    {
+      "id": "skull",
+      "label": "Sọ trước",
+      "kind": "print",
+      "position": [
+        -60.0,
+        -89.694626,
+        114.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "skull.stl",
+          "color": "#d9cfb4"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 150
+      }
+    },
+    {
+      "id": "skullBack",
+      "label": "Sọ sau",
+      "kind": "print",
+      "position": [
+        60.0,
+        89.694626,
+        114.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        180.0
+      ],
+      "meshes": [
+        {
+          "src": "skull.stl",
+          "color": "#d9cfb4"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 150
+      }
+    },
+    {
+      "id": "chain",
+      "label": "Xích trước",
+      "kind": "print",
+      "position": [
+        87.586775,
+        -96.913225,
+        123.0
+      ],
+      "rotation": [
+        -90.0,
+        45.0,
+        90.0
+      ],
+      "meshes": [
+        {
+          "src": "chain.stl",
+          "color": "#3d3d42"
+        }
+      ],
+      "drag": {
+        "axis": [
+          1,
+          0,
+          0
+        ],
+        "maxDistance": 80
+      }
+    },
+    {
+      "id": "chainBack",
+      "label": "Xích sau",
+      "kind": "print",
+      "position": [
+        -87.586775,
+        96.913225,
+        123.0
+      ],
+      "rotation": [
+        90.0,
+        -45.0,
+        -90.0
+      ],
+      "meshes": [
+        {
+          "src": "chain.stl",
+          "color": "#3d3d42"
+        }
+      ],
+      "drag": {
+        "axis": [
+          -1,
+          0,
+          0
+        ],
+        "maxDistance": 80
+      }
+    },
+    {
+      "id": "altar",
+      "label": "Bệ tay cầm trước",
+      "kind": "print",
+      "position": [
+        -122.599998,
+        -60.5,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "altar.stl",
+          "color": "#7a746b"
+        }
+      ],
+      "drag": {
+        "axis": [
+          -1,
+          0,
+          0
+        ],
+        "maxDistance": 100
+      }
+    },
+    {
+      "id": "altarBack",
+      "label": "Bệ tay cầm sau",
+      "kind": "print",
+      "position": [
+        122.599998,
+        60.5,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        180.0
+      ],
+      "meshes": [
+        {
+          "src": "altar.stl",
+          "color": "#7a746b"
+        }
+      ],
+      "drag": {
+        "axis": [
+          1,
+          0,
+          0
+        ],
+        "maxDistance": 100
+      }
+    },
+    {
+      "id": "console",
+      "label": "PS4 (tham khảo)",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "primitive": "box",
+          "size": [
+            53.0,
+            305.0,
+            275.0
+          ],
+          "position": [
+            0,
+            0,
+            157.5
+          ],
+          "color": "#1b1b1f"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "maxDistance": 320
+      }
+    },
+    {
+      "id": "ds4",
+      "label": "Tay cầm trước (tham khảo)",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/ds4.stl",
+          "color": "#2a2a30"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0.34202,
+          0.0,
+          0.939693
+        ],
+        "maxDistance": 150
+      }
+    },
+    {
+      "id": "ds4Back",
+      "label": "Tay cầm sau (tham khảo)",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/ds4Back.stl",
+          "color": "#2a2a30"
+        }
+      ],
+      "drag": {
+        "axis": [
+          -0.34202,
+          0.0,
+          0.939693
+        ],
+        "maxDistance": 150
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "id": "slot",
+      "label": "Khe đặt máy",
+      "kind": "case",
+      "followPart": "plinth",
+      "color": "#efb96e",
+      "labelWidth": 70,
+      "lines": [
+        {
+          "a": [
+            -27,
+            -140,
+            66
+          ],
+          "b": [
+            27,
+            -140,
+            66
+          ],
+          "anchorA": [
+            -27,
+            -117.5,
+            66
+          ],
+          "anchorB": [
+            27,
+            -117.5,
+            66
+          ],
+          "label": "54 mm · Khe (máy 53)",
+          "labelOffset": [
+            0,
+            0,
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "id": "airGap",
+      "label": "Khe gió dưới máy",
+      "kind": "case",
+      "followPart": "plinth",
+      "color": "#efb96e",
+      "labelWidth": 64,
+      "lines": [
+        {
+          "a": [
+            -45,
+            0,
+            0
+          ],
+          "b": [
+            -45,
+            0,
+            20
+          ],
+          "anchorA": [
+            -26.5,
+            0,
+            0
+          ],
+          "anchorB": [
+            -26.5,
+            0,
+            20
+          ],
+          "label": "20 mm · Gầm máy",
+          "labelOffset": [
+            -30,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "footprint",
+      "label": "Đế 170 × 80",
+      "kind": "case",
+      "followPart": "plinth",
+      "color": "#efb96e",
+      "labelWidth": 64,
+      "lines": [
+        {
+          "a": [
+            -85,
+            -145,
+            0
+          ],
+          "b": [
+            85,
+            -145,
+            0
+          ],
+          "anchorA": [
+            -85,
+            -132.5,
+            0
+          ],
+          "anchorB": [
+            85,
+            -132.5,
+            0
+          ],
+          "label": "170 mm · Đế rộng",
+          "labelOffset": [
+            0,
+            -10,
+            0
+          ]
+        },
+        {
+          "a": [
+            100,
+            -132.5,
+            0
+          ],
+          "b": [
+            100,
+            -52.5,
+            0
+          ],
+          "anchorA": [
+            85,
+            -132.5,
+            0
+          ],
+          "anchorB": [
+            85,
+            -52.5,
+            0
+          ],
+          "label": "80 mm · Đế sâu",
+          "labelOffset": [
+            26,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pillar",
+      "label": "Cột cao",
+      "kind": "case",
+      "followPart": "pillar",
+      "color": "#efb96e",
+      "labelWidth": 64,
+      "lines": [
+        {
+          "a": [
+            60,
+            -150,
+            0
+          ],
+          "b": [
+            60,
+            -150,
+            221.5
+          ],
+          "anchorA": [
+            60,
+            -132.5,
+            0
+          ],
+          "anchorB": [
+            60,
+            -109.5,
+            221.5
+          ],
+          "label": "221.5 mm · Đỉnh cột",
+          "labelOffset": [
+            0,
+            -6,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "overall",
+      "label": "Cao tổng",
+      "kind": "case",
+      "followPart": "plinth",
+      "color": "#83caff",
+      "labelWidth": 72,
+      "lines": [
+        {
+          "a": [
+            -110,
+            -92.5,
+            0
+          ],
+          "b": [
+            -110,
+            -92.5,
+            295
+          ],
+          "anchorA": [
+            -85,
+            -92.5,
+            0
+          ],
+          "anchorB": [
+            -26.5,
+            -92.5,
+            295
+          ],
+          "label": "295 mm · Cao cả máy",
+          "labelOffset": [
+            -34,
+            0,
+            0
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "whenHidden": "console",
+          "lines": [
+            {
+              "a": [
+                -110,
+                -92.5,
+                0
+              ],
+              "b": [
+                -110,
+                -92.5,
+                221.5
+              ],
+              "anchorA": [
+                -85,
+                -92.5,
+                0
+              ],
+              "anchorB": [
+                43,
+                -92.5,
+                221.5
+              ],
+              "label": "221.5 mm · Cao giá",
+              "labelOffset": [
+                -34,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "altar",
+      "label": "Bệ tay cầm",
+      "kind": "case",
+      "followPart": "altar",
+      "color": "#efb96e",
+      "labelWidth": 64,
+      "lines": [
+        {
+          "a": [
+            -180,
+            -163.5,
+            0
+          ],
+          "b": [
+            -86,
+            -163.5,
+            0
+          ],
+          "anchorA": [
+            -180,
+            -151.5,
+            0
+          ],
+          "anchorB": [
+            -86,
+            -151.5,
+            0
+          ],
+          "label": "94 mm · Bệ rộng",
+          "labelOffset": [
+            0,
+            -10,
+            0
+          ]
+        },
+        {
+          "a": [
+            -192,
+            -151.5,
+            0
+          ],
+          "b": [
+            -192,
+            30.5,
+            0
+          ],
+          "anchorA": [
+            -180,
+            -151.5,
+            0
+          ],
+          "anchorB": [
+            -180,
+            30.5,
+            0
+          ],
+          "label": "182 mm · Bệ dài",
+          "labelOffset": [
+            -26,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lean",
+      "label": "Góc nghiêng tay cầm",
+      "kind": "component",
+      "followPart": "altar",
+      "visibleWith": "ds4",
+      "color": "#83caff",
+      "labelWidth": 56,
+      "lines": [
+        {
+          "a": [
+            -118.0,
+            -141.5,
+            10.2
+          ],
+          "b": [
+            -90.638,
+            -141.5,
+            85.375
+          ],
+          "anchorA": [
+            -78.0,
+            -141.5,
+            10.2
+          ],
+          "anchorB": [
+            -90.638,
+            -141.5,
+            85.375
+          ],
+          "label": "70° · Nghiêng",
+          "labelOffset": [
+            0,
+            -8,
+            14
+          ]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "id": "assembly",
+      "label": "Tháo lắp",
+      "duration": 14,
+      "openPose": {
+        "skull": [
+          0,
+          0,
+          90
+        ],
+        "chain": [
+          40,
+          0,
+          0
+        ],
+        "ds4": [
+          22.231309,
+          0.0,
+          61.08002
+        ],
+        "skullBack": [
+          0,
+          0,
+          90
+        ],
+        "chainBack": [
+          -40,
+          0,
+          0
+        ],
+        "ds4Back": [
+          -22.231309,
+          0.0,
+          61.08002
+        ],
+        "altar": [
+          -60,
+          0,
+          0
+        ],
+        "altarBack": [
+          60,
+          0,
+          0
+        ],
+        "console": [
+          0,
+          0,
+          220
+        ],
+        "pillar": [
+          0,
+          0,
+          60
+        ],
+        "stub": [
+          0,
+          0,
+          7
+        ],
+        "pillarBack": [
+          0,
+          0,
+          60
+        ],
+        "stubBack": [
+          0,
+          0,
+          7
+        ]
+      },
+      "tracks": [
+        {
+          "part": "skull",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.02,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.14,
+              "value": [
+                0,
+                0,
+                90
+              ]
+            },
+            {
+              "time": 0.86,
+              "value": [
+                0,
+                0,
+                90
+              ]
+            },
+            {
+              "time": 0.98,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "chain",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.02,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.14,
+              "value": [
+                40,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.86,
+              "value": [
+                40,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.98,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "ds4",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.02,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.14,
+              "value": [
+                22.231309,
+                0.0,
+                61.08002
+              ]
+            },
+            {
+              "time": 0.86,
+              "value": [
+                22.231309,
+                0.0,
+                61.08002
+              ]
+            },
+            {
+              "time": 0.98,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "skullBack",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.02,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.14,
+              "value": [
+                0,
+                0,
+                90
+              ]
+            },
+            {
+              "time": 0.86,
+              "value": [
+                0,
+                0,
+                90
+              ]
+            },
+            {
+              "time": 0.98,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "chainBack",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.02,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.14,
+              "value": [
+                -40,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.86,
+              "value": [
+                -40,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.98,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "ds4Back",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.02,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.14,
+              "value": [
+                -22.231309,
+                0.0,
+                61.08002
+              ]
+            },
+            {
+              "time": 0.86,
+              "value": [
+                -22.231309,
+                0.0,
+                61.08002
+              ]
+            },
+            {
+              "time": 0.98,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "altar",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.14,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.24,
+              "value": [
+                -60,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.78,
+              "value": [
+                -60,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.88,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "altarBack",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.14,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.24,
+              "value": [
+                60,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.78,
+              "value": [
+                60,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.88,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "console",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.24,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.36,
+              "value": [
+                0,
+                0,
+                220
+              ]
+            },
+            {
+              "time": 0.68,
+              "value": [
+                0,
+                0,
+                220
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "pillar",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.36,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.48,
+              "value": [
+                0,
+                0,
+                60
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                0,
+                0,
+                60
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "stub",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.36,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.48,
+              "value": [
+                0,
+                0,
+                7
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                0,
+                0,
+                7
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "pillarBack",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.36,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.48,
+              "value": [
+                0,
+                0,
+                60
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                0,
+                0,
+                60
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "stubBack",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.36,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.48,
+              "value": [
+                0,
+                0,
+                7
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                0,
+                0,
+                7
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.02,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            60
+          ]
+        },
+        {
+          "time": 0.8,
+          "value": [
+            0,
+            0,
+            60
+          ]
+        },
+        {
+          "time": 0.98,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "measureReveal": [
+        0.4,
+        0.6
+      ]
+    }
+  ],
+  "downloads": {
+    "bundle": "ps4-wraeclast-stand.zip",
+    "step": "assembly.step"
+  }
+}

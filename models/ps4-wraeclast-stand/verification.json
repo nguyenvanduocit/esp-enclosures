@@ -1,0 +1,1638 @@
+{
+  "units": "mm",
+  "dimensions": [
+    360.0,
+    305.0,
+    295.0
+  ],
+  "parts": {
+    "plinth": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 229799.09,
+      "bounds_mm": [
+        [
+          -85.0,
+          -40.0,
+          0.0
+        ],
+        [
+          85.0,
+          40.0,
+          65.0
+        ]
+      ]
+    },
+    "pillar": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 217583.5,
+      "bounds_mm": [
+        [
+          -28.348,
+          -19.972,
+          0.0
+        ],
+        [
+          28.348,
+          19.972,
+          207.49
+        ]
+      ]
+    },
+    "stub": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 112340.09,
+      "bounds_mm": [
+        [
+          -19.957,
+          -19.966,
+          0.0
+        ],
+        [
+          19.957,
+          19.966,
+          106.0
+        ]
+      ]
+    },
+    "skull": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 58431.83,
+      "bounds_mm": [
+        [
+          -20.5,
+          -26.691,
+          0.0
+        ],
+        [
+          20.5,
+          26.691,
+          46.5
+        ]
+      ]
+    },
+    "chain": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 5011.96,
+      "bounds_mm": [
+        [
+          -68.178,
+          -6.241,
+          0.0
+        ],
+        [
+          68.178,
+          6.241,
+          12.482
+        ]
+      ]
+    },
+    "altar": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 425825.43,
+      "bounds_mm": [
+        [
+          -57.4,
+          -91.0,
+          0.0
+        ],
+        [
+          57.4,
+          91.0,
+          66.571
+        ]
+      ]
+    },
+    "fitCoupon": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 36824.59,
+      "bounds_mm": [
+        [
+          -45.0,
+          -8.0,
+          0.0
+        ],
+        [
+          45.0,
+          8.0,
+          65.0
+        ]
+      ]
+    }
+  },
+  "checks": {
+    "physical_fit_tested": {
+      "tested": false,
+      "note": "Not printed yet; print fitCoupon first"
+    },
+    "all_parts_watertight_one_shell": {
+      "plinth": {
+        "triangles": 35988,
+        "volume_mm3": 229799.1,
+        "mass_g_solid": 285.0,
+        "mass_g_estimate": 109.2,
+        "overhang_mm2_over_45deg": 1312.5,
+        "sha256": "d2d0ff9d210b65986edc61fa3c87bed7df294834e2c0e3c4c2c339f59fc93d2f"
+      },
+      "pillar": {
+        "triangles": 36994,
+        "volume_mm3": 217583.5,
+        "mass_g_solid": 269.8,
+        "mass_g_estimate": 78.4,
+        "overhang_mm2_over_45deg": 493.2,
+        "sha256": "ac7f8f90d03c364790e5a5066f4108860ca475433c46f94eaf2b8e01b2c26316"
+      },
+      "stub": {
+        "triangles": 14332,
+        "volume_mm3": 112340.1,
+        "mass_g_solid": 139.3,
+        "mass_g_estimate": 40.5,
+        "overhang_mm2_over_45deg": 162.1,
+        "sha256": "6f67e11cb338658e7a7122f26479dd649de17917b33709ceb3fadd9bffe26b1d"
+      },
+      "skull": {
+        "triangles": 22626,
+        "volume_mm3": 58431.8,
+        "mass_g_solid": 72.5,
+        "mass_g_estimate": 22.0,
+        "overhang_mm2_over_45deg": 453.3,
+        "sha256": "6677a2ef9447889de5e59c5ef9743aee2217249fceba33b792f8e431d6bc6607"
+      },
+      "chain": {
+        "triangles": 32480,
+        "volume_mm3": 5012.0,
+        "mass_g_solid": 6.2,
+        "mass_g_estimate": 6.2,
+        "overhang_mm2_over_45deg": 867.5,
+        "sha256": "de0f6378eca875fcc228a31e56bac5dd8555e046692740d35275742c38838a6c"
+      },
+      "altar": {
+        "triangles": 49854,
+        "volume_mm3": 425825.4,
+        "mass_g_solid": 528.0,
+        "mass_g_estimate": 186.5,
+        "overhang_mm2_over_45deg": 545.2,
+        "sha256": "037b5e006beae7efedc9fcb60a763e80b3ad84c0381f05768a99dedb68e8a95b"
+      },
+      "fitCoupon": {
+        "triangles": 4016,
+        "volume_mm3": 36824.6,
+        "mass_g_solid": 45.7,
+        "mass_g_estimate": 21.8,
+        "overhang_mm2_over_45deg": 0.0,
+        "sha256": "ed08a249552c1f561df77487ead489c2f02193d7ac61fa2a3231884f9e8bffae"
+      }
+    },
+    "fits_250_cube": {
+      "plinth": [
+        170.0,
+        80.0,
+        65.0
+      ],
+      "pillar": [
+        56.697,
+        39.944,
+        207.49
+      ],
+      "stub": [
+        39.914,
+        39.931,
+        106.0
+      ],
+      "skull": [
+        41.0,
+        53.382,
+        46.5
+      ],
+      "chain": [
+        136.355,
+        12.482,
+        12.482
+      ],
+      "altar": [
+        114.8,
+        182.0,
+        66.571
+      ],
+      "fitCoupon": [
+        90.0,
+        16.0,
+        65.0
+      ]
+    },
+    "under_60k_triangles": {
+      "plinth": 35988,
+      "pillar": 36994,
+      "stub": 14332,
+      "skull": 22626,
+      "chain": 32480,
+      "altar": 49854,
+      "fitCoupon": 4016
+    },
+    "no_part_intersects_console": {
+      "pairs_checked": 14,
+      "max_pair": "plinth~console",
+      "max_volume_mm3": 5.573319583618286e-14
+    },
+    "no_two_parts_overlap": {
+      "pairs_checked": 66,
+      "max_pair": "stubBack~skullBack",
+      "max_volume_mm3": 5.331930982344947e-13
+    },
+    "ds4_envelope_intersects_no_part": {
+      "pairs_checked": 27,
+      "max_pair": "plinth~ds4",
+      "max_volume_mm3": 0.0,
+      "ds4_straight_lift_free_mm": 19
+    },
+    "air_channel_clear": {
+      "bodies_checked": 14
+    },
+    "under_console_between_sets_clear": {
+      "bodies_checked": 14
+    },
+    "port_and_exhaust_zones_clear": {
+      "bodies_checked": 14
+    },
+    "tenon_clears_socket_by_0_15": {
+      "overlap_mm3": 0.0,
+      "socket": [
+        34.4,
+        34.4,
+        6.0
+      ],
+      "tenon": [
+        34.0,
+        34.0,
+        6.0
+      ]
+    },
+    "peg_clears_hole_by_0_15": {
+      "overlap_mm3": 0.0,
+      "peg_diameter_height": [
+        8.0,
+        6.0
+      ],
+      "hole_diameter_depth": [
+        8.4,
+        7.0
+      ]
+    },
+    "chain_lifts_off_clear": {
+      "max_overlap_mm3": 0.0,
+      "steps_mm": 45,
+      "chain": {
+        "links": 7,
+        "wire": 4.0,
+        "pitch": 18.4,
+        "inner_width": 8.0,
+        "hook_peg_diameter": 6.0,
+        "break_gap": 2.0
+      }
+    },
+    "tongue_clears_pocket_by_0_15": {
+      "overlap_mm3": 0.0,
+      "tongue_clearance": 0.2
+    },
+    "altar_lip_faces_exact": {
+      "lean_deg": 70.0,
+      "back_bottom_edge_xz": [
+        -118.0,
+        10.2
+      ],
+      "backrest_max_x": -89.96,
+      "lip_outer_x": -178.14,
+      "cheek_top_max_z": 60.0,
+      "ds4_envelope": [
+        162.0,
+        57.0,
+        100.0
+      ],
+      "cheek_gap": 2.0,
+      "lip_gap": 1.0,
+      "backrest_reach_along_v": 60.0,
+      "lip_measured": {
+        "height_mm": 10.0,
+        "thickness_mm": 6.0,
+        "gap_to_envelope_mm": 1.0
+      }
+    },
+    "erosion_step_inward_only": {
+      "amplitude_mm": 1.0,
+      "seeds": {
+        "plinth": 11,
+        "tall_pillar": 23,
+        "stub": 37,
+        "altar": 53
+      },
+      "refine_edge_mm": 0.8,
+      "simplify_tolerance_mm": 0.05,
+      "volume_outside_blank_mm3": {
+        "plinth": 0.0,
+        "pillar": 0.0493,
+        "stub": 0.0222,
+        "altar": 0.0011
+      }
+    },
+    "final_outside_nominal_below_0_5mm3": {
+      "plinth": 0.0,
+      "pillar": 0.0516,
+      "stub": 0.0104,
+      "altar": 0.0267
+    },
+    "sets_within_y_52_5_to_132_5": {
+      "abs_y_mm": {
+        "plinth": [
+          52.5,
+          132.5
+        ],
+        "plinthBack": [
+          52.5,
+          132.5
+        ],
+        "pillar": [
+          72.552,
+          112.496
+        ],
+        "pillarBack": [
+          72.552,
+          112.496
+        ],
+        "stub": [
+          72.5,
+          112.431
+        ],
+        "stubBack": [
+          72.5,
+          112.431
+        ],
+        "skull": [
+          63.003,
+          116.386
+        ],
+        "skullBack": [
+          63.003,
+          116.386
+        ],
+        "chain": [
+          84.5,
+          100.5
+        ],
+        "chainBack": [
+          84.5,
+          100.5
+        ]
+      },
+      "assembly_bounds_mm": [
+        [
+          -180.0,
+          -152.5,
+          0.0
+        ],
+        [
+          180.0,
+          152.5,
+          295.0
+        ]
+      ]
+    },
+    "stub_seat_flat": {
+      "stub_seat_z": 100.0,
+      "stub_seat_flat_area_mm2": 856.0,
+      "stub_rim_max_z": 100.0
+    },
+    "broken_edges_within_limits": {
+      "tall_pillar_top_z_local": 207.49,
+      "tall_pillar_top_z_world": 221.49,
+      "broken_top_lowest_z_local": 188.94,
+      "corner_chips": 8,
+      "corner_chip_depths_mm": [
+        4.11,
+        5.37,
+        2.08,
+        1.95,
+        1.74,
+        5.93,
+        2.3,
+        1.88
+      ],
+      "cradle_wall_top_z": [
+        56.71,
+        65.0
+      ]
+    },
+    "contacts": {
+      "mm3_after_drop": {
+        "console_on_ribs": 424.0,
+        "pillar_in_socket": 581.81,
+        "stub_in_socket": 579.615,
+        "skull_on_stub": 357.194,
+        "chain_on_hook": 7.183,
+        "ds4_on_seat": 4432.319,
+        "ds4_on_backrest": 4637.244
+      },
+      "rib_contact_area_mm2_per_set": 848.0
+    },
+    "tipping_angle_at_least_20deg": {
+      "pla_mass_g_solid": 1545.5,
+      "controllers_g": 420.0,
+      "total_mass_g": 4765.5,
+      "center_of_mass": [
+        0.0,
+        0.0,
+        120.9
+      ],
+      "angle_deg_bumper_centres": 30.07,
+      "angle_deg_plinth_footprint": 35.11,
+      "angle_deg_bumper_centres_console_only": 23.96,
+      "angle_deg_plinth_footprint_console_only": 28.35
+    },
+    "ds4_centre_over_altar_bumpers": {
+      "ds4_centre_local": [
+        -127.68,
+        32.0,
+        66.93
+      ],
+      "ds4_margin_to_bumper_polygon_mm": 31.68,
+      "altar_mass_g_solid": 528.0,
+      "altar_plus_ds4_tipping_deg": 48.65
+    },
+    "step_ten_valid_solids": {
+      "solids": [
+        "altar",
+        "altarBack",
+        "chain",
+        "chainBack",
+        "pillar",
+        "pillarBack",
+        "plinth",
+        "plinthBack",
+        "stub",
+        "stubBack"
+      ]
+    },
+    "model_json_poses_match": {
+      "parts_checked": 12,
+      "tolerance_mm": 0.001
+    },
+    "animation_collision_free": {
+      "max_overlap_mm3": 0.0,
+      "pair": null,
+      "at": null,
+      "samples": 2751,
+      "max_step_mm": 1.0
+    }
+  },
+  "printability": {
+    "plinth": {
+      "overhang_mm2": 1323.6,
+      "bridges": [
+        {
+          "z": 1.5,
+          "size_mm": [
+            11.996,
+            12.0
+          ],
+          "area_mm2": 113.05
+        },
+        {
+          "z": 1.5,
+          "size_mm": [
+            11.996,
+            12.0
+          ],
+          "area_mm2": 113.05
+        },
+        {
+          "z": 1.5,
+          "size_mm": [
+            11.996,
+            12.0
+          ],
+          "area_mm2": 113.05
+        },
+        {
+          "z": 1.5,
+          "size_mm": [
+            11.996,
+            12.0
+          ],
+          "area_mm2": 113.05
+        },
+        {
+          "z": 3.016,
+          "size_mm": [
+            1.0,
+            3.76
+          ],
+          "area_mm2": 3.76
+        },
+        {
+          "z": 3.016,
+          "size_mm": [
+            1.0,
+            3.76
+          ],
+          "area_mm2": 3.76
+        },
+        {
+          "z": 5.8,
+          "size_mm": [
+            19.978,
+            40.0
+          ],
+          "area_mm2": 788.96
+        },
+        {
+          "z": 5.94,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 5.94,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 6.144,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 6.144,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 8.456,
+          "size_mm": [
+            1.0,
+            5.5
+          ],
+          "area_mm2": 5.5
+        },
+        {
+          "z": 8.456,
+          "size_mm": [
+            1.0,
+            5.5
+          ],
+          "area_mm2": 5.5
+        },
+        {
+          "z": 8.66,
+          "size_mm": [
+            0.029,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 8.66,
+          "size_mm": [
+            0.029,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.06,
+            1.0
+          ],
+          "area_mm2": 0.06
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.06,
+            1.0
+          ],
+          "area_mm2": 0.06
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.059,
+            1.0
+          ],
+          "area_mm2": 0.06
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.06,
+            1.0
+          ],
+          "area_mm2": 0.06
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.06,
+            1.0
+          ],
+          "area_mm2": 0.06
+        }
+      ],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 1323.6,
+          "contact_mm2": 12347.8,
+          "height_mm": 65.0
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 4405.4,
+          "contact_mm2": 1273.0,
+          "height_mm": 80.0
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 5516.3,
+          "contact_mm2": 152.5,
+          "height_mm": 80.0
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 6920.8,
+          "contact_mm2": 48.9,
+          "height_mm": 170.0
+        },
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 6933.7,
+          "contact_mm2": 59.6,
+          "height_mm": 170.0
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 13497.1,
+          "contact_mm2": 38.0,
+          "height_mm": 65.0
+        }
+      ]
+    },
+    "pillar": {
+      "overhang_mm2": 660.1,
+      "bridges": [
+        {
+          "z": 6.0,
+          "size_mm": [
+            36.0,
+            36.0
+          ],
+          "area_mm2": 156.0
+        },
+        {
+          "z": 35.999,
+          "size_mm": [
+            0.1,
+            1.497
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 35.999,
+          "size_mm": [
+            0.1,
+            1.494
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 38.72,
+          "size_mm": [
+            1.5,
+            12.9
+          ],
+          "area_mm2": 19.25
+        },
+        {
+          "z": 40.0,
+          "size_mm": [
+            0.05,
+            1.497
+          ],
+          "area_mm2": 0.07
+        },
+        {
+          "z": 54.28,
+          "size_mm": [
+            0.05,
+            1.5
+          ],
+          "area_mm2": 0.07
+        },
+        {
+          "z": 60.999,
+          "size_mm": [
+            0.098,
+            1.5
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 60.999,
+          "size_mm": [
+            0.1,
+            1.493
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 75.28,
+          "size_mm": [
+            0.05,
+            1.488
+          ],
+          "area_mm2": 0.07
+        },
+        {
+          "z": 81.999,
+          "size_mm": [
+            0.1,
+            1.5
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 81.999,
+          "size_mm": [
+            0.1,
+            1.493
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 88.92,
+          "size_mm": [
+            1.497,
+            10.186
+          ],
+          "area_mm2": 15.24
+        },
+        {
+          "z": 95.8,
+          "size_mm": [
+            0.05,
+            1.493
+          ],
+          "area_mm2": 0.07
+        },
+        {
+          "z": 98.999,
+          "size_mm": [
+            0.1,
+            1.494
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 98.999,
+          "size_mm": [
+            0.1,
+            1.481
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 101.72,
+          "size_mm": [
+            1.495,
+            12.9
+          ],
+          "area_mm2": 19.15
+        },
+        {
+          "z": 102.2,
+          "size_mm": [
+            0.049,
+            1.5
+          ],
+          "area_mm2": 0.07
+        },
+        {
+          "z": 109.92,
+          "size_mm": [
+            1.5,
+            10.186
+          ],
+          "area_mm2": 15.13
+        },
+        {
+          "z": 116.8,
+          "size_mm": [
+            0.05,
+            1.5
+          ],
+          "area_mm2": 0.07
+        },
+        {
+          "z": 123.2,
+          "size_mm": [
+            0.049,
+            1.5
+          ],
+          "area_mm2": 0.07
+        },
+        {
+          "z": 124.0,
+          "size_mm": [
+            0.05,
+            1.499
+          ],
+          "area_mm2": 0.07
+        },
+        {
+          "z": 144.999,
+          "size_mm": [
+            0.1,
+            1.5
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 144.999,
+          "size_mm": [
+            0.098,
+            1.5
+          ],
+          "area_mm2": 0.15
+        },
+        {
+          "z": 167.001,
+          "size_mm": [
+            0.189,
+            1.0
+          ],
+          "area_mm2": 0.17
+        }
+      ],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 660.1,
+          "contact_mm2": 1124.0,
+          "height_mm": 207.49
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 2100.6,
+          "contact_mm2": 0.0,
+          "height_mm": 207.49
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 5993.6,
+          "contact_mm2": 0.0,
+          "height_mm": 56.697
+        },
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 6213.2,
+          "contact_mm2": 19.6,
+          "height_mm": 56.697
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 6454.7,
+          "contact_mm2": 0.0,
+          "height_mm": 39.944
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 6664.0,
+          "contact_mm2": 0.0,
+          "height_mm": 39.944
+        }
+      ]
+    },
+    "stub": {
+      "overhang_mm2": 187.4,
+      "bridges": [
+        {
+          "z": 6.0,
+          "size_mm": [
+            36.0,
+            36.0
+          ],
+          "area_mm2": 156.0
+        }
+      ],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 187.4,
+          "contact_mm2": 1124.0,
+          "height_mm": 106.0
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 1287.4,
+          "contact_mm2": 36.3,
+          "height_mm": 106.0
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 3047.8,
+          "contact_mm2": 0.0,
+          "height_mm": 39.931
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 3075.3,
+          "contact_mm2": 5.6,
+          "height_mm": 39.931
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 3157.6,
+          "contact_mm2": 0.5,
+          "height_mm": 39.914
+        },
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 3309.4,
+          "contact_mm2": 1.1,
+          "height_mm": 39.914
+        }
+      ]
+    },
+    "skull": {
+      "overhang_mm2": 497.6,
+      "bridges": [
+        {
+          "z": 0.013,
+          "size_mm": [
+            0.75,
+            1.0
+          ],
+          "area_mm2": 0.19
+        },
+        {
+          "z": 0.013,
+          "size_mm": [
+            0.75,
+            1.0
+          ],
+          "area_mm2": 0.19
+        },
+        {
+          "z": 0.016,
+          "size_mm": [
+            1.5,
+            1.5
+          ],
+          "area_mm2": 1.13
+        },
+        {
+          "z": 0.017,
+          "size_mm": [
+            0.5,
+            2.25
+          ],
+          "area_mm2": 0.5
+        },
+        {
+          "z": 0.023,
+          "size_mm": [
+            0.5,
+            1.0
+          ],
+          "area_mm2": 0.13
+        },
+        {
+          "z": 0.028,
+          "size_mm": [
+            4.0,
+            10.5
+          ],
+          "area_mm2": 12.0
+        },
+        {
+          "z": 0.091,
+          "size_mm": [
+            0.389,
+            2.38
+          ],
+          "area_mm2": 0.06
+        },
+        {
+          "z": 0.091,
+          "size_mm": [
+            0.389,
+            2.38
+          ],
+          "area_mm2": 0.06
+        },
+        {
+          "z": 7.0,
+          "size_mm": [
+            8.397,
+            8.4
+          ],
+          "area_mm2": 55.39
+        },
+        {
+          "z": 15.67,
+          "size_mm": [
+            0.883,
+            3.633
+          ],
+          "area_mm2": 1.38
+        },
+        {
+          "z": 15.703,
+          "size_mm": [
+            4.25,
+            5.75
+          ],
+          "area_mm2": 19.25
+        }
+      ],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 497.6,
+          "contact_mm2": 878.3,
+          "height_mm": 46.5
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 872.1,
+          "contact_mm2": 1.2,
+          "height_mm": 53.382
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 1136.8,
+          "contact_mm2": 0.1,
+          "height_mm": 53.382
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 1273.9,
+          "contact_mm2": 0.3,
+          "height_mm": 46.5
+        },
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 1751.7,
+          "contact_mm2": 0.0,
+          "height_mm": 41.0
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 1752.0,
+          "contact_mm2": 0.0,
+          "height_mm": 41.0
+        }
+      ]
+    },
+    "chain": {
+      "overhang_mm2": 951.8,
+      "bridges": [
+        {
+          "z": 8.491,
+          "size_mm": [
+            0.299,
+            4.0
+          ],
+          "area_mm2": 1.2
+        },
+        {
+          "z": 8.491,
+          "size_mm": [
+            0.299,
+            4.0
+          ],
+          "area_mm2": 1.2
+        },
+        {
+          "z": 8.491,
+          "size_mm": [
+            0.299,
+            10.0
+          ],
+          "area_mm2": 2.99
+        },
+        {
+          "z": 8.491,
+          "size_mm": [
+            0.299,
+            10.0
+          ],
+          "area_mm2": 2.99
+        },
+        {
+          "z": 8.491,
+          "size_mm": [
+            0.299,
+            10.0
+          ],
+          "area_mm2": 2.99
+        },
+        {
+          "z": 8.491,
+          "size_mm": [
+            0.299,
+            10.0
+          ],
+          "area_mm2": 2.99
+        },
+        {
+          "z": 8.491,
+          "size_mm": [
+            0.299,
+            10.0
+          ],
+          "area_mm2": 2.99
+        },
+        {
+          "z": 8.491,
+          "size_mm": [
+            0.299,
+            10.0
+          ],
+          "area_mm2": 2.99
+        }
+      ],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 304.3,
+          "contact_mm2": 0.0,
+          "height_mm": 136.355
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 306.0,
+          "contact_mm2": 0.0,
+          "height_mm": 136.355
+        },
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 951.8,
+          "contact_mm2": 20.9,
+          "height_mm": 12.482
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 960.0,
+          "contact_mm2": 20.9,
+          "height_mm": 12.482
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 965.2,
+          "contact_mm2": 20.3,
+          "height_mm": 12.482
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 966.2,
+          "contact_mm2": 20.3,
+          "height_mm": 12.482
+        }
+      ],
+      "warning": "set print_rotation to (0, 0, -45) to cut overhang from 951.8 mm² to 304.3 mm²"
+    },
+    "altar": {
+      "overhang_mm2": 550.8,
+      "bridges": [
+        {
+          "z": 1.5,
+          "size_mm": [
+            11.996,
+            12.0
+          ],
+          "area_mm2": 113.05
+        },
+        {
+          "z": 1.5,
+          "size_mm": [
+            11.996,
+            12.0
+          ],
+          "area_mm2": 113.05
+        },
+        {
+          "z": 1.5,
+          "size_mm": [
+            11.996,
+            12.0
+          ],
+          "area_mm2": 113.05
+        },
+        {
+          "z": 1.5,
+          "size_mm": [
+            11.996,
+            12.0
+          ],
+          "area_mm2": 113.05
+        },
+        {
+          "z": 3.016,
+          "size_mm": [
+            1.0,
+            3.76
+          ],
+          "area_mm2": 3.76
+        },
+        {
+          "z": 3.016,
+          "size_mm": [
+            1.0,
+            3.76
+          ],
+          "area_mm2": 3.76
+        },
+        {
+          "z": 5.94,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 5.94,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 6.144,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 8.456,
+          "size_mm": [
+            1.0,
+            5.5
+          ],
+          "area_mm2": 5.5
+        },
+        {
+          "z": 8.456,
+          "size_mm": [
+            1.0,
+            5.5
+          ],
+          "area_mm2": 5.5
+        },
+        {
+          "z": 8.66,
+          "size_mm": [
+            0.029,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 8.66,
+          "size_mm": [
+            0.029,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.03,
+            1.0
+          ],
+          "area_mm2": 0.03
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.059,
+            1.0
+          ],
+          "area_mm2": 0.06
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.06,
+            1.0
+          ],
+          "area_mm2": 0.06
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.06,
+            1.0
+          ],
+          "area_mm2": 0.06
+        },
+        {
+          "z": 9.0,
+          "size_mm": [
+            0.059,
+            1.0
+          ],
+          "area_mm2": 0.06
+        }
+      ],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 550.8,
+          "contact_mm2": 17479.5,
+          "height_mm": 66.571
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 8122.1,
+          "contact_mm2": 94.7,
+          "height_mm": 182.0
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 8128.3,
+          "contact_mm2": 72.1,
+          "height_mm": 182.0
+        },
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 13759.0,
+          "contact_mm2": 221.8,
+          "height_mm": 114.8
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 16138.8,
+          "contact_mm2": 1613.9,
+          "height_mm": 114.8
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 18540.7,
+          "contact_mm2": 0.0,
+          "height_mm": 66.571
+        }
+      ]
+    },
+    "fitCoupon": {
+      "overhang_mm2": 0.0,
+      "bridges": [],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 0.0,
+          "contact_mm2": 1440.0,
+          "height_mm": 65.0
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 787.7,
+          "contact_mm2": 2013.6,
+          "height_mm": 16.0
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 1402.7,
+          "contact_mm2": 38.0,
+          "height_mm": 65.0
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 1406.2,
+          "contact_mm2": 272.9,
+          "height_mm": 90.0
+        },
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 1414.9,
+          "contact_mm2": 271.5,
+          "height_mm": 90.0
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 1749.6,
+          "contact_mm2": 1024.8,
+          "height_mm": 16.0
+        }
+      ]
+    }
+  },
+  "warnings": [
+    "chain: set print_rotation to (0, 0, -45) to cut overhang from 951.8 mm² to 304.3 mm²"
+  ]
+}
