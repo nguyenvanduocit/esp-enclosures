@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {sampleTrack, sampleAnimation, measurementLines} from '../viewer/model-core.js';
+import {sampleTrack, sampleAnimation, measurementLines, layerStarts} from '../viewer/model-core.js';
 
 const load = id => JSON.parse(readFileSync(new URL(`../models/${id}/model.json`, import.meta.url)));
 const battery = load('esp32-c3-supermini-18650');
@@ -57,4 +57,26 @@ test('arbitrary model and part ids work without enclosure-specific branches', ()
   const frame = sampleAnimation(model, animation, .5);
   assert.deepEqual(frame.offsets, {drawer: [50, 0, 0], cabinet: [0, 0, 0]});
   assert.ok(Math.abs(frame.measureProgress - .5) < 1e-10);
+});
+
+test('layer starts count two vertices per polyline segment', () => {
+  const layers = [
+    {z: .2, paths: {outer_wall: [[0, 0, 10, 0, 10, 10]], infill: [[0, 0, 5, 5]]}},
+    {z: .36, paths: {}},
+    {z: .52, paths: {outer_wall: [[0, 0, 1, 1], [2, 2, 3, 3, 4, 4]]}},
+  ];
+  assert.deepEqual(layerStarts(layers, 'outer_wall'), [0, 4, 4, 10]);
+  assert.deepEqual(layerStarts(layers, 'infill'), [0, 2, 2, 2]);
+  assert.deepEqual(layerStarts(layers, 'support'), [0, 0, 0, 0]);
+});
+
+test('sliced models ship toolpaths for every layer', () => {
+  for (const id of ['esp32-c3-supermini', 'esp32-c3-supermini-18650']) {
+    const model = load(id);
+    const data = JSON.parse(readFileSync(new URL(`../models/${id}/${model.print.layers}`, import.meta.url)));
+    assert.equal(data.layers.length, model.print.layerCount);
+    assert.deepEqual(data.bed, [256, 256]);
+    const total = data.types.reduce((sum, type) => sum + layerStarts(data.layers, type.id).at(-1), 0);
+    assert.ok(total > 1000);
+  }
 });

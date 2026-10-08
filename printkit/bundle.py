@@ -13,6 +13,7 @@ MODULES = [
     "viewer/vendor/OrbitControls.js",
     "viewer/resources.js",
     "viewer/model-core.js",
+    "viewer/print-preview.js",
     "viewer/part-drag.js",
     "viewer/dimensions.js",
     "viewer/renderer.js",

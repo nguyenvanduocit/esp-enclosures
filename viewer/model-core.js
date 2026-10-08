@@ -23,3 +23,14 @@ export function sampleAnimation(model, animation, time) {
 export function measurementLines(measurement, visibility) {
   return measurement.variants?.find(variant => visibility[variant.whenHidden] === false)?.lines ?? measurement.lines;
 }
+
+// Vertex index where each layer's segments start in one toolpath type; LineSegments use two vertices per segment.
+export function layerStarts(layers, type) {
+  const starts = [0];
+  for (const layer of layers) {
+    let count = starts.at(-1);
+    for (const path of layer.paths[type] ?? []) count += (path.length / 2 - 1) * 2;
+    starts.push(count);
+  }
+  return starts;
+}
