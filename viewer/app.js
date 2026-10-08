@@ -128,7 +128,6 @@ function syncState(state) {
   $('play').setAttribute('aria-label', state.playing ? 'Tạm dừng' : 'Phát');
   $('play').title = state.playing ? 'Tạm dừng' : 'Phát';
   $('timeline').value = String(Math.round(state.time * 1000));
-  $('assembly').textContent = state.opened ? 'Lắp lại' : 'Tách rời';
   $('mode').value = state.animation;
 }
 
@@ -200,7 +199,6 @@ function showError(error) {
 
 $('play').onclick = () => viewer.togglePlay();
 $('timeline').oninput = event => viewer.scrub(Number(event.target.value) / 1000);
-$('assembly').onclick = () => viewer.setOpen(!viewer.state.opened);
 $('mode').onchange = event => { viewer.setMode(event.target.value); syncVisibility(); };
 $('wireframe').onchange = event => viewer.setWireframe(event.target.checked);
 const measure = () => viewer.setMeasurements($('measure').checked, $('componentMeasure').value);

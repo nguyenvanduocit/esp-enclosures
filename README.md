@@ -47,7 +47,7 @@ Schema đầy đủ nằm trong [model.schema.json](model.schema.json); hai `mod
 
 Tọa độ dùng mm, trục Z hướng lên. `position` là vị trí lắp; `rotation` là góc Euler XYZ theo **độ**. Mesh STL giữ tọa độ trong file; mesh `box` khai báo `size` và `position` trong chi tiết. Đường dẫn asset tính từ thư mục chứa `model.json`.
 
-`drag.axis` là vector đơn vị trong hệ tọa độ thế giới; `maxDistance` là khoảng kéo tối đa. Animation v1 hỗ trợ **tịnh tiến**: giá trị keyframe là độ dịch chuyển so với vị trí lắp, không cộng dồn qua các frame. `time` chạy từ 0 đến 1, nội suy smoothstep. Mỗi chu kỳ bắt đầu và kết thúc ở vị trí lắp, chạy một lượt. `openPose` là trạng thái của nút **Tách rời**.
+`drag.axis` là vector đơn vị trong hệ tọa độ thế giới; `maxDistance` là khoảng kéo tối đa. Animation v1 hỗ trợ **tịnh tiến**: giá trị keyframe là độ dịch chuyển so với vị trí lắp, không cộng dồn qua các frame. `time` chạy từ 0 đến 1, nội suy smoothstep. Mỗi chu kỳ bắt đầu và kết thúc ở vị trí lắp, chạy một lượt. `openPose` lưu tư thế tách, dùng qua API `viewer.setOpen(true)`.
 
 Ví dụ một track kéo chi tiết `drawer` ra 30 mm theo X rồi đóng:
 
