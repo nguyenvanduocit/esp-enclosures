@@ -1,4 +1,4 @@
 [
   "esp32-c3-supermini-18650/model.json",
-  "esp32-c3-supermini/model.json"
+  "models/esp32-c3-supermini/model.json"
 ]

@@ -161,7 +161,7 @@
       "additionalProperties": false
     },
     "$schema": {
-      "const": "../model.schema.json"
+      "enum": ["../model.schema.json", "../../model.schema.json"]
     }
   },
   "required": [
