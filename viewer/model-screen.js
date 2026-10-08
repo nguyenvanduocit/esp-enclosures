@@ -154,7 +154,6 @@ $('timeline').oninput = event => viewer.scrub(Number(event.target.value) / 1000)
 $('mode').onchange = event => { viewer.setMode(event.target.value); syncVisibility(); };
 $('wireframe').onchange = event => viewer.setWireframe(event.target.checked);
 $('measurementControls').onchange = () => viewer.setMeasurements([...$('measurementControls').querySelectorAll('input:checked')].map(input => input.value));
-$('reset').onclick = () => { viewer.reset(); syncVisibility(); $('wireframe').checked = false; for (const input of $('measurementControls').querySelectorAll('input')) input.checked = false; };
 $('openPrint').onclick = () => { viewer.pause(); $('printDialog').showModal(); };
 $('closePrint').onclick = () => $('printDialog').close();
 $('printDialog').addEventListener('click', event => {

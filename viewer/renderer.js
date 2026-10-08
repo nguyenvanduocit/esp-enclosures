@@ -88,17 +88,6 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
     measureProgress = 1;
     notify();
   }
-  function reset() {
-    animation = model.animations[0];
-    setOpen(false);
-    camera.position.set(...model.camera.position);
-    controls.target.set(...model.camera.target);
-    for (const part of Object.values(parts)) part.visible = true;
-    setWireframe(false);
-    selectedMeasurements.clear();
-    controls.update();
-    notify();
-  }
   function setWireframe(value) { for (const part of Object.values(parts)) part.traverse(mesh => { if (mesh.isMesh) mesh.material.wireframe = value; }); }
   sceneView.start(delta => {
     if (playing) {
@@ -118,7 +107,7 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
     pause() { playing = false; notify(); },
     scrub(value) { playing = false; setTime(value); },
     setMode(id) { animation = model.animations.find(item => item.id === id); setOpen(false); for (const track of animation.tracks) parts[track.part].visible = true; },
-    setOpen, reset, setWireframe,
+    setOpen, setWireframe,
     setVisible(id, value) { parts[id].visible = value; },
     setMeasurements(ids) { selectedMeasurements = new Set(ids); },
     dispose() {
