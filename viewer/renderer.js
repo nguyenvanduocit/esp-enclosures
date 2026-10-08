@@ -121,7 +121,6 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
     setOpen, reset, setWireframe,
     setVisible(id, value) { parts[id].visible = value; },
     setMeasurements(ids) { selectedMeasurements = new Set(ids); },
-    setView(id) { const view = model.camera.views.find(item => item.id === id); camera.position.set(...view.offset).add(controls.target); camera.lookAt(controls.target); controls.update(); },
     dispose() {
       partDrag.dispose();
       sceneView.dispose();

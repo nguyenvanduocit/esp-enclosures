@@ -20,12 +20,6 @@ function renderControls(model, folder) {
     label.append(input, document.createTextNode(part.label));
     $('partControls').append(label);
   }
-  $('viewControls').replaceChildren();
-  for (const view of model.camera.views) {
-    const button = element('button', view.label);
-    button.onclick = () => viewer.setView(view.id);
-    $('viewControls').append(button);
-  }
   $('measurementControls').replaceChildren();
   for (const measurement of model.measurements) {
     const label = element('label');

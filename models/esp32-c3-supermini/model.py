@@ -28,9 +28,7 @@ model = Model(
     description='Hộp gọn cho bo đã hàn chân, cấp nguồn qua USB-C.',
     category='Hộp điện tử', status='Chưa in thử', thumbnail='thumbnail.png',
     dimensions=(OUTER_W, OUTER_L, HEIGHT),
-    camera={'position': [63, -88, 69], 'target': [0, 0, 12], 'minDistance': 28, 'maxDistance': 230,
-            'views': [{'id': 'front', 'label': 'Trước', 'offset': [0, -115, 0.01]},
-                      {'id': 'top', 'label': 'Trên', 'offset': [0, -0.01, 115]}]},
+    camera={'position': [63, -88, 69], 'target': [0, 0, 12], 'minDistance': 28, 'maxDistance': 230},
     grid={'size': 100, 'divisions': 20},
     print_info={'summary': 'Chưa in thử', 'sections': [
         {'title': 'Độ vừa', 'rows': [],

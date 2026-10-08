@@ -17,7 +17,6 @@ def make_model():
             "target": [0, 0, 0],
             "minDistance": 1,
             "maxDistance": 9,
-            "views": [{"id": "top", "label": "Trên", "offset": [0, 0, 9]}],
         },
         grid={"size": 100, "divisions": 20},
         print_info={"summary": "x", "sections": []},

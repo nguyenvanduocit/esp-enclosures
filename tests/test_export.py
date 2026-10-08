@@ -13,8 +13,7 @@ from printkit.shapes import block, box_solid, rotated
 def demo(check_passes=True, part_id='lid'):
     model = Model('demo', title='Demo', description='d', category='c', status='s', thumbnail='thumbnail.png',
                   dimensions=(20, 20, 12),
-                  camera={'position': [60, -60, 60], 'target': [0, 0, 5], 'minDistance': 10, 'maxDistance': 300,
-                          'views': [{'id': 'top', 'label': 'Trên', 'offset': [0, -0.01, 100]}]},
+                  camera={'position': [60, -60, 60], 'target': [0, 0, 5], 'minDistance': 10, 'maxDistance': 300},
                   grid={'size': 100, 'divisions': 20}, print_info={'summary': 'x', 'sections': []})
 
     @model.part('base', 'Thân', color='#367c85', drag=Drag((0, 0, -1), 20))

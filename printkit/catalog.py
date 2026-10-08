@@ -29,7 +29,6 @@ def validate_data(model):
     ids = unique_ids(model["parts"], "part")
     unique_ids(model["measurements"], "measurement")
     unique_ids(model["animations"], "animation")
-    unique_ids(model["camera"]["views"], "view")
     if model["camera"]["minDistance"] >= model["camera"]["maxDistance"]:
         raise ValueError("Camera distance limits are reversed")
     for part in model["parts"]:

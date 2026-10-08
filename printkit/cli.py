@@ -26,8 +26,7 @@ W, L, H = 40.0, 30.0, 10.0
 model = Model(
     '{id}', title='{id}', description='Mô tả ngắn.', category='Khác', status='Bản nháp',
     thumbnail='thumbnail.png', dimensions=(W, L, H),
-    camera={{'position': [80, -110, 90], 'target': [0, 0, H / 2], 'minDistance': 30, 'maxDistance': 400,
-            'views': [{{'id': 'top', 'label': 'Trên', 'offset': [0, -0.01, 200]}}]}},
+    camera={{'position': [80, -110, 90], 'target': [0, 0, H / 2], 'minDistance': 30, 'maxDistance': 400}},
     grid={{'size': 100, 'divisions': 20}},
     print_info={{'summary': 'Chưa in thử', 'sections': []}})
 

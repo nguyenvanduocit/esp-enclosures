@@ -48,39 +48,13 @@
         "maxDistance": {
           "type": "number",
           "exclusiveMinimum": 0
-        },
-        "views": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "$ref": "#/$defs/id"
-              },
-              "label": {
-                "type": "string",
-                "minLength": 1
-              },
-              "offset": {
-                "$ref": "#/$defs/vec3"
-              }
-            },
-            "required": [
-              "id",
-              "label",
-              "offset"
-            ],
-            "additionalProperties": false
-          },
-          "minItems": 1
         }
       },
       "required": [
         "position",
         "target",
         "minDistance",
-        "maxDistance",
-        "views"
+        "maxDistance"
       ],
       "additionalProperties": false
     },

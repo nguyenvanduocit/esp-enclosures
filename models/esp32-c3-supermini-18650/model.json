@@ -24,27 +24,7 @@
       16
     ],
     "minDistance": 55,
-    "maxDistance": 550,
-    "views": [
-      {
-        "id": "front",
-        "label": "Trước",
-        "offset": [
-          0,
-          -285,
-          0.01
-        ]
-      },
-      {
-        "id": "top",
-        "label": "Trên",
-        "offset": [
-          0,
-          -0.01,
-          285
-        ]
-      }
-    ]
+    "maxDistance": 550
   },
   "grid": {
     "size": 180,
