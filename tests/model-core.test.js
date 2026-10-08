@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {sampleTrack, sampleAnimation, measurementLines} from '../viewer/model-core.js';
 
-const load = id => JSON.parse(readFileSync(new URL(`../${id}/model.json`, import.meta.url)));
+const load = id => JSON.parse(readFileSync(new URL(`../models/${id}/model.json`, import.meta.url)));
 const battery = load('esp32-c3-supermini-18650');
 const small = load('esp32-c3-supermini');
 

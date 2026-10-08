@@ -2,7 +2,7 @@
 
 Thân hộp 60 × 84 × 27,2 mm cho bo đã hàn hai hàng chân hướng xuống, một viên 18650 tháo rời và module tăng/hạ áp mini. Có hai nắp độc lập; thay pin qua nắp bên trái. Không có khoang mạch sạc. Có nút bịt USB tháo rời; kích thước bao ngoài khi gắn nút là 60 × 85,2 × 27,2 mm. Bản V1 nằm ở thư mục bên cạnh và được giữ nguyên.
 
-Mở model trong [app chung](../#model/esp32-c3-supermini-18650); bản ZIP có `index.html` chạy offline. Viewer có xoay/zoom, animation mở–đóng và chế độ **Thay pin**. Sidebar có **Hiển thị** để ẩn từng chi tiết, **Đo** để bật kích thước vỏ hoặc linh kiện và **In & tải** để lấy file cùng cấu hình in. Số đo vỏ luôn tính khi lắp kín, không cộng khoảng bóc tách. Chế độ **Bịt USB** chỉ di chuyển nút bịt; chế độ thay pin giữ nó tại chỗ.
+Mở model trong [app chung](../../#model/esp32-c3-supermini-18650); bản ZIP có `index.html` chạy offline. Viewer có xoay/zoom, animation mở–đóng và chế độ **Thay pin**. Sidebar có **Hiển thị** để ẩn từng chi tiết, **Đo** để bật kích thước vỏ hoặc linh kiện và **In & tải** để lấy file cùng cấu hình in. Số đo vỏ luôn tính khi lắp kín, không cộng khoảng bóc tách. Chế độ **Bịt USB** chỉ di chuyển nút bịt; chế độ thay pin giữ nó tại chỗ.
 
 ## Kéo từng chi tiết
 
@@ -38,16 +38,16 @@ Nút bịt USB che toàn bộ lỗ 14 × 14,2 mm ở mặt trước. Mặt ngoà
 ## File in và tái tạo
 
 - `base.stl`: thân, mặt đáy trên bàn in.
-- `battery_lid.stl`: nắp pin, mặt ngoài trên bàn in, mép cài hướng lên.
-- `electronics_lid.stl`: nắp mạch, cùng hướng in với nắp pin.
-- `usb_cap.stl`: nút bịt USB, mặt ngoài phẳng đặt trên bàn in, phần gài hướng lên; không cần in lại thân hoặc hai nắp.
-- `enclosure.step`: bốn chi tiết ở vị trí lắp kín; không chứa linh kiện tham khảo.
-- `model.py`: nguồn CAD; `reference/` chứa mesh minh họa cho viewer, không phải chi tiết cần in.
-- `model.json`: chi tiết, số đo, animation và thông tin in theo [schema chung](../model.schema.json). Viewer dùng nguồn chung ở `../viewer/`.
+- `batteryLid.stl`: nắp pin, mặt ngoài trên bàn in, mép cài hướng lên.
+- `electronicsLid.stl`: nắp mạch, cùng hướng in với nắp pin.
+- `usbCap.stl`: nút bịt USB, mặt ngoài phẳng đặt trên bàn in, phần gài hướng lên; không cần in lại thân hoặc hai nắp.
+- `assembly.step`: bốn chi tiết ở vị trí lắp kín; không chứa linh kiện tham khảo.
+- `model.py`: nguồn duy nhất; `reference/` chứa mesh minh họa cho viewer, không phải chi tiết cần in.
+- `model.json`, `verification.json`: sinh ra từ `model.py`, không sửa tay. `model.json` theo [schema chung](../../model.schema.json); viewer dùng nguồn chung ở `../../viewer/`.
 
 ```sh
-uv run --python 3.12 --with cadquery==2.8.0 --with trimesh==5.1.1 python model.py
-uv run ../build.py
+uv run printkit cad esp32-c3-supermini-18650
+uv run printkit build
 ```
 
 Model kiểm tra BRep hợp lệ, STL kín/một khối, giao nhau giữa linh kiện–vỏ, nắp–nắp, cửa USB cho bao dây 12 × 6 mm, và hình quét liên tục của viên pin khi nhấc lên với nắp mạch vẫn đóng. Gân ma sát chủ đích được loại khỏi phép kiểm tra khe lắp nắp. Đường rút nút bịt theo phương thẳng ra trước cũng được kiểm tra bằng hình quét, bỏ qua gân ma sát chủ đích. STEP được đọc lại để xác nhận bốn solid hợp lệ. Những phép kiểm tra này không thay thế việc thử độ vừa, tiếp điểm pin, độ bền ngàm và cách cố định bo trên bản in thật.

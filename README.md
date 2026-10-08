@@ -2,63 +2,64 @@
 
 [App](https://nguyenvanduocit.github.io/esp-enclosures/) dùng một viewer cho tất cả model. Gallery và model chuyển trong cùng trang, theo URL `#model/<id>`.
 
+Mỗi model là một file `model.py`. `printkit` dựng CAD, kiểm tra, xuất STL/STEP và sinh `model.json` cho viewer từ cùng các hằng số đó.
+
 ```text
-index.html                 Giao diện chung
-viewer/                    Render, kéo chi tiết, đo, animation, CSS
-viewer/vendor/             Three.js / OrbitControls 0.169.0, MIT
-model.schema.json          JSON Schema 2020-12, schemaVersion: 1
-models.json                Danh sách đường dẫn model.json
-<model-id>/
-  model.json               Dữ liệu model
-  *.stl, enclosure.step    File in / CAD
-  reference/               Mesh linh kiện tham khảo (nếu có)
-  model.py                 Nguồn CAD
-  thumbnail.png
+printkit/                  Toolkit Python: khai báo, CAD, kiểm tra, xuất, đóng gói
+printkit/library/          Linh kiện tham khảo dùng lại (điện tử…)
+models/<id>/model.py       Nguồn duy nhất của model
+models/<id>/README.md      Ghi chú, giả định, nguồn số liệu
+models/<id>/thumbnail.png  Ảnh gallery (chụp tay)
+index.html, viewer/        App xem model; viewer/vendor/ là Three.js 0.169.0, MIT
+model.schema.json          Hợp đồng giữa printkit và viewer, schemaVersion: 1
+models.json                Danh sách model.json
 ```
 
-## Chạy và kiểm tra
+Các file khác trong `models/<id>/` là file sinh ra (`*.stl`, `reference/`, `assembly.step`, `model.json`, `verification.json`, `<id>.zip`). Không sửa tay; chạy lại lệnh.
+
+## Lệnh
 
 ```sh
-python3 -m http.server 8000
-# Mở http://localhost:8000
-
-uv run build.py
-node --test tests/*.test.js
-uv run --with jsonschema==4.23.0 python -m unittest discover -s tests
+uv run printkit new <id>     # tạo models/<id>/ từ mẫu và thêm vào models.json
+uv run printkit cad <id>     # dựng CAD, chạy kiểm tra, ghi STL/STEP/model.json/verification.json
+uv run printkit build        # kiểm tra mọi model, gắn phiên bản JS/CSS, đóng gói ZIP offline
+uv run pytest && node --test tests/*.test.js
+python3 -m http.server 8000  # mở http://localhost:8000
 ```
 
-`build.py` kiểm tra schema, đường dẫn asset, ID và tham chiếu, hướng kéo, giới hạn di chuyển, thứ tự keyframe. Build gắn phiên bản đồng bộ cho JS/CSS để tránh cache trộn code cũ và mới, rồi tạo ZIP cho từng model. Trong ZIP, mở `index.html` trực tiếp để dùng offline; HTML này được sinh từ cùng nguồn app, chứa thư viện và dữ liệu của model đó. Không sửa file sinh ra.
-
-GitHub Pages phục vụ thư mục gốc. App online tải mesh khi mở model; thư viện và UI chỉ có một bản dùng chung.
+`cad` chỉ ghi file khi mọi bước đều qua: BRep hợp lệ và một khối, STL kín, mọi `@model.check` không va chạm, STEP đọc lại đúng số khối. Lỗi thì giữ nguyên file cũ.
 
 ## Khai báo model
 
-Schema đầy đủ nằm trong [model.schema.json](model.schema.json); hai `model.json` có sẵn là ví dụ chạy được.
+Dựng mỗi chi tiết **ở vị trí lắp**. `print_rotation` (Euler XYZ, độ) xoay chi tiết lên bàn in; printkit đặt nó xuống Z = 0, căn giữa XY, xuất STL theo hướng in và tính `position`/`rotation` cho viewer.
 
-| Trường | Ý nghĩa |
-|---|---|
-| `parts` | ID, tên, loại `print`/`reference`, mesh, vị trí và góc lắp, hướng kéo |
-| `measurements` | Đường đo, nhãn, chi tiết đi theo; biến thể khi một chi tiết bị ẩn |
-| `animations` | Thời lượng, keyframe theo chi tiết, chuyển động camera, thời gian hiện số đo |
-| `camera`, `grid` | Góc nhìn mặc định, giới hạn zoom, góc nhìn có sẵn và lưới |
-| `printInfo`, `downloads` | Thông tin in và file tải |
-| `title`, `thumbnail`, `dimensions`, `status` | Nội dung gallery |
+```python
+from printkit import Box, Drag, Model, Solid, dim
+from printkit.checks import clear
 
-Tọa độ dùng mm, trục Z hướng lên. `position` là vị trí lắp; `rotation` là góc Euler XYZ theo **độ**. Mesh STL giữ tọa độ trong file; mesh `box` khai báo `size` và `position` trong chi tiết. Đường dẫn asset tính từ thư mục chứa `model.json`.
+model = Model('wall-hook', title='Móc treo', description='…', category='Gia dụng', status='Bản nháp',
+              thumbnail='thumbnail.png', dimensions=(W, L, H), camera={…}, grid={…}, print_info={…})
 
-`drag.axis` là vector đơn vị trong hệ tọa độ thế giới; `maxDistance` là khoảng kéo tối đa. Animation v1 hỗ trợ **tịnh tiến**: giá trị keyframe là độ dịch chuyển so với vị trí lắp, không cộng dồn qua các frame. `time` chạy từ 0 đến 1, nội suy smoothstep. Mỗi chu kỳ bắt đầu và kết thúc ở vị trí lắp, chạy một lượt. `openPose` lưu tư thế tách, dùng qua API `viewer.setOpen(true)`.
+@model.part('body', 'Thân', color='#367c85', drag=Drag((0, 0, 1), 30), print_rotation=(0, 180, 0))
+def body():
+    return …  # CadQuery, vị trí lắp
 
-Ví dụ một track kéo chi tiết `drawer` ra 30 mm theo X rồi đóng:
+model.reference('screw', 'Vít', [Box('head', (8, 8, 3), (0, 0, 1.5), '#c3cbd0')])
+model.measure('size', 'Kích thước', kind='case', follow='body',
+              lines=[dim((-W/2, -L/2, 0), (W/2, -L/2, 0), offset=(0, -6, 0), name='Rộng')])
+model.animation('lift', 'Nhấc lên', duration=6, open_pose={…}, tracks={…}, camera=[…], measure_reveal=(0.34, 0.64))
 
-```json
-{"part":"drawer","keyframes":[
-  {"time":0,"value":[0,0,0]},
-  {"time":0.4,"value":[30,0,0]},
-  {"time":0.7,"value":[30,0,0]},
-  {"time":1,"value":[0,0,0]}
-]}
+@model.check('Screw clears body')
+def screw_clear():
+    clear(screw_envelope, body=body())
 ```
 
-Đường đo khai báo trong tọa độ lắp kín. `followPart` chỉ dịch chuyển đường đo cùng chi tiết; khoảng bóc tách không làm tăng kích thước. `variants[].whenHidden` chọn bộ đường đo khác, chẳng hạn chiều dài vỏ khi tháo nút USB. Nhãn là dữ liệu thiết kế cần cập nhật cùng CAD.
+| API | Ý nghĩa |
+|---|---|
+| `model.part` | Chi tiết in; hàm dựng chạy một lần và có thể gọi lại trong kiểm tra |
+| `model.reference` | Linh kiện tham khảo: `Box` thành khối hộp của viewer, `Solid` thành `reference/<name>.stl` |
+| `dim(a, b, offset, name)` | Đường đo cách hai điểm neo một đoạn `offset`; nhãn tính từ độ dài thật |
+| `model.animation` | Keyframe là độ dịch so với vị trí lắp, `time` từ 0 đến 1, bắt đầu và kết thúc ở vị trí lắp |
+| `model.check` | Ném `CheckFailed` khi sai; trả về dict để ghi số đo vào `verification.json` |
 
-Để thêm model: tạo thư mục cùng tên `id`, thêm `model.json` và asset, ghi đường dẫn vào `models.json`, rồi chạy build. Không cần sửa HTML hoặc JavaScript. Chưa mô phỏng va chạm và chưa kiểm chứng độ vừa bằng bản in thật.
+`drag.axis` là vector đơn vị trong hệ tọa độ thế giới; `maxDistance` là khoảng kéo tối đa. Đường đo khai báo ở tư thế lắp kín; `follow` chỉ dịch chuyển đường đo cùng chi tiết; `variants` chọn bộ đường đo khác khi một chi tiết bị ẩn. Chưa mô phỏng va chạm khi kéo và chưa kiểm chứng độ vừa bằng bản in thật.
