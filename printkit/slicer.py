@@ -2,7 +2,17 @@
 
 Pure helpers (preset flattening, settings, G-code header) come first; the CLI run follows."""
 
+import json
+import plistlib
 import re
+import subprocess
+import tempfile
+import zipfile
+from functools import cache
+from pathlib import Path
+
+from printkit.gcode import parse_layers
+from printkit.manifest import PrintPart
 
 MACHINE = "Bambu Lab P1S 0.4 nozzle"
 # Bambu ships no P1S-named process preset; this X1C one lists the P1S 0.4 nozzle as compatible.
@@ -106,4 +116,133 @@ def parse_summary(gcode):
         "seconds": parse_duration(time[1]),
         "grams": float(grams[1]),
         "layerCount": int(layers[1]),
+    }
+
+
+STUDIO = Path("/Applications/BambuStudio.app")
+BINARY = STUDIO / "Contents/MacOS/BambuStudio"
+PROFILES = STUDIO / "Contents/Resources/profiles/BBL"
+
+
+def studio_version():
+    return plistlib.loads((STUDIO / "Contents/Info.plist").read_bytes())[
+        "CFBundleShortVersionString"
+    ]
+
+
+@cache
+def load_index(kind):
+    """Bundled presets of one kind by name. Files Studio itself cannot parse are skipped."""
+    index = {}
+    for path in sorted((PROFILES / kind).glob("*.json")):
+        try:
+            preset = json.loads(path.read_text())
+        except json.JSONDecodeError:
+            continue
+        if "name" in preset:
+            index[preset["name"]] = preset
+    return index
+
+
+def write_presets(settings, folder):
+    if settings.filament not in FILAMENTS:
+        raise SliceError(
+            f"filament {settings.filament!r} not supported; use one of {sorted(FILAMENTS)}"
+        )
+    overrides = process_settings(settings)
+    presets = {
+        "machine": flatten(load_index("machine"), MACHINE),
+        "process": apply_overrides(flatten(load_index("process"), PROCESS), overrides),
+        "filament": flatten(load_index("filament"), FILAMENTS[settings.filament]),
+    }
+    for kind, preset in presets.items():
+        (folder / f"{kind}.json").write_text(json.dumps(preset, indent=1))
+    return overrides
+
+
+def run_studio(stls, presets, target, work):
+    """Slice `stls` on one auto-arranged plate. Studio writes result.json into its cwd on failure,
+    so it always runs inside `work`."""
+    command = [
+        str(BINARY),
+        "--load-settings",
+        f"{presets / 'machine.json'};{presets / 'process.json'}",
+        "--load-filaments",
+        str(presets / "filament.json"),
+        "--arrange",
+        "1",
+        "--slice",
+        "0",
+        "--export-3mf",
+        str(target),
+        *map(str, stls),
+    ]
+    result = subprocess.run(
+        command, cwd=work, capture_output=True, text=True, timeout=600
+    )
+    if result.returncode != 0:
+        detail = work / "result.json"
+        message = (
+            json.loads(detail.read_text()).get("error_string")
+            if detail.exists()
+            else result.stderr.strip()[-500:]
+        )
+        raise SliceError(f"Bambu Studio exited {result.returncode}: {message}")
+    with zipfile.ZipFile(target) as project:
+        return (
+            project.read("Metadata/plate_1.gcode").decode(),
+            json.loads(project.read("Metadata/project_settings.config")),
+        )
+
+
+def slice_plate(stls, settings, target, work):
+    presets = work / "presets"
+    presets.mkdir(exist_ok=True)
+    overrides = write_presets(settings, presets)
+    gcode, project = run_studio(stls, presets, target, work)
+    problems = ignored_settings(project, overrides)
+    if problems:
+        raise SliceError("Bambu Studio ignored settings: " + "; ".join(problems))
+    return gcode, parse_summary(gcode)
+
+
+def slice_model(model, out):
+    """Slice every print STL in `out` on one P1S plate, then each part alone for per-part numbers.
+
+    Writes out/print/<id>.gcode.3mf and out/print/layers.json; returns the model.json `print` block."""
+    if not BINARY.exists():
+        raise SliceError(
+            f"{BINARY} not found; install it with `brew install --cask bambu-studio`"
+        )
+    parts = [part for part in model.parts if isinstance(part, PrintPart)]
+    folder = out / "print"
+    folder.mkdir()
+    with tempfile.TemporaryDirectory() as scratch:
+        work = Path(scratch)
+        gcode, plate = slice_plate(
+            [out / f"{part.id}.stl" for part in parts],
+            model.print_settings,
+            folder / f"{model.id}.gcode.3mf",
+            work,
+        )
+        (folder / "layers.json").write_text(
+            json.dumps(parse_layers(gcode), separators=(",", ":"))
+        )
+        per_part = []
+        for part in parts:
+            _, summary = slice_plate(
+                [out / f"{part.id}.stl"],
+                model.print_settings,
+                work / f"{part.id}.gcode.3mf",
+                work,
+            )
+            per_part.append(
+                {"id": part.id, "seconds": summary["seconds"], "grams": summary["grams"]}
+            )
+    return {
+        "project": f"print/{model.id}.gcode.3mf",
+        "layers": "print/layers.json",
+        "slicer": f"Bambu Studio {studio_version()}",
+        **plate,
+        "parts": per_part,
     }
