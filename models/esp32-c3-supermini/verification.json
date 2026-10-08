@@ -45,5 +45,140 @@
     "Lid without friction ribs clears base": true,
     "Reference board and headers clear": true,
     "Cable envelope 12x6 clear": true
-  }
+  },
+  "printability": {
+    "base": {
+      "overhang_mm2": 0.0,
+      "bridges": [],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 0.0,
+          "contact_mm2": 837.1,
+          "height_mm": 18.4
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 545.1,
+          "contact_mm2": 380.8,
+          "height_mm": 32.0
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 648.7,
+          "contact_mm2": 277.2,
+          "height_mm": 32.0
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 671.5,
+          "contact_mm2": 165.6,
+          "height_mm": 18.4
+        },
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 744.5,
+          "contact_mm2": 483.8,
+          "height_mm": 26.4
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 744.5,
+          "contact_mm2": 483.8,
+          "height_mm": 26.4
+        }
+      ]
+    },
+    "lid": {
+      "overhang_mm2": 0.0,
+      "bridges": [],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 0.0,
+          "contact_mm2": 787.9,
+          "height_mm": 4.2
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 138.0,
+          "contact_mm2": 37.3,
+          "height_mm": 32.0
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 138.0,
+          "contact_mm2": 37.3,
+          "height_mm": 32.0
+        },
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 142.7,
+          "contact_mm2": 47.3,
+          "height_mm": 26.4
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 142.7,
+          "contact_mm2": 47.3,
+          "height_mm": 26.4
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 690.2,
+          "contact_mm2": 97.7,
+          "height_mm": 4.2
+        }
+      ]
+    }
+  },
+  "warnings": []
 }

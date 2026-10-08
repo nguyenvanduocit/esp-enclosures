@@ -83,6 +83,8 @@ def cad(model_id):
         raise ModelError(f'{folder / "model.py"} declares id {model.id!r}, expected {model_id!r}')
     _, report = export(model, folder, os.path.relpath(ROOT / 'model.schema.json', folder))
     print(f'{model_id}: {len(report["parts"])} print parts, {len(report["checks"])} checks passed')
+    for warning in report['warnings']:
+        print(f'warning: {warning}', file=sys.stderr)
 
 
 def main(argv=None):

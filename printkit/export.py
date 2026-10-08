@@ -12,6 +12,7 @@ from printkit.catalog import validate_data
 from printkit.checks import CheckFailed
 from printkit.manifest import PrintPart, Solid, render
 from printkit.pose import installed_pose
+from printkit.printability import assess
 from printkit.shapes import rotated
 
 GENERATED = ('*.stl', '*.step', 'model.json', 'verification.json')
@@ -56,7 +57,7 @@ def rgb(hex_color):
 
 
 def write_outputs(model, out):
-    installed, poses, parts = {}, {}, {}
+    installed, poses, parts, printability = {}, {}, {}, {}
     for part in model.parts:
         if isinstance(part, PrintPart):
             shape = single_solid(part.id, part.build())
@@ -67,6 +68,10 @@ def write_outputs(model, out):
             translation = [-(low[0] + high[0]) / 2, -(low[1] + high[1]) / 2, -low[2]]
             mesh.apply_translation(translation)
             mesh.export(path)
+            printability[part.id] = assess(mesh)
+            limit = part.max_overhang_mm2
+            if limit is not None and printability[part.id]['overhang_mm2'] > limit:
+                raise ModelError(f"{part.id}: overhang {printability[part.id]['overhang_mm2']} mm² exceeds {limit} mm²")
             poses[part.id] = installed_pose(part.print_rotation, translation)
             parts[part.id] = {'watertight': True, 'solid_count': 1, 'volume_mm3': round(float(mesh.volume), 2),
                               'bounds_mm': mesh.bounds.round(3).tolist()}
@@ -75,7 +80,7 @@ def write_outputs(model, out):
                 if isinstance(piece, Solid):
                     (out / 'reference').mkdir(exist_ok=True)
                     cq.exporters.export(piece.shape, str(out / 'reference' / f'{piece.name}.stl'), **REFERENCE_TOLERANCE)
-    return installed, poses, parts
+    return installed, poses, parts, printability
 
 
 def write_assembly(model, installed, out):
@@ -117,9 +122,10 @@ def export(model, folder, schema_ref):
     folder.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=folder.parent) as scratch:
         out = Path(scratch)
-        installed, poses, parts = write_outputs(model, out)
+        installed, poses, parts, printability = write_outputs(model, out)
+        warnings = [f'{part}: {result["warning"]}' for part, result in printability.items() if 'warning' in result]
         report = {'units': 'mm', 'dimensions': model.info['dimensions'], 'parts': parts,
-                  'checks': run_checks(model)}
+                  'checks': run_checks(model), 'printability': printability, 'warnings': warnings}
         write_assembly(model, installed, out)
         manifest = validate_data(render(model, poses, schema_ref))
         (out / 'model.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')

@@ -130,3 +130,21 @@ def test_export_replaces_existing_files_and_reference_dir(tmp_path):
     export(demo(), tmp_path, '../../model.schema.json')
     assert (tmp_path / 'base.stl').read_bytes() != b'old'
     assert not (tmp_path / 'reference').exists()
+
+
+def test_overhang_limit_fails_export(tmp_path):
+    model = demo()
+
+    @model.part('shelf', 'Kệ', color='#000000', max_overhang_mm2=1)
+    def shelf():
+        return block(2, 2, 10).union(block(10, 10, 2, z=10))
+
+    with pytest.raises(ModelError, match='shelf: overhang'):
+        export(model, tmp_path, '../../model.schema.json')
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_report_includes_printability(tmp_path):
+    _, report = export(demo(), tmp_path, '../../model.schema.json')
+    assert set(report['printability']) == {'base', 'lid'}
+    assert report['printability']['base']['overhang_mm2'] == 0
