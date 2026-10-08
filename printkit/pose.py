@@ -52,3 +52,11 @@ def installed_pose(print_rotation, translation):
     else:
         rotation = matrix_euler_xyz(inverse)
     return tidy(position), tidy(rotation)
+
+
+def composed_pose(degrees, position, pose):
+    """Viewer pose of a copy: the rigid move (Euler XYZ `degrees`, then `position`) after `pose`."""
+    move = euler_xyz_matrix(degrees)
+    rotation = move @ euler_xyz_matrix(pose[1])
+    location = move @ np.asarray(pose[0], dtype=float) + np.asarray(position, dtype=float)
+    return tidy(location), tidy(half_open(angle) for angle in tidy(matrix_euler_xyz(rotation)))

@@ -5,14 +5,16 @@ import tempfile
 from pathlib import Path
 
 import cadquery as cq
+import manifold3d as m3
 import trimesh
 
+from printkit.art import canonical_mesh
 from printkit.catalog import validate_data
 from printkit.checks import CheckFailed
-from printkit.manifest import PrintPart, Solid, render
-from printkit.pose import euler_xyz_matrix, half_open, installed_pose, matrix_euler_xyz, tidy
+from printkit.manifest import CopyPart, ReferencePart, Solid, render
+from printkit.pose import composed_pose, euler_xyz_matrix, half_open, installed_pose, matrix_euler_xyz, tidy
 from printkit.printability import assess
-from printkit.shapes import rotated
+from printkit.shapes import placed, rotated
 
 PRINT_TOLERANCE = {'tolerance': 0.03, 'angularTolerance': 0.1}
 REFERENCE_TOLERANCE = {'tolerance': 0.04, 'angularTolerance': 0.15}
@@ -28,12 +30,47 @@ def single_solid(name, shape):
     return shape
 
 
-def printable_mesh(name, shape, path):
-    cq.exporters.export(shape, str(path), **PRINT_TOLERANCE)
+def single_body(name, shape):
+    if shape.status() != m3.Error.NoError or len(shape.decompose()) != 1 or shape.volume() <= 0:
+        raise ModelError(f'{name}: Manifold must be one valid body with positive volume')
+    return shape
+
+
+def body_mesh(name, path):
     mesh = trimesh.load_mesh(path)
     if not (mesh.is_watertight and mesh.is_winding_consistent and mesh.volume > 0 and len(mesh.split()) == 1):
         raise ModelError(f'{name}: mesh must be one watertight, consistently wound body')
     return mesh
+
+
+def print_stl(name, shape, print_rotation, path):
+    """Write `shape` turned to its print orientation and centred in XY on the bed.
+
+    Returns the bed translation and the checked mesh. Manifold STLs come from canonical_mesh,
+    so their bytes depend only on the geometry."""
+    if isinstance(shape, m3.Manifold):
+        turned = placed(shape, print_rotation, (0, 0, 0))
+        x0, y0, z0, x1, y1, z1 = turned.bounding_box()
+        translation = [-(x0 + x1) / 2, -(y0 + y1) / 2, -z0]
+        verts, tris, _ = canonical_mesh(turned.translate(translation))
+        trimesh.Trimesh(verts, tris, process=False).export(path)
+        return translation, body_mesh(name, path)
+    cq.exporters.export(rotated(shape, print_rotation), str(path), **PRINT_TOLERANCE)
+    mesh = body_mesh(name, path)
+    low, high = mesh.bounds
+    translation = [-(low[0] + high[0]) / 2, -(low[1] + high[1]) / 2, -low[2]]
+    mesh.apply_translation(translation)
+    mesh.export(path)
+    return translation, mesh
+
+
+def built(name, build):
+    """Run a build function; the result must be one valid CadQuery solid or Manifold body."""
+    try:
+        shape = build()
+    except Exception as error:
+        raise ModelError(f'{name}: {type(error).__name__}: {error}') from error
+    return single_body(name, shape) if isinstance(shape, m3.Manifold) else single_solid(name, shape)
 
 
 def run_checks(model):
@@ -66,37 +103,39 @@ def orientation_warning(part, result):
 def write_outputs(model, out):
     installed, poses, parts, printability = {}, {}, {}, {}
     for part in model.parts:
-        if isinstance(part, PrintPart):
-            try:
-                built = part.build()
-            except Exception as error:
-                raise ModelError(f'{part.id}: {type(error).__name__}: {error}') from error
-            shape = single_solid(part.id, built)
-            installed[part.id] = shape
-            path = out / f'{part.id}.stl'
-            mesh = printable_mesh(part.id, rotated(shape, part.print_rotation), path)
-            low, high = mesh.bounds
-            translation = [-(low[0] + high[0]) / 2, -(low[1] + high[1]) / 2, -low[2]]
-            mesh.apply_translation(translation)
-            mesh.export(path)
-            printability[part.id] = assess(mesh)
-            if 'warning' in printability[part.id]:
-                printability[part.id]['warning'] = orientation_warning(part, printability[part.id])
-            limit = part.max_overhang_mm2
-            if limit is not None and printability[part.id]['overhang_mm2'] > limit:
-                raise ModelError(f"{part.id}: overhang {printability[part.id]['overhang_mm2']} mm² exceeds {limit} mm²")
-            poses[part.id] = installed_pose(part.print_rotation, translation)
-            parts[part.id] = {'watertight': True, 'solid_count': 1, 'volume_mm3': round(float(mesh.volume), 2),
-                              'bounds_mm': mesh.bounds.round(3).tolist()}
-        else:
+        if isinstance(part, ReferencePart):
             for piece in part.pieces:
                 if isinstance(piece, Solid):
                     (out / 'reference').mkdir(exist_ok=True)
                     cq.exporters.export(piece.shape, str(out / 'reference' / f'{piece.name}.stl'), **REFERENCE_TOLERANCE)
+            continue
+        shape = built(part.id, part.build)
+        if not isinstance(shape, m3.Manifold):
+            brep = shape
+        else:  # a Manifold has no BRep; its CadQuery core stands in for it in assembly.step
+            brep = built(f'{part.id} core', part.core) if part.core else None
+        if brep is not None and (isinstance(part, CopyPart) or part.assembled):
+            installed[part.id] = brep
+        if isinstance(part, CopyPart):
+            poses[part.id] = composed_pose(part.rotation, part.position, poses[part.of])
+            continue
+        translation, mesh = print_stl(part.id, shape, part.print_rotation, out / f'{part.id}.stl')
+        printability[part.id] = assess(mesh)
+        if 'warning' in printability[part.id]:
+            printability[part.id]['warning'] = orientation_warning(part, printability[part.id])
+        limit = part.max_overhang_mm2
+        if limit is not None and printability[part.id]['overhang_mm2'] > limit:
+            raise ModelError(f"{part.id}: overhang {printability[part.id]['overhang_mm2']} mm² exceeds {limit} mm²")
+        if part.assembled:
+            poses[part.id] = installed_pose(part.print_rotation, translation)
+        parts[part.id] = {'watertight': True, 'solid_count': 1, 'volume_mm3': round(float(mesh.volume), 2),
+                          'bounds_mm': mesh.bounds.round(3).tolist()}
     return installed, poses, parts, printability
 
 
 def write_assembly(model, installed, out):
+    if not installed:
+        raise ModelError('assembly.step needs at least one BRep: give a mesh part a core=')
     assembly = cq.Assembly(name=model.id)
     for part in model.parts:
         if part.id in installed:
@@ -120,6 +159,10 @@ def previous_outputs(folder):
             names |= {manifest['print']['project'], manifest['print']['layers']}
     except (OSError, ValueError, KeyError, TypeError):
         return set()
+    try:  # print-only parts are listed in verification.json, not model.json
+        names |= {f'{part}.stl' for part in json.loads((folder / 'verification.json').read_text())['parts']}
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
     root = folder.resolve()
     return {name for name in names if isinstance(name, str) and (folder / name).resolve().is_relative_to(root)}
 

@@ -1,10 +1,11 @@
 import json
 
+import cadquery as cq
 import numpy as np
 import pytest
 
-from printkit import Box, Drag, Model, Solid
-from printkit.checks import CheckFailed, clear
+from printkit import Box, Drag, Model, Solid, art
+from printkit.checks import CheckFailed, clear, overlap
 from printkit.export import ModelError, export
 from printkit.pose import euler_xyz_matrix
 from printkit.shapes import block, box_solid, rotated
@@ -211,3 +212,70 @@ def test_failed_slice_writes_nothing(tmp_path):
     with pytest.raises(SliceError, match='239'):
         export(demo(), tmp_path, '../../model.schema.json', slicer=broken)
     assert list(tmp_path.iterdir()) == []
+
+
+def art_demo(coupon=True, copy_core=True):
+    """demo() plus a Manifold part with a core, a copy of it, and a print-only coupon."""
+    model = demo()
+
+    @model.part('stone', 'Đá', color='#8a8a80', core=lambda: block(6, 6, 6, x=30) if copy_core else None)
+    def stone():
+        return art.erode(art.box((27, -3, 0), (33, 3, 6)), seed=5, amplitude=0.5)
+
+    model.copy('stoneCopy', 'Đá 2', of='stone', rotation=(0, 0, 180), position=(0, 0, 0))
+    if coupon:
+        @model.part('coupon', 'Mẫu thử', color='#000000', assembled=False)
+        def coupon_part():
+            return art.box((0, 0, 0), (8, 4, 2))
+
+    return model
+
+
+def test_mesh_parts_copies_and_print_only_parts(tmp_path):
+    manifest, report = export(art_demo(), tmp_path, '../../model.schema.json')
+    names = sorted(path.name for path in tmp_path.iterdir())
+    assert names == ['assembly.step', 'base.stl', 'coupon.stl', 'lid.stl', 'model.json', 'stone.stl',
+                     'verification.json']
+    parts = {part['id']: part for part in manifest['parts']}
+    assert 'coupon' not in parts and set(report['parts']) == {'base', 'lid', 'stone', 'coupon'}
+    assert parts['stoneCopy']['meshes'][0]['src'] == 'stone.stl'
+    assert parts['stoneCopy']['rotation'] == [0, 0, 180]
+    assert np.allclose(parts['stoneCopy']['position'], [-x for x in parts['stone']['position'][:2]] + [0], atol=1e-6)
+    solids = cq.importers.importStep(str(tmp_path / 'assembly.step')).solids().vals()
+    assert len(solids) == 4  # base, lid and both stone cores; the coupon is not assembled
+
+
+def test_mesh_part_stl_is_byte_reproducible(tmp_path):
+    export(art_demo(), tmp_path / 'a', '../../model.schema.json')
+    export(art_demo(), tmp_path / 'b', '../../model.schema.json')
+    for name in ('stone.stl', 'coupon.stl'):
+        assert (tmp_path / 'a' / name).read_bytes() == (tmp_path / 'b' / name).read_bytes()
+
+
+def test_stale_print_only_stl_is_removed(tmp_path):
+    export(art_demo(), tmp_path, '../../model.schema.json')
+    export(art_demo(coupon=False), tmp_path, '../../model.schema.json')
+    assert not (tmp_path / 'coupon.stl').exists()
+
+
+def test_mesh_without_brep_needs_a_core(tmp_path):
+    model = Model('demo', title='Demo', description='d', category='c', status='s', thumbnail='thumbnail.png',
+                  dimensions=(5, 5, 5), camera=demo().info['camera'], grid={'size': 100, 'divisions': 20},
+                  print_info={'summary': 'x', 'sections': []})
+    model.part('stone', 'Đá', color='#8a8a80')(lambda: art.box((0, 0, 0), (5, 5, 5)))
+    model.animation('still', 'Đứng', duration=1, open_pose={}, tracks={'stone': [(0, (0, 0, 0)), (1, (0, 0, 0))]},
+                    camera=[(0, (0, 0, 0)), (1, (0, 0, 0))], measure_reveal=(0.3, 0.6))
+    with pytest.raises(ModelError, match='core='):
+        export(model, tmp_path, '../../model.schema.json')
+
+
+def test_overlap_mixes_cadquery_and_manifold():
+    assert overlap(block(10, 10, 10), art.box((0, 0, 0), (10, 10, 10))) == pytest.approx(250, rel=1e-6)
+    assert overlap(art.box((0, 0, 0), (2, 2, 2)), art.box((3, 0, 0), (4, 2, 2))) == 0
+    with pytest.raises(CheckFailed, match='rock'):
+        clear(block(4, 4, 4), rock=art.box((0, 0, 0), (2, 2, 2)))
+
+
+def test_copy_needs_an_earlier_print_part():
+    with pytest.raises(ValueError, match='ghost'):
+        demo().copy('twin', 'Đôi', of='ghost')

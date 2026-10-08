@@ -1,8 +1,10 @@
-"""Model declarations and their model.json rendering. No CAD or file I/O here."""
+"""Model declarations and their model.json rendering. No file I/O here."""
 
 import math
 from dataclasses import dataclass, field
 from functools import cache
+
+from printkit.shapes import placed
 
 SCHEMA_VERSION = 1
 MEASURE_COLORS = {"case": "#efb96e", "component": "#83caff"}
@@ -42,6 +44,23 @@ class PrintPart:
     drag: Drag | None
     print_rotation: tuple
     max_overhang_mm2: float | None
+    core: object | None
+    assembled: bool
+
+
+@dataclass(frozen=True)
+class CopyPart:
+    """Print part placed by a rigid transform of part `of`; shares its STL."""
+
+    id: str
+    label: str
+    color: str
+    of: str
+    rotation: tuple
+    position: tuple
+    build: object
+    core: object | None
+    drag: Drag | None
 
 
 @dataclass(frozen=True)
@@ -200,8 +219,16 @@ class Model:
         drag=None,
         print_rotation=(0, 0, 0),
         max_overhang_mm2=None,
+        core=None,
+        assembled=True,
     ):
-        """Register a printed part built in its installed pose; the build runs once."""
+        """Register a printed part built in its installed pose; the build runs once.
+
+        The build returns a CadQuery solid or a manifold3d.Manifold. A Manifold has no BRep:
+        `core` returns the CadQuery mechanical core for assembly.step, or is None to leave the
+        part out of it. `assembled=False` declares a print-only part (a test coupon): its build
+        returns the print frame, and it stays out of model.json and assembly.step.
+        """
 
         def register(build):
             build = cache(build)
@@ -214,11 +241,25 @@ class Model:
                     drag,
                     tuple(print_rotation),
                     max_overhang_mm2,
+                    cache(core) if core else None,
+                    assembled,
                 )
             )
             return build
 
         return register
+
+    def copy(self, id, label, *, of, rotation=(0, 0, 0), position=(0, 0, 0), drag=None, color=None):
+        """Register a copy of print part `of`, moved by Euler XYZ `rotation` (degrees) then `position`.
+
+        The copy reuses the original's STL. Returns its installed shape, for checks."""
+        source = next((part for part in self.parts if part.id == of and isinstance(part, PrintPart)), None)
+        if source is None or not source.assembled:
+            raise ValueError(f"copy {id!r}: {of!r} is not an assembled print part declared before it")
+        build = cache(lambda: placed(source.build(), rotation, position))
+        core = cache(lambda: placed(source.core(), rotation, position)) if source.core else None
+        self.parts.append(CopyPart(id, label, color or source.color, of, tuple(rotation), tuple(position), build, core, drag))
+        return build
 
     def reference(self, id, label, pieces, *, drag=None):
         self.parts.append(ReferencePart(id, label, tuple(pieces), drag))
@@ -292,6 +333,8 @@ def clean(value):
 def _meshes(part):
     if isinstance(part, PrintPart):
         return [{"src": f"{part.id}.stl", "color": part.color}]
+    if isinstance(part, CopyPart):
+        return [{"src": f"{part.of}.stl", "color": part.color}]
     return [
         {
             "primitive": "box",
@@ -308,11 +351,13 @@ def _meshes(part):
 def render(model, poses, schema_ref, sliced=None):
     parts = []
     for part in model.parts:
+        if isinstance(part, PrintPart) and not part.assembled:
+            continue
         position, rotation = poses.get(part.id, ([0, 0, 0], [0, 0, 0]))
         item = {
             "id": part.id,
             "label": part.label,
-            "kind": "print" if isinstance(part, PrintPart) else "reference",
+            "kind": "reference" if isinstance(part, ReferencePart) else "print",
             "position": list(position),
             "rotation": list(rotation),
             "meshes": _meshes(part),
