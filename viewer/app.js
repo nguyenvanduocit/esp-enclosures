@@ -155,6 +155,11 @@ function showLayer(index) {
   $('printLayerLabel').textContent = `Lớp ${preview.layer + 1}/${preview.layerCount} · Z ${preview.zOf(preview.layer).toLocaleString('vi')} mm`;
 }
 
+function lockModelControls(locked) {
+  $('play').disabled = locked || !viewer;
+  for (const control of [$('timeline'), $('mode'), $('wireframe'), ...$('partControls').querySelectorAll('input')]) control.disabled = locked;
+}
+
 function stopPrintPlay() {
   clearInterval(printTimer);
   printTimer = null;
@@ -167,6 +172,8 @@ async function setPreview(on) {
     viewer?.setPrintPreview(null);
     preview?.dispose();
     preview = null;
+    lockModelControls(false);
+    syncVisibility();
     $('printTypes').replaceChildren();
     $('printLayerLabel').textContent = '';
     $('printPlay').disabled = $('printLayer').disabled = true;
@@ -179,9 +186,10 @@ async function setPreview(on) {
     if (entry !== activeEntry || !$('printPreview').checked) return;
     preview = createPrintPreview(data);
     viewer.setPrintPreview(preview);
+    lockModelControls(true);
     $('printLayer').max = String(preview.layerCount);
     $('printPlay').disabled = $('printLayer').disabled = false;
-    for (const type of preview.types) {
+    for (const type of preview.types.filter(type => data.layers.some(layer => layer.paths[type.id]?.length))) {
       const label = element('label'), input = element('input'), swatch = element('span', undefined, 'swatch');
       input.type = 'checkbox';
       input.checked = true;
@@ -210,6 +218,7 @@ function clearViewer() {
   preview = null;
   viewer?.dispose();
   viewer = null;
+  lockModelControls(false);
   window.viewer = null;
   activeId = null;
   activeEntry = null;
