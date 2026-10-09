@@ -14,9 +14,9 @@
   ],
   "camera": {
     "position": [
-      47.76,
-      -79.6,
-      55.72
+      52.6,
+      -87.7,
+      71.3
     ],
     "target": [
       0,
@@ -84,13 +84,13 @@
         "title": "Lắp nam châm và vòng đệm",
         "rows": [],
         "notes": [
-          "Mặt dương (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.",
+          "Mặt dương có điểm nối (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm có điểm nối (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.",
           "Mua vòng đệm thép mạ kẽm, không mua inox 304/316 vì inox không hút nam châm.",
           "Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.",
           "Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.",
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
           "Bo khoảng 20,5×16 mm theo trang bán hàng, các nơi ghi 20×16 đến 21×16,4; đo bo của bạn.",
-          "Hàng chân cắm nằm ở cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình); mô hình không đánh dấu trục của chip.",
+          "Hàng chân cắm nằm gần cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình); mô hình không đánh dấu trục của chip.",
           "Hàn dây trực tiếp hoặc dùng dải chân cắm ngắn: từ đỉnh chip tới tấm nắp còn 9,4 mm."
         ],
         "links": []
@@ -587,18 +587,18 @@
     "project": "print/kit-mpu6050.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 2366,
+    "seconds": 2362,
     "grams": 10.58,
     "layerCount": 111,
     "parts": [
       {
         "id": "shell",
-        "seconds": 1730,
+        "seconds": 1727,
         "grams": 7.09
       },
       {
         "id": "lid",
-        "seconds": 696,
+        "seconds": 697,
         "grams": 3.59
       }
     ]

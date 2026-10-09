@@ -11,13 +11,14 @@ Mở trong [app chung](../../#model/kit-mpu6050). Khối 2×2×1 đơn vị (39,
 
 ## Giả định
 - Kích thước bo từ trang bán hàng, các nơi ghi từ 20 × 16 đến 21 × 16,4 mm, chênh nhau khoảng 1 mm; đo bo của bạn trước khi in. Chiều trong của thân là 35,8 × 35,8 mm nên bo lớn hơn vài mm vẫn vừa, nhưng bốn trụ nằm theo kích thước 20,5 × 16 mm.
+- Khoảng cách 0,55 mm giữa thân đầu cắm và trụ gần nhất là giả định: mô hình đặt hàng chân cách tâm bo 5 mm theo y, còn kích thước bo các nơi chênh nhau khoảng 1 mm nên vị trí hàng chân thật có thể lệch và khoảng này có thể mất.
 - Vị trí lỗ bắt vít của bo không có trong mô hình. Trụ đỡ mặt dưới PCB ở khoảng cách chọn theo kích thước bo, không theo lỗ vít.
-- Hàng chân cắm nằm ở cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình). Mô hình không đánh dấu trục của chip.
+- Hàng chân cắm nằm gần cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình). Mô hình không đánh dấu trục của chip.
 - Lực hút nam châm chưa đo: in một mối ghép và kéo thử trước khi in cả bộ.
 
 ## Lắp
 - Thứ tự dán: dán nam châm vào lỗ ở ba mặt dương (+x, +y, +z) và vòng đệm vào lỗ ở ba mặt âm (−x, −y, −z) bằng keo, đủ số cần cho từng mối ghép. Phía sau lỗ chỉ còn sàn mỏng nên không dán thì bị hút ra.
-- Vị trí bo trong mô hình: bo nằm giữa khối, mặt dưới PCB cách sàn 3,9 mm trên bốn trụ Ø2,4 mm đặt ở ±8 mm theo x và ±2 mm theo y so với tâm. Cạnh PCB cách tường trong 7,65 mm theo x và 9,9 mm theo y mỗi bên. Thân đầu cắm treo dưới bo, đáy cách sàn 1,4 mm và cách mép trụ gần nhất 0,55 mm.
+- Vị trí bo trong mô hình: bo nằm giữa khối, mặt dưới PCB cách sàn 3,9 mm trên bốn trụ Ø2,4 mm đặt ở ±8 mm theo x và ±2 mm theo y so với tâm. Cạnh PCB cách tường trong 7,65 mm theo x và 9,9 mm theo y mỗi bên. Thân đầu cắm treo dưới bo, đáy cách sàn 1,4 mm và cách mép trụ gần nhất 0,55 mm. Với 1,4 mm dưới đáy thân đầu cắm, đầu nối Dupont không lồng được vào chân cắm dưới bo.
 - Trụ chỉ đỡ mặt dưới PCB, không có gì giữ bo theo chiều ngang: dán bo bằng keo hoặc băng dính hai mặt.
 - Từ đỉnh chip tới tấm nắp còn 9,4 mm (từ mặt trên PCB còn 10,3 mm), đủ cho dây hàn trực tiếp hoặc dải chân cắm ngắn. Gờ nắp bắt đầu ở độ cao 15,4 mm, cao hơn bo.
 - Luồn dây qua cổng Ø5 ở giữa mỗi đơn vị trên các mặt, rồi đóng nắp +z. Nắp có gờ lồng vào thân, không cần vít.

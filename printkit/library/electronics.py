@@ -48,7 +48,7 @@ def mpu6050(at=(0, 0, 0)):
 
 
 def hc_sr501(at=(0, 0, 0)):
-    """HC-SR501 PIR, 32 x 24 mm PCB and a dome lens of diameter 23 and height about 18 (listings disagree, 18 to 30 mm overall)."""
+    """HC-SR501 PIR, 32 x 24 mm PCB and a cylindrical lens of diameter 23 and height about 18 (listings disagree, 18 to 30 mm overall)."""
     x, y, z = at
     lens = cq.Workplane('XY').circle(11.5).extrude(18).translate((x, y, z + 1.2))
     return [Box('pcb', (32, 24, 1.2), (x, y, z + 0.6), '#2e8b57'),

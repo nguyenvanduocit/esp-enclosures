@@ -731,18 +731,18 @@
     "project": "print/kit-display.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 4593,
+    "seconds": 4597,
     "grams": 23.94,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3924,
+        "seconds": 3927,
         "grams": 20.32
       },
       {
         "id": "lid",
-        "seconds": 725,
+        "seconds": 726,
         "grams": 3.71
       }
     ]

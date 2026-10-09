@@ -843,7 +843,7 @@
     "project": "print/kit-esp32.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 3839,
+    "seconds": 3838,
     "grams": 16.44,
     "layerCount": 236,
     "parts": [
@@ -854,7 +854,7 @@
       },
       {
         "id": "lid",
-        "seconds": 698,
+        "seconds": 699,
         "grams": 3.59
       }
     ]

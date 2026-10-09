@@ -14,9 +14,9 @@
   ],
   "camera": {
     "position": [
-      95.76,
-      -159.6,
-      111.72
+      89.7,
+      -149.5,
+      114.5
     ],
     "target": [
       0,
@@ -84,13 +84,13 @@
         "title": "Lắp nam châm và vòng đệm",
         "rows": [],
         "notes": [
-          "Mặt dương (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.",
+          "Mặt dương có điểm nối (+x, +y) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm có điểm nối (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.",
           "Mua vòng đệm thép mạ kẽm, không mua inox 304/316 vì inox không hút nam châm.",
           "Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.",
           "Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.",
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
           "Mặt +z là màn hình nên không có điểm nối.",
-          "Cửa sổ 49×37 mm theo vùng hiển thị 48,96×36,72 mm; kính 60×40 mm là giả định, hãy đo màn hình của bạn.",
+          "Cửa sổ cắt đúng 48,96×36,72 mm, bằng vùng hiển thị và không chừa lề (gọi là 49×37 mm cho tròn); kính 60×40 mm là giả định, hãy đo màn hình của bạn.",
           "Bo lắp từ phía nắp +y rồi trượt vào dưới khung."
         ],
         "links": []
@@ -573,18 +573,18 @@
     "project": "print/kit-display.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 4593,
+    "seconds": 4597,
     "grams": 23.94,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3924,
+        "seconds": 3927,
         "grams": 20.32
       },
       {
         "id": "lid",
-        "seconds": 725,
+        "seconds": 726,
         "grams": 3.71
       }
     ]

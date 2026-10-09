@@ -14,9 +14,9 @@
   ],
   "camera": {
     "position": [
-      47.76,
-      -79.6,
-      55.72
+      60.8,
+      -101.4,
+      90.9
     ],
     "target": [
       0,
@@ -84,7 +84,7 @@
         "title": "Lắp nam châm và vòng đệm",
         "rows": [],
         "notes": [
-          "Mặt dương (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.",
+          "Mặt dương có điểm nối (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm có điểm nối (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.",
           "Mua vòng đệm thép mạ kẽm, không mua inox 304/316 vì inox không hút nam châm.",
           "Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.",
           "Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.",
@@ -852,7 +852,7 @@
     "project": "print/kit-esp32.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 3839,
+    "seconds": 3838,
     "grams": 16.44,
     "layerCount": 236,
     "parts": [
@@ -863,7 +863,7 @@
       },
       {
         "id": "lid",
-        "seconds": 698,
+        "seconds": 699,
         "grams": 3.59
       }
     ]

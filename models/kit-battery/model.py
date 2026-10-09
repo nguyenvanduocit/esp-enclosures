@@ -12,8 +12,8 @@ LO, HI = bounds(ModuleSpec(CELLS, '+x'))
 FLOOR = LO[2] + WALL
 HOLDER = (22, 75, 18)                                 # open single 18650 holder, 75 x 22 x 18 per listings
 HOLDER_X = LO[0] + WALL + 0.8 + HOLDER[0] / 2          # 0.8 mm against the -x wall for adhesive
-HOLDER_Z = FLOOR + 0.8
-CELL_Z = HOLDER_Z + 10.3
+HOLDER_Z = FLOOR + 0.8                                # the holder floats 0.8 mm above the floor, the glue layer fills the gap
+CELL_Z = HOLDER_Z + 10.3                              # cell axis; the cell top (r 9.25) ends 1.55 mm above the holder top (18)
 CY = (LO[1] + HI[1]) / 2
 CHARGER = (36.0, 17.5, 16.75)                          # PCB underside centre; the USB-C axis ends at z = 20, mid height
 CHARGER_POSTS = tuple(cyl((CHARGER[0] + sx, CHARGER[1] + sy, FLOOR - 0.5), (0, 0, 1), 1.5, CHARGER[2] - FLOOR + 0.5)
@@ -29,7 +29,7 @@ model = kit_model(
     refs=[('holder', 'Khay pin 18650', [Box('holder', HOLDER, (HOLDER_X, CY, HOLDER_Z + HOLDER[2] / 2), '#303d46')]),
           ('cell', 'Pin 18650', [Solid('cell', cell, '#87b483')]),
           ('charger', 'Mạch sạc TP4056 USB-C', tp4056_usbc(at=CHARGER))],
-    notes=['Khoảng trống trong chiều dài là 75,8 mm cho khay 75 mm: chỉ còn 0,4 mm, hãy đo khay thật.',
+    notes=['Khoảng trống trong chiều dài là 75,8 mm cho khay 75 mm: chỉ còn 0,8 mm cho cả hai đầu (0,4 mm mỗi đầu), hãy đo khay thật.',
            'Mạch sạc đặt trên bốn trụ; cổng USB-C nhìn ra khe ở mặt −y, nằm giữa hai hàng lỗ khoét.',
            'Không có mạch tăng áp; bạn tự chọn cách nối pin với ESP32-C3 SuperMini.',
            'Thay pin bằng cách mở nắp ở mặt +x.'])

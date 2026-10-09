@@ -1,4 +1,4 @@
-"""Module màn hình 2.4": 4 x 3 x 1 units. ILI9341 board under a 49 x 37 window in the +z face. Millimetres, Z up."""
+"""Module màn hình 2.4": 4 x 3 x 1 units. ILI9341 board under a 48.96 x 36.72 window (the active area, zero margin) in the +z face. Millimetres, Z up."""
 from printkit.library.electronics import ili9341_24
 from printkit.modules import WALL, ModuleSpec, bounds, box, kit_model
 
@@ -16,5 +16,5 @@ model = kit_model(
     spec=ModuleSpec(cells=CELLS, lid='+y', plain=('+z',), cuts=(WINDOW,)), color='#7b6cd9',
     refs=[('display', 'Màn hình ILI9341 2.4"', ili9341_24(at=(CX, PY, PCB_Z)))],
     notes=['Mặt +z là màn hình nên không có điểm nối.',
-           'Cửa sổ 49×37 mm theo vùng hiển thị 48,96×36,72 mm; kính 60×40 mm là giả định, hãy đo màn hình của bạn.',
+           'Cửa sổ cắt đúng 48,96×36,72 mm, bằng vùng hiển thị và không chừa lề (gọi là 49×37 mm cho tròn); kính 60×40 mm là giả định, hãy đo màn hình của bạn.',
            'Bo lắp từ phía nắp +y rồi trượt vào dưới khung.'])

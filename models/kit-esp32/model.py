@@ -9,7 +9,7 @@ LO, HI = bounds(ModuleSpec(CELLS, '+y'))
 CX = (LO[0] + HI[0]) / 2
 FLOOR = LO[2] + WALL
 BOARD_Z = (LO[2] + HI[2]) / 2 - 3.2                  # USB-C axis at mid height, in the channel between the two connector rows
-BOARD_Y = LO[1] + WALL + 0.5 + 12.75                 # PCB front 0.5 mm from the -y wall, USB overhang 1.5 mm
+BOARD_Y = LO[1] + WALL + 0.5 + 12.75                 # USB front 0.5 mm from the -y wall (PCB front 2.0 mm), USB overhang 1.5 mm
 USB_SLOT = box((CX - 6, 0, BOARD_Z + 0.2), (CX + 6, LO[1] + WALL + 1, BOARD_Z + 6.2))
 POSTS = tuple(cyl((CX + sx, BOARD_Y + sy, FLOOR - 0.5), (0, 0, 1), 1.5, BOARD_Z - FLOOR + 0.5)
               for sx, sy in itertools.product((-4.6, 4.6), (-7.4, 7.4)))

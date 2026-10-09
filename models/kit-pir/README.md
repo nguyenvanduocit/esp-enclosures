@@ -22,7 +22,7 @@ Mở trong [app chung](../../#model/kit-pir). Khối 2×2×2 đơn vị (39,8 ×
 - Trụ chỉ định độ cao của mặt trên PCB, không có gì giữ bo theo chiều ngang hay giữ bo khỏi rơi xuống: dán bo vào đầu trụ bằng keo hoặc băng dính hai mặt.
 - Thân đầu cắm dưới bo có đáy cách mặt ngoài −z 17,2 mm, cách mặt trên của nắp 12,8 mm. Luồn dây qua cổng Ø5 ở giữa mỗi đơn vị trên các mặt có điểm nối.
 - Lắp từ phía −z: đưa bo vào thân đang mở, dán vào đầu trụ, rồi đóng nắp −z. Nắp có gờ lồng vào thân, không cần vít.
-- In: thân in với mặt trơn +z úp xuống bàn, nên lỗ thấu kính nằm xuyên qua các lớp đầu. Hướng này có vùng nhô 495,3 mm², chạm bàn 970,0 mm², cao 37,8 mm; mọi cầu của thân đều dưới 1 mm². Nắp úp mặt ngoài xuống bàn. Cảnh báo của `printkit cad`: `lid: set print_rotation to (90, 0, 0) to cut overhang from 481.1 mm² to 257.4 mm²`. Nắp úp mặt ngoài xuống bàn có vùng nhô 481,1 mm², chạm bàn 977,7 mm², cao 4,4 mm, có bốn cầu 12,1 × 12,1 mm cao 1,6 mm ở các lỗ vòng đệm; hướng slicer gợi ý (đặt nắp đứng trên cạnh) còn 257,4 mm² nhưng chỉ chạm bàn 40,4 mm².
+- In: thân in với mặt trơn +z úp xuống bàn, nên lỗ thấu kính nằm xuyên qua các lớp đầu. Hướng này có vùng nhô 495,3 mm², chạm bàn 970,0 mm², cao 37,8 mm; mọi cầu của thân đều dưới 1 mm². Nắp úp mặt ngoài xuống bàn có vùng nhô 481,1 mm², chạm bàn 977,7 mm², cao 4,4 mm, có bốn cầu 12,1 × 12,1 mm cao 1,6 mm ở các lỗ vòng đệm; hướng slicer gợi ý (đặt nắp đứng trên cạnh) còn 257,4 mm² nhưng chỉ chạm bàn 40,4 mm².
 
 ## File
 `shell.stl`, `lid.stl` (in), `assembly.step`, `model.json`, `verification.json`: sinh ra, không sửa tay.

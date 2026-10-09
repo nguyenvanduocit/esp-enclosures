@@ -13,8 +13,6 @@ def test_supermini_envelope():
     assert by_name['pin_1_7'].center == approx((21.62, -17.61, 9.25))
 
 
-import cadquery as cq
-
 from printkit.library.electronics import bme280, hc_sr501, ili9341_24, mpu6050, tp4056_usbc
 
 

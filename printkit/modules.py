@@ -382,13 +382,19 @@ def overlap_fraction(disc_centre, ring_centre):
 MAGNET_COLOR, WASHER_COLOR, LID_COLOR = '#ef5b5b', '#c9d3d9', '#d9d2b8'
 GROUP_LABELS = {'magnets': ('Nam châm 5×1.5', MAGNET_COLOR), 'washers': ('Vòng đệm M6', WASHER_COLOR),
                 'lidMagnets': ('Nam châm ở nắp', MAGNET_COLOR), 'lidWashers': ('Vòng đệm ở nắp', WASHER_COLOR)}
-STANDARD_NOTES = [
-    'Mặt dương (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.',
-    'Mua vòng đệm thép mạ kẽm, không mua inox 304/316 vì inox không hút nam châm.',
-    'Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.',
-    'Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.',
-    'Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.',
-]
+
+
+def standard_notes(spec):
+    faces = connector_faces(spec)
+    magnets = ', '.join(f.replace('-', '−') for f in faces if kind(f) == 'magnet')
+    washers = ', '.join(f.replace('-', '−') for f in faces if kind(f) == 'steel')
+    return [
+        f'Mặt dương có điểm nối ({magnets}) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm có điểm nối ({washers}) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.',
+        'Mua vòng đệm thép mạ kẽm, không mua inox 304/316 vì inox không hút nam châm.',
+        'Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.',
+        'Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.',
+        'Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.',
+    ]
 
 
 def moved_piece(piece, offset):
@@ -492,11 +498,14 @@ def kit_model(model_id, *, title, description, spec, color, refs=(), notes=(), s
     W, L, H = outer(spec.cells)
     size = max(W, L, H)
     grid = int(20 * math.ceil(3 * size / 20))
+    # Orbit from the front right above, far enough that the bounding sphere (radius = half the diagonal) fits the 36° view with margin.
+    distance = 4 * math.hypot(W, L, H) / 2
+    direction = np.array([1.2, -2.0, 1.4]) / np.linalg.norm([1.2, -2.0, 1.4])
     info = {'summary': 'Chưa in thử', 'sections': [
-        {'title': 'Lắp nam châm và vòng đệm', 'rows': [], 'notes': [*STANDARD_NOTES, *notes], 'links': []}, *sections]}
+        {'title': 'Lắp nam châm và vòng đệm', 'rows': [], 'notes': [*standard_notes(spec), *notes], 'links': []}, *sections]}
     model = Model(model_id, title=title, description=description, category='Module', status='Chưa in thử',
                   thumbnail='thumbnail.png', dimensions=(W, L, H),
-                  camera={'position': [1.2 * size, -2.0 * size, 1.4 * size], 'target': [0, 0, H / 2],
+                  camera={'position': [round(float(x), 1) for x in distance * direction + np.array([0, 0, H / 2])], 'target': [0, 0, H / 2],
                           'minDistance': 0.6 * size, 'maxDistance': 6 * size},
                   grid={'size': grid, 'divisions': grid // 10}, print_info=info,
                   print=Print(layer=0.16, first_layer=0.2, walls=3, infill=(15, 'gyroid'), supports=False, brim='auto',

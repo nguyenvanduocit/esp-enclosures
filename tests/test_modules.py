@@ -8,7 +8,6 @@ from printkit.cli import placeholder_png
 from printkit.export import ModelError, built as build_part, export, run_checks
 from printkit.manifest import Box, PrintPart
 from printkit.modules import (
-    cyl,
     DISC_R,
     DOWN,
     FACES,
@@ -20,6 +19,7 @@ from printkit.modules import (
     bom,
     box,
     cut_clash_volume,
+    cyl,
     disc_offsets,
     fastener_groups,
     kind,
@@ -31,6 +31,7 @@ from printkit.modules import (
     pocket_problems,
     pocket_walls,
     shell_and_lid,
+    standard_notes,
     unit,
 )
 from printkit.pose import euler_xyz_matrix
@@ -180,6 +181,23 @@ def test_kit_model_builds_single_solids_and_passes_its_checks():
             build_part(part.id, part.build)
     results = run_checks(model)
     assert results['Outer size equals units x 20 - 0.2 mm']['outer_mm'] == approx([19.8, 19.8, 19.8])
+
+
+def test_standard_note_names_the_connector_faces_of_each_module():
+    note = standard_notes(ModuleSpec(cells=(1, 1, 1), lid='+y', plain=('+z', '-y')))[0]
+    assert 'Mặt dương có điểm nối (+x, +y)' in note
+    assert 'Mặt âm có điểm nối (−x, −z)' in note
+    assert '+z' not in note and '−y' not in note
+    assert 'Mặt dương có điểm nối (+x, +y, +z)' in standard_notes(ModuleSpec(cells=(1, 1, 1), lid='+y'))[0]
+
+
+@pytest.mark.parametrize("cells", [(1, 1, 1), (2, 2, 2), (2, 4, 2), (4, 1, 2)])
+def test_camera_frames_the_whole_module(cells):
+    camera = small_model(spec=ModuleSpec(cells=cells, lid='+y')).info['camera']
+    radius = np.linalg.norm(outer(cells)) / 2
+    distance = np.linalg.norm(np.array(camera['position']) - np.array(camera['target']))
+    assert distance * np.sin(np.radians(18)) >= 1.15 * radius  # vertical fov 36 degrees, 15 % margin
+    assert camera['minDistance'] < distance < camera['maxDistance']
 
 
 def test_reference_inside_wall_fails():

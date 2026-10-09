@@ -19,5 +19,5 @@ model = kit_model(
     spec=ModuleSpec(cells=CELLS, lid='+z', adds=POSTS), color='#d06a6a',
     refs=[('board', 'GY-521 MPU6050', mpu6050(at=BOARD))],
     notes=['Bo khoảng 20,5×16 mm theo trang bán hàng, các nơi ghi 20×16 đến 21×16,4; đo bo của bạn.',
-           'Hàng chân cắm nằm ở cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình); mô hình không đánh dấu trục của chip.',
+           'Hàng chân cắm nằm gần cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình); mô hình không đánh dấu trục của chip.',
            'Hàn dây trực tiếp hoặc dùng dải chân cắm ngắn: từ đỉnh chip tới tấm nắp còn 9,4 mm.'])

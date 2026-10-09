@@ -11,9 +11,9 @@ Mở trong [app chung](../../#model/kit-display). Khối 4×3×1 đơn vị (79,
 
 ## Giả định
 - Kích thước bo và vùng hiển thị theo giả định A1; đo màn hình của bạn trước khi in.
-- Kính 60 × 40 × 3,2 mm là giả định, không có trong trang bán hàng. Cửa sổ rộng 48,96 × 36,72 mm; nếu kính căn giữa dưới cửa sổ thì phủ lên tường mặt +z mỗi bên 5,5 mm theo x và 1,6 mm theo y.
+- Kính 60 × 40 × 3,2 mm là giả định, không có trong trang bán hàng. Cửa sổ cắt đúng 48,96 × 36,72 mm, bằng vùng hiển thị và không chừa lề (thiết kế gọi là 49 × 37 mm, làm tròn); nếu kính căn giữa dưới cửa sổ thì phủ lên tường mặt +z mỗi bên 5,5 mm theo x và 1,6 mm theo y.
 - Chiều dài trong của thân theo x là 75,8 mm cho bo dài 70,5 mm: còn 5,3 mm cho cả hai bên (2,65 mm mỗi bên khi bo nằm giữa).
-- Mô hình không có chân cắm hay cáp của bo; dây đi qua cổng Ø5 ở giữa mỗi đơn vị trên các mặt.
+- Mô hình không có chân cắm hay cáp của bo; dây đi qua cổng Ø5 ở giữa mỗi đơn vị trên năm mặt có điểm nối (mặt +z trơn nên không có cổng).
 - Lực hút nam châm chưa đo: in một mối ghép và kéo thử trước khi in cả bộ.
 
 ## Lắp

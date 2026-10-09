@@ -12,7 +12,7 @@ Mở trong [app chung](../../#model/kit-esp32). Khối 2×2×2 đơn vị (39,8 
 ## Giả định
 - Kích thước bo từ trang bán hàng; đo bo của bạn trước khi in.
 - Lực hút nam châm chưa đo: in một mối ghép và kéo thử trước khi in cả bộ.
-- Hai hàng chân header hàn xuống, nằm ngoài các trụ (cách mép trụ 1,2 mm theo trục x) và dài 8,5 mm dưới PCB, còn cách sàn 6,1 mm.
+- Hai hàng chân header hàn xuống, nằm ngoài các trụ (cách mép trụ 1,2 mm theo trục x) và dài 8,5 mm dưới PCB, còn cách sàn 6,2 mm.
 - Khe USB-C rộng 12 mm, cao 6 mm, thừa hơn đầu cắm 9 × 3,2 mm của bo; ốp lưng cáp quá to có thể không vừa.
 
 ## Lắp
@@ -20,7 +20,7 @@ Mở trong [app chung](../../#model/kit-esp32). Khối 2×2×2 đơn vị (39,8 
 - Hướng mặt: cổng USB-C quay ra mặt −y, đối diện nắp (+y). Khe USB-C nằm trong dải giữa hai hàng lỗ khoét của mặt đó.
 - Đặt bo lên bốn trụ, mặt linh kiện hướng lên, USB-C sát khe. Cố định bo bằng keo hoặc băng dính hai mặt vì trụ chỉ đỡ mặt dưới PCB.
 - Luồn dây qua cổng Ø5 ở giữa mỗi đơn vị trên các mặt, rồi đóng nắp +y. Nắp có gờ lồng vào thân, không cần vít.
-- In: thân mở lên (mặt +y hướng lên), nắp úp mặt ngoài xuống bàn in. Slicer cảnh báo nắp: đặt `print_rotation` (-90, 0, 90) giảm vùng nhô từ 426,5 mm² xuống 316,5 mm².
+- In: thân mở lên (mặt +y hướng lên), nắp úp mặt ngoài xuống bàn in. Thân cao 37,8 mm, nắp cao 4,4 mm. Slicer cảnh báo nắp: vùng nhô 426,5 mm² khi úp mặt ngoài xuống bàn; hướng slicer gợi ý (đặt nắp đứng trên cạnh) còn 316,5 mm².
 
 ## File
 `shell.stl`, `lid.stl` (in), `assembly.step`, `model.json`, `verification.json`: sinh ra, không sửa tay.
