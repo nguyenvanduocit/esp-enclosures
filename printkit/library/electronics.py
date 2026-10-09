@@ -4,6 +4,9 @@ import cadquery as cq
 from printkit.manifest import Box, Solid
 
 SUPERMINI_PCB = (18.0, 22.5, 1.6)
+MPU6050_PCB = (20.5, 16, 1.6)
+HC_SR501_PCB = (32, 24, 1.2)
+ILI9341_PCB = (70.5, 43.3, 1.6)
 
 
 def esp32_c3_supermini(at=(0, 0, 0)):
@@ -42,7 +45,7 @@ def bme280(at=(0, 0, 0)):
 def mpu6050(at=(0, 0, 0)):
     """GY-521 MPU6050, about 20.5 x 16 mm per listings; the 8-pin header body sits under the board along X."""
     x, y, z = at
-    return [Box('pcb', (20.5, 16, 1.6), (x, y, z + 0.8), '#2b6fb3'),
+    return [Box('pcb', MPU6050_PCB, (x, y, z + MPU6050_PCB[2] / 2), '#2b6fb3'),
             Box('chip', (4, 4, 0.9), (x, y, z + 1.6 + 0.45), '#24343c'),
             Box('header', (20.32, 2.5, 2.5), (x, y - 5, z - 1.25), '#27343c')]
 
@@ -51,7 +54,7 @@ def hc_sr501(at=(0, 0, 0)):
     """HC-SR501 PIR, 32 x 24 mm PCB and a cylindrical lens of diameter 23 and height about 18 (listings disagree, 18 to 30 mm overall)."""
     x, y, z = at
     lens = cq.Workplane('XY').circle(11.5).extrude(18).translate((x, y, z + 1.2))
-    return [Box('pcb', (32, 24, 1.2), (x, y, z + 0.6), '#2e8b57'),
+    return [Box('pcb', HC_SR501_PCB, (x, y, z + HC_SR501_PCB[2] / 2), '#2e8b57'),
             Solid('lens', lens, '#e8e2d0'),
             Box('header', (7.62, 2.5, 2.5), (x + 12, y - 9, z - 1.25), '#27343c')]
 
@@ -59,5 +62,5 @@ def hc_sr501(at=(0, 0, 0)):
 def ili9341_24(at=(0, 0, 0)):
     """2.4 inch ILI9341 module, 70.5 x 43.3 mm PCB (Waveshare listing) with the glass above it; the glass size is an assumption."""
     x, y, z = at
-    return [Box('pcb', (70.5, 43.3, 1.6), (x, y, z + 0.8), '#2b6fb3'),
+    return [Box('pcb', ILI9341_PCB, (x, y, z + ILI9341_PCB[2] / 2), '#2b6fb3'),
             Box('glass', (60, 40, 3.2), (x, y, z + 1.6 + 1.6), '#1c2a33')]

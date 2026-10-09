@@ -15,14 +15,18 @@ Mở trong [app chung](../../#model/kit-mpu6050). Khối 2×2×1 đơn vị (39,
 - Vị trí lỗ bắt vít của bo không có trong mô hình. Trụ đỡ mặt dưới PCB ở khoảng cách chọn theo kích thước bo, không theo lỗ vít.
 - Hàng chân cắm nằm gần cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình). Mô hình không đánh dấu trục của chip.
 - Lực hút nam châm chưa đo: in một mối ghép và kéo thử trước khi in cả bộ.
+- Móc gài: thân móc cách mép PCB 0,2 mm mỗi bên, ngạnh đè lên mặt PCB 0,6 mm và cách mặt PCB 0,2 mm. Bo rộng hơn mô hình tới 0,3 mm (đo qua hai cạnh có móc) vẫn vào không phải ép. Bo hẹp hơn 0,3 mm nằm giữa thì mỗi ngạnh còn đè 0,45 mm; nếu bo dồn hẳn sang một bên thì ngạnh bên kia chỉ còn đè 0,1 mm. Lực giữ của móc chưa đo: in thân, gài bo thật và thử trước khi in cả bộ. Ngạnh nằm trên dải 0,6 mm sát mép bo, dài 4 mm ở chỗ mỗi móc; dải đó phải trống, không có linh kiện hay mối hàn nhô quá 0,2 mm. Trước khi in, đo bề dài bo theo cạnh 20,5 mm và độ dày PCB (mô hình 1,6 mm; dày quá 1,8 mm thì không lọt dưới ngạnh).
 
 ## Lắp
 - Thứ tự dán: dán nam châm vào lỗ ở ba mặt dương (+x, +y, +z) và vòng đệm vào lỗ ở ba mặt âm (−x, −y, −z) bằng keo, đủ số cần cho từng mối ghép. Phía sau lỗ chỉ còn sàn mỏng nên không dán thì bị hút ra.
-- Vị trí bo trong mô hình: bo nằm giữa khối, mặt dưới PCB cách sàn 3,9 mm trên bốn trụ Ø2,4 mm đặt ở ±8 mm theo x và ±2 mm theo y so với tâm. Cạnh PCB cách tường trong 7,65 mm theo x và 9,9 mm theo y mỗi bên. Thân đầu cắm treo dưới bo, đáy cách sàn 1,4 mm và cách mép trụ gần nhất 0,55 mm. Với 1,4 mm dưới đáy thân đầu cắm, đầu nối Dupont không lồng được vào chân cắm dưới bo.
-- Trụ chỉ đỡ mặt dưới PCB, không có gì giữ bo theo chiều ngang: dán bo bằng keo hoặc băng dính hai mặt.
-- Từ đỉnh chip tới tấm nắp còn 9,4 mm (từ mặt trên PCB còn 10,3 mm), đủ cho dây hàn trực tiếp hoặc dải chân cắm ngắn. Gờ nắp bắt đầu ở độ cao 15,4 mm, cao hơn bo.
+- Vị trí bo trong mô hình: bo nằm giữa khối, mặt dưới PCB cách sàn 6,4 mm trên bốn trụ Ø2,4 mm đặt ở ±8 mm theo x và ±2 mm theo y so với tâm. Cạnh PCB cách tường trong 7,65 mm theo x và 9,9 mm theo y mỗi bên. Thân đầu cắm treo dưới bo, đáy cách sàn 3,9 mm và cách mép trụ gần nhất 0,55 mm. Với 3,9 mm dưới đáy thân đầu cắm, đầu nối Dupont không lồng được vào chân cắm dưới bo.
+- Bo đặt cao 6,4 mm trên sàn để thân móc đủ dài (8,6 mm từ sàn tới mũi ngạnh): thân móc ngắn hơn thì bị uốn quá mức khi gài.
+- Hai móc gài, một ở mỗi cạnh ngắn của bo (cạnh ±x), mọc thẳng từ sàn ở giữa cạnh, rộng 4 mm, dày 1,2 mm, đỉnh ở độ cao 11,4 mm.
+- Gài bo: đặt bo lên bốn trụ, mặt chip hướng lên, rồi ấn thẳng xuống. Mép bo đẩy mặt vát của hai ngạnh ra ngoài và hai móc bật lại khi bo chạm trụ. Không cần keo.
+- Tháo bo: gạt đỉnh hai móc ra phía tường x khoảng 0,6 mm bằng móng tay rồi nhấc bo lên.
+- Từ đỉnh chip tới tấm nắp còn 6,9 mm (từ mặt trên PCB còn 7,8 mm), đủ cho dây hàn trực tiếp hoặc dải chân cắm ngắn. Gờ nắp bắt đầu ở độ cao 15,4 mm, cao hơn bo và móc.
 - Luồn dây qua cổng Ø5 ở giữa mỗi đơn vị trên các mặt, rồi đóng nắp +z. Nắp có gờ lồng vào thân, không cần vít.
-- In: thân mở lên (mặt +z hướng lên, cao 17,8 mm), nắp úp mặt ngoài xuống bàn in. Thân có vùng nhô 678,8 mm², chạm bàn 977,7 mm², có bốn cầu 12,1 × 12,1 mm ở các lỗ vòng đệm mặt −z (cao 1,6 mm); các cầu còn lại đều dưới 1 mm². Slicer cảnh báo nắp: vùng nhô 426,5 mm² khi úp mặt ngoài xuống bàn (chạm bàn 1032,2 mm², có mười sáu cầu 5,1 × 5,1 mm cao 1,5 mm ở lỗ nam châm); hướng slicer gợi ý (đặt nắp đứng trên cạnh) còn 316,1 mm² nhưng chỉ chạm bàn 39,7 mm².
+- In: thân mở lên (mặt +z hướng lên, cao 17,8 mm), nắp úp mặt ngoài xuống bàn in. Thân có vùng nhô 685,2 mm², chạm bàn 977,7 mm², có bốn cầu 12,1 × 12,1 mm ở các lỗ vòng đệm mặt −z (cao 1,6 mm). Mặt dưới hai ngạnh là hai gờ 0,8 × 4 mm in treo ở độ cao 10,2 mm (3,2 mm² mỗi gờ, thêm 6,4 mm² so với thân không móc); các cầu còn lại đều dưới 1 mm². Slicer cảnh báo nắp: vùng nhô 426,5 mm² khi úp mặt ngoài xuống bàn (chạm bàn 1032,2 mm², có mười sáu cầu 5,1 × 5,1 mm cao 1,5 mm ở lỗ nam châm); hướng slicer gợi ý (đặt nắp đứng trên cạnh) còn 316,1 mm² nhưng chỉ chạm bàn 39,7 mm².
 
 ## File
 `shell.stl`, `lid.stl` (in), `assembly.step`, `model.json`, `verification.json`: sinh ra, không sửa tay.

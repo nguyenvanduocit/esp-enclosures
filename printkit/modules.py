@@ -379,6 +379,165 @@ def overlap_fraction(disc_centre, ring_centre):
     return hit / total
 
 
+SNAP_HOOKS, SLIDE_RAILS, STOP_AND_HOOK = 'snap hooks', 'slide rails, lid-locked', 'front stop and snap hook'
+
+
+class Pcb(NamedTuple):
+    """A board the shell holds. `at` is the centre of the PCB underside (as in printkit.library.electronics), `size` is
+    (x, y, thickness); `held` is +1 when barbs or rails hold the top face down, -1 when they hold the underside up.
+    `retention` names how: SNAP_HOOKS, SLIDE_RAILS (rails along two opposite edges, the closed lid stops the slide) or
+    STOP_AND_HOOK (a rigid lip on one edge, a snap hook on the other)."""
+    at: tuple
+    size: tuple
+    held: int = 1
+    retention: str = SNAP_HOOKS
+
+
+HOOK_T, HOOK_W, HOOK_SIDE_GAP, HOOK_GAP, HOOK_OVERLAP, HOOK_LAND = 1.2, 4.0, 0.2, 0.2, 0.6, 0.4
+HOOK_EMBED = 0.5  # the hook root reaches this far into its wall so the fuse is solid
+HOOK_SLOPE = 1.2  # the support chamfers at a beam's barb end rise 50°, so slicers never count them as 45° overhang
+LIP_EMBED = 0.2  # a lip is fused along its whole length, so it reaches only this far into the wall and stays off pocket floors
+MIN_OVERLAP, MAX_GAP, MAX_TRAVEL = 0.4, 0.3, 1.0
+
+
+def held_face(pcb):
+    return pcb.at[2] + (pcb.size[2] if pcb.held > 0 else 0)
+
+
+def _prism(origin, basis, axes, outline, span):
+    """Prism with `outline` in local axes axes[0], axes[1] (keys of `basis`), extruded along axes[2] over `span`."""
+    a, b, c = (basis[k] for k in axes)
+    plane = cq.Plane(origin=vec(origin + span[0] * c), xDir=vec(a), normal=vec(c))
+    flip = 1.0 if np.dot(plane.yDir.toTuple(), b) > 0 else -1.0
+    points = [(float(p), float(flip * q)) for p, q in outline]
+    return cq.Workplane(plane).polyline(points).close().extrude(float(span[1] - span[0])).val()
+
+
+def snap_hook(pcb, side, *, root, at=None, width=HOOK_W, thickness=HOOK_T, side_gap=HOOK_SIDE_GAP, gap=HOOK_GAP,
+              overlap=HOOK_OVERLAP, land=HOOK_LAND, back=0.0):
+    """A printed snap hook at `side` ('+x', '-x', '+y', '-y') of `pcb`, as one solid in module coordinates.
+
+    The hook stands `side_gap` outside the PCB edge. Its barb reaches `overlap` over the held face, `gap` beyond it, and
+    a 45° lead-in on the barb lets the board push the hook aside. `root` = (axis, coordinate) of the inner wall face the
+    hook grows from. Axis 'z' makes a stem from the floor or ceiling. The axis along the edge makes a beam from that
+    wall, as tall as the PCB edge plus `gap` and `back`, with the barb on its last `width` mm; that end is chamfered
+    towards the wall so the beam prints without support when the wall lies on the bed. `at` is the barb centre along
+    the edge, by default the middle of the edge."""
+    axis, sign = FACES[side]
+    if axis == 2:
+        raise ValueError(f'snap hooks hold a PCB edge; {side} is not an edge side')
+    e = 1 - axis
+    basis = {'u': unit(side), 'v': np.eye(3)[e], 'w': np.array([0.0, 0.0, float(pcb.held)])}
+    origin = np.zeros(3)
+    origin[axis] = pcb.at[axis] + sign * pcb.size[axis] / 2
+    origin[2] = held_face(pcb)
+    centre = pcb.at[e] if at is None else at
+    inner, outside = side_gap, side_gap + thickness
+    top = gap + land + side_gap + overlap
+    barb = [(-overlap, gap), (-overlap, gap + land), (inner, top), (outside, top)]
+    root_axis, root_at = root
+    if root_axis == 'z':
+        foot = (root_at - origin[2]) * pcb.held - HOOK_EMBED
+        return _prism(origin, basis, 'uwv', [(outside, foot), (inner, foot), (inner, gap), *barb],
+                      (centre - width / 2, centre + width / 2))
+    if root_axis != 'xyz'[e]:
+        raise ValueError(f"a hook at {side} grows from the floor or ceiling (z) or from a wall across {'xyz'[e]}")
+    s = 1.0 if centre > root_at else -1.0
+    start, v0, tip = root_at - s * HOOK_EMBED, centre - s * width / 2, centre + s * width / 2
+    low = -pcb.size[2] - back
+    body = _prism(origin, basis, 'uwv', [(inner, low), (outside, low), (outside, gap), (inner, gap)], sorted((start, tip)))
+    end = _prism(origin, basis, 'uwv', [(outside, gap), *barb], sorted((v0, tip)))
+    rise = [(v0 - s * HOOK_SLOPE, gap - 1), (v0 + s * HOOK_SLOPE * (top - gap + 1), top + 1),
+            (v0 - s * 10, top + 1), (v0 - s * 10, gap - 1)]
+    lean = [(outside + 1, v0 - s * HOOK_SLOPE * (thickness + 1)), (-overlap - 1, v0 + s * HOOK_SLOPE * (inner + overlap + 1)),
+            (-overlap - 1, v0 - s * 10), (outside + 1, v0 - s * 10)]
+    end = end.cut(_prism(origin, basis, 'vwu', rise, (-overlap - 1, outside + 1)))
+    end = end.cut(_prism(origin, basis, 'uvw', lean, (gap - 1, top + 1)))
+    return body.fuse(end).clean()
+
+
+def edge_lip(pcb, side, *, wall, span, side_gap=HOOK_SIDE_GAP, gap=HOOK_GAP, overlap=HOOK_OVERLAP, thickness=HOOK_T,
+             embed=LIP_EMBED):
+    """A rigid lip fused to the wall behind the `side` edge of `pcb`, over `span` (lo, hi) along that edge.
+
+    It reaches `overlap` over the held face, `gap` beyond it, and `thickness` thick; from the wall to `side_gap` off the
+    PCB edge it also covers the edge itself, so the board cannot slide towards the wall. `wall` is the coordinate of the
+    inner wall face across the side axis. Two lips on opposite edges make slide rails; with a snap hook opposite, a front stop."""
+    axis, sign = FACES[side]
+    if axis == 2:
+        raise ValueError(f'a lip holds a PCB edge; {side} is not an edge side')
+    e = 1 - axis
+    basis = {'u': unit(side), 'v': np.eye(3)[e], 'w': np.array([0.0, 0.0, float(pcb.held)])}
+    origin = np.zeros(3)
+    origin[axis] = pcb.at[axis] + sign * pcb.size[axis] / 2
+    origin[2] = held_face(pcb)
+    back = (wall - origin[axis]) * sign + embed
+    if back <= side_gap:
+        raise ValueError(f'the wall at {wall} is not behind the {side} edge')
+    top = gap + thickness
+    outline = [(back, -pcb.size[2]), (back, top), (-overlap, top), (-overlap, gap), (side_gap, gap), (side_gap, -pcb.size[2])]
+    return _prism(origin, basis, 'uwv', outline, sorted(span))
+
+
+def lid_travel(lid, pcb, axis):
+    """How far `pcb` slides along `axis` (a unit vector out through the lid) before it meets the closed `lid`."""
+    a = int(np.flatnonzero(axis)[0])
+    s = float(axis[a])
+    lo = np.array([pcb.at[0] - pcb.size[0] / 2, pcb.at[1] - pcb.size[1] / 2, pcb.at[2]])
+    hi = lo + np.array(pcb.size)
+    edge = hi[a] if s > 0 else lo[a]
+    lo[a], hi[a] = sorted((edge, edge + s * 5))
+    pieces = lid.intersect(box(lo, hi)).Solids()
+    if not pieces:
+        return float('inf')
+    near = [p.BoundingBox() for p in pieces]
+    return float(min((bb.xmin, bb.ymin, bb.zmin)[a] - edge if s > 0 else edge - (bb.xmax, bb.ymax, bb.zmax)[a] for bb in near))
+
+
+def barb_grips(shell, pcb, depth=2.0):
+    """[(side, overlap, gap)] for each piece of `shell` inside the PCB outline within `depth` of the held face.
+
+    overlap is how far the piece reaches over the face from the edge it hugs (of the edges it touches, the one it reaches
+    least far from, so a rail along a whole edge counts once), gap its distance from the face."""
+    face = held_face(pcb)
+    lo = np.array([pcb.at[0] - pcb.size[0] / 2, pcb.at[1] - pcb.size[1] / 2])
+    hi = lo + np.array(pcb.size[:2])
+    z0, z1 = sorted((face, face + pcb.held * depth))
+    grips = []
+    for piece in shell.intersect(box((lo[0], lo[1], z0), (hi[0], hi[1], z1))).Solids():
+        bb = piece.BoundingBox()
+        low, high = np.array([bb.xmin, bb.ymin]), np.array([bb.xmax, bb.ymax])
+        gap = bb.zmin - face if pcb.held > 0 else face - bb.zmax
+        touched = []
+        for side in ('+x', '-x', '+y', '-y'):
+            axis, sign = FACES[side]
+            if sign > 0 and high[axis] > hi[axis] - 1e-3:
+                touched.append((float(hi[axis] - low[axis]), side))
+            elif sign < 0 and low[axis] < lo[axis] + 1e-3:
+                touched.append((float(high[axis] - lo[axis]), side))
+        if touched:
+            overlap, side = min(touched)
+            grips.append((side, overlap, float(gap)))
+    return grips
+
+
+def grip_problems(grips, retention=SNAP_HOOKS, travel=None):
+    """Why `grips` do not hold a board: fewer than two sides gripped by MIN_OVERLAP, a barb further than MAX_GAP, or for
+    slide rails, rails not on opposite edges or a lid that lets the board slide more than MAX_TRAVEL."""
+    sides = {side for side, overlap, _ in grips if overlap >= MIN_OVERLAP}
+    problems = [] if len(sides) >= 2 else [f'barbs reach {MIN_OVERLAP} mm over the board on {len(sides)} side(s), need 2']
+    problems += [f'barb at {side} is {gap:.2f} mm from the board, more than {MAX_GAP}' for side, _, gap in grips if gap > MAX_GAP]
+    if retention == SLIDE_RAILS:
+        if not ({'+x', '-x'} <= sides or {'+y', '-y'} <= sides):
+            problems.append('slide rails must hold two opposite edges')
+        if travel is None or travel > MAX_TRAVEL:
+            problems.append(f'the closed lid lets the board slide {travel:.1f} mm, more than {MAX_TRAVEL}' if travel is not None
+                            else 'no closed lid to stop the slide')
+    elif retention not in (SNAP_HOOKS, STOP_AND_HOOK):
+        problems.append(f'unknown retention {retention!r}')
+    return problems
+
+
 MAGNET_COLOR, WASHER_COLOR, LID_COLOR = '#ef5b5b', '#c9d3d9', '#d9d2b8'
 GROUP_LABELS = {'magnets': ('Nam châm 5×1.5', MAGNET_COLOR), 'washers': ('Vòng đệm M6', WASHER_COLOR),
                 'lidMagnets': ('Nam châm ở nắp', MAGNET_COLOR), 'lidWashers': ('Vòng đệm ở nắp', WASHER_COLOR)}
@@ -407,8 +566,10 @@ def reference_solid(piece):
     return box_solid(piece) if isinstance(piece, Box) else wp(piece.shape)
 
 
-def declare(model, spec, *, color, refs=()):
-    """Register shell, lid, fasteners, references, measurements, the open-lid animation and the standard checks."""
+def declare(model, spec, *, color, refs=(), boards=()):
+    """Register shell, lid, fasteners, references, measurements, the open-lid animation and the standard checks.
+
+    `boards` are the Pcbs the module holds with hooks, rails or lips in `spec.adds`; with any, the board check is registered too."""
     lo, hi = bounds(spec)
     offset = (-(lo[0] + hi[0]) / 2, -(lo[1] + hi[1]) / 2, -lo[2])
     W, L, H = outer(spec.cells)
@@ -497,8 +658,25 @@ def declare(model, spec, *, color, refs=()):
             for piece in pieces:
                 clear(reference_solid(piece), shell=shell, lid=lid)
 
+    if boards:
+        @model.check('Boards held in place')
+        def boards_held():
+            report = []
+            for i, pcb in enumerate(boards):
+                grips = barb_grips(shapes()[0], pcb)
+                travel = lid_travel(shapes()[1], pcb, unit(spec.lid)) if pcb.retention == SLIDE_RAILS else None
+                problems = grip_problems(grips, pcb.retention, travel)
+                if problems:
+                    raise CheckFailed(f'board {i}: ' + '; '.join(problems))
+                entry = {'retention': pcb.retention,
+                         'grips': [{'side': side, 'overlap_mm': round(overlap, 2), 'gap_mm': round(gap, 2)} for side, overlap, gap in grips]}
+                if travel is not None:
+                    entry['lid_travel_mm'] = round(travel, 2)
+                report.append(entry)
+            return {'boards': report}
 
-def kit_model(model_id, *, title, description, spec, color, refs=(), notes=(), sections=()):
+
+def kit_model(model_id, *, title, description, spec, color, refs=(), boards=(), notes=(), sections=()):
     W, L, H = outer(spec.cells)
     size = max(W, L, H)
     grid = int(20 * math.ceil(3 * size / 20))
@@ -514,5 +692,5 @@ def kit_model(model_id, *, title, description, spec, color, refs=(), notes=(), s
                   grid={'size': grid, 'divisions': grid // 10}, print_info=info,
                   print=Print(layer=0.16, first_layer=0.2, walls=3, infill=(15, 'gyroid'), supports=False, brim='auto',
                               extra={'top_shell_layers': 5, 'bottom_shell_layers': 5, 'wall_generator': 'arachne'}))
-    declare(model, spec, color=color, refs=refs)
+    declare(model, spec, color=color, refs=refs, boards=boards)
     return model

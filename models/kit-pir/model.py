@@ -1,8 +1,9 @@
-"""Module cảm biến PIR: 2 x 2 x 2 units. HC-SR501 hangs from the ceiling, its lens passes through a hole in the +z face. Millimetres, Z up."""
+"""Module cảm biến PIR: 2 x 2 x 2 units. HC-SR501 hangs from the ceiling on two snap hooks, its lens passes through a hole in the +z
+face. Millimetres, Z up."""
 import itertools
 
-from printkit.library.electronics import hc_sr501
-from printkit.modules import WALL, ModuleSpec, bounds, cyl, kit_model
+from printkit.library.electronics import HC_SR501_PCB, hc_sr501
+from printkit.modules import WALL, ModuleSpec, Pcb, bounds, cyl, kit_model, snap_hook
 
 CELLS = (2, 2, 2)
 LO, HI = bounds(ModuleSpec(CELLS, '-z'))
@@ -13,12 +14,16 @@ CEILING = HI[2] - WALL
 HOLE = cyl((CX, CY, HI[2] - WALL - 1), (0, 0, 1), 12.2, WALL + 2)          # O24.4 for the O23 lens
 HANGERS = tuple(cyl((CX + sx, CY + sy, BOARD[2] + 1.2), (0, 0, 1), 1.5, CEILING + 0.5 - (BOARD[2] + 1.2))
                 for sx, sy in itertools.product((-13, 13), (-9, 9)))
+PCB = Pcb(BOARD, HC_SR501_PCB, held=-1)
+# two stems hang from the ceiling at the +-y edges and hold the PCB underside up against the hangers; they sit 6 mm off the centre
+# in x, point-symmetric, so their roots stay 0.6 mm outside the lens hole cutter (r 12.2)
+HOOKS = (snap_hook(PCB, '+y', root=('z', CEILING), at=CX + 6), snap_hook(PCB, '-y', root=('z', CEILING), at=CX - 6))
 
 model = kit_model(
     'kit-pir', title='Module cảm biến PIR',
     description='Cảm biến chuyển động HC-SR501, thấu kính nhô qua lỗ ở mặt trên, khối 2×2×2.',
-    spec=ModuleSpec(cells=CELLS, lid='-z', plain=('+z',), cuts=(HOLE,), adds=HANGERS), color='#4d9d7a',
-    refs=[('board', 'HC-SR501', hc_sr501(at=BOARD))],
+    spec=ModuleSpec(cells=CELLS, lid='-z', plain=('+z',), cuts=(HOLE,), adds=HANGERS + HOOKS), color='#4d9d7a',
+    refs=[('board', 'HC-SR501', hc_sr501(at=BOARD))], boards=(PCB,),
     notes=['Bo 32×24 mm, thấu kính Ø23; chiều cao các trang bán hàng ghi 18 đến 30 mm không khớp nhau, hãy đo.',
            'Mặt +z là cửa sổ cho thấu kính nên không có điểm nối.',
-           'Bo treo vào bốn trụ từ trần; lắp từ phía nắp −z rồi đóng nắp.'])
+           'Bo treo vào bốn trụ từ trần, hai móc gài ở hai cạnh dài giữ mặt dưới PCB: đẩy bo lên là móc bật vào; lắp từ phía nắp −z rồi đóng nắp.'])

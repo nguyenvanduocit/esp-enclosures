@@ -9,7 +9,7 @@
     "shell": {
       "watertight": true,
       "solid_count": 1,
-      "volume_mm3": 2269.73,
+      "volume_mm3": 2254.44,
       "bounds_mm": [
         [
           -9.9,
@@ -57,11 +57,31 @@
     "Connectors: pockets void, floors solid, interior flat, ports open": true,
     "Plain faces are solid wall": true,
     "Cut-outs clear every pocket": true,
-    "Reference parts clear shell and lid": true
+    "Reference parts clear shell and lid": true,
+    "Boards held in place": {
+      "boards": [
+        {
+          "retention": "slide rails, lid-locked",
+          "grips": [
+            {
+              "side": "+x",
+              "overlap_mm": 0.6,
+              "gap_mm": 0.2
+            },
+            {
+              "side": "-x",
+              "overlap_mm": 0.6,
+              "gap_mm": 0.2
+            }
+          ],
+          "lid_travel_mm": 0.6
+        }
+      ]
+    }
   },
   "printability": {
     "shell": {
-      "overhang_mm2": 168.8,
+      "overhang_mm2": 144.0,
       "bridges": [
         {
           "z": 8.277,
@@ -94,22 +114,6 @@
             1.5
           ],
           "area_mm2": 0.19
-        },
-        {
-          "z": 10.2,
-          "size_mm": [
-            0.06,
-            6.7
-          ],
-          "area_mm2": 0.4
-        },
-        {
-          "z": 10.2,
-          "size_mm": [
-            0.06,
-            6.7
-          ],
-          "area_mm2": 0.4
         },
         {
           "z": 12.399,
@@ -199,7 +203,7 @@
             0,
             0
           ],
-          "overhang_mm2": 168.8,
+          "overhang_mm2": 144.0,
           "contact_mm2": 277.7,
           "height_mm": 17.8
         },
@@ -209,7 +213,7 @@
             0,
             0
           ],
-          "overhang_mm2": 327.1,
+          "overhang_mm2": 302.2,
           "contact_mm2": 141.5,
           "height_mm": 17.8
         },
@@ -219,18 +223,8 @@
             0,
             0
           ],
-          "overhang_mm2": 405.2,
+          "overhang_mm2": 439.0,
           "contact_mm2": 200.8,
-          "height_mm": 19.8
-        },
-        {
-          "rotation": [
-            -90,
-            0,
-            0
-          ],
-          "overhang_mm2": 418.2,
-          "contact_mm2": 186.6,
           "height_mm": 19.8
         },
         {
@@ -239,8 +233,18 @@
             90,
             0
           ],
-          "overhang_mm2": 475.0,
+          "overhang_mm2": 449.3,
           "contact_mm2": 200.5,
+          "height_mm": 19.8
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 452.0,
+          "contact_mm2": 186.6,
           "height_mm": 19.8
         },
         {
@@ -249,7 +253,7 @@
             -90,
             0
           ],
-          "overhang_mm2": 488.6,
+          "overhang_mm2": 462.9,
           "contact_mm2": 186.9,
           "height_mm": 19.8
         }
@@ -363,14 +367,14 @@
     "project": "print/kit-bme280.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 1108,
-    "grams": 3.76,
+    "seconds": 1174,
+    "grams": 3.74,
     "layerCount": 111,
     "parts": [
       {
         "id": "shell",
-        "seconds": 928,
-        "grams": 2.84
+        "seconds": 991,
+        "grams": 2.83
       },
       {
         "id": "lid",

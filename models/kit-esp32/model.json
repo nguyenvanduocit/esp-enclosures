@@ -31,7 +31,7 @@
     "divisions": 12
   },
   "printInfo": {
-    "summary": "16,4 g PLA · 1 giờ 4 phút · Bambu P1S",
+    "summary": "16,5 g PLA · 1 giờ 5 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -89,7 +89,7 @@
           "Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.",
           "Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.",
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
-          "Bốn trụ đỡ mặt dưới PCB; bo cần cố định thêm bằng keo hoặc băng dính.",
+          "Bốn trụ đỡ mặt dưới PCB, hai móc gài ở hai cạnh dọc giữ mặt trên: ấn bo xuống là móc bật vào, không cần keo.",
           "Khe USB-C nằm trong dải giữa hai hàng lỗ khoét ở mặt −y, nên không cắt vào lỗ nào."
         ],
         "links": []
@@ -99,7 +99,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "12,9 g · 53 phút"
+            "13 g · 55 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -107,7 +107,7 @@
           ],
           [
             "Cả bàn in",
-            "16,4 g · 1 giờ 4 phút · 236 lớp"
+            "16,5 g · 1 giờ 5 phút · 236 lớp"
           ]
         ],
         "notes": [
@@ -860,18 +860,18 @@
     "project": "print/kit-esp32.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 3838,
-    "grams": 16.44,
+    "seconds": 3920,
+    "grams": 16.53,
     "layerCount": 236,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3203,
-        "grams": 12.94
+        "seconds": 3282,
+        "grams": 13.03
       },
       {
         "id": "lid",
-        "seconds": 699,
+        "seconds": 698,
         "grams": 3.59
       }
     ]

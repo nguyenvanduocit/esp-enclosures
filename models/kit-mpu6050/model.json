@@ -31,7 +31,7 @@
     "divisions": 12
   },
   "printInfo": {
-    "summary": "10,6 g PLA · 39 phút · Bambu P1S",
+    "summary": "10,7 g PLA · 41 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -91,7 +91,8 @@
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
           "Bo khoảng 20,5×16 mm theo trang bán hàng, các nơi ghi 20×16 đến 21×16,4; đo bo của bạn.",
           "Hàng chân cắm nằm gần cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình); mô hình không đánh dấu trục của chip.",
-          "Hàn dây trực tiếp hoặc dùng dải chân cắm ngắn: từ đỉnh chip tới tấm nắp còn 9,4 mm."
+          "Hàn dây trực tiếp hoặc dùng dải chân cắm ngắn: từ đỉnh chip tới tấm nắp còn 6,9 mm.",
+          "Bốn trụ đỡ mặt dưới PCB, hai móc gài ở hai cạnh ngắn giữ mặt trên: ấn bo xuống là móc bật vào, không cần keo."
         ],
         "links": []
       },
@@ -100,7 +101,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "7,1 g · 29 phút"
+            "7,2 g · 30 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -108,7 +109,7 @@
           ],
           [
             "Cả bàn in",
-            "10,6 g · 39 phút · 111 lớp"
+            "10,7 g · 41 phút · 111 lớp"
           ]
         ],
         "notes": [
@@ -275,7 +276,7 @@
           "position": [
             0.0,
             0.0,
-            6.7
+            9.2
           ],
           "color": "#2b6fb3"
         },
@@ -289,7 +290,7 @@
           "position": [
             0.0,
             0.0,
-            7.95
+            10.45
           ],
           "color": "#24343c"
         },
@@ -303,7 +304,7 @@
           "position": [
             0.0,
             -5.0,
-            4.65
+            7.15
           ],
           "color": "#27343c"
         }
@@ -595,14 +596,14 @@
     "project": "print/kit-mpu6050.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 2362,
-    "grams": 10.58,
+    "seconds": 2458,
+    "grams": 10.74,
     "layerCount": 111,
     "parts": [
       {
         "id": "shell",
-        "seconds": 1727,
-        "grams": 7.09
+        "seconds": 1822,
+        "grams": 7.25
       },
       {
         "id": "lid",

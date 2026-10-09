@@ -31,7 +31,7 @@
     "divisions": 24
   },
   "printInfo": {
-    "summary": "23,9 g PLA · 1 giờ 17 phút · Bambu P1S",
+    "summary": "24,1 g PLA · 1 giờ 19 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -91,7 +91,7 @@
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
           "Mặt +z là màn hình nên không có điểm nối.",
           "Cửa sổ cắt đúng 48,96×36,72 mm, bằng vùng hiển thị và không chừa lề (gọi là 49×37 mm cho tròn); kính 60×40 mm là giả định, hãy đo màn hình của bạn.",
-          "Bo lắp từ phía nắp +y rồi trượt vào dưới khung."
+          "Bo lắp từ phía nắp +y: đưa bo vào dưới khung rồi đẩy lên, hai móc gài ở hai cạnh ngắn bật vào dưới mặt PCB."
         ],
         "links": []
       },
@@ -100,7 +100,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "20,3 g · 1 giờ 5 phút"
+            "20,5 g · 1 giờ 7 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -108,7 +108,7 @@
           ],
           [
             "Cả bàn in",
-            "23,9 g · 1 giờ 17 phút · 361 lớp"
+            "24,1 g · 1 giờ 19 phút · 361 lớp"
           ]
         ],
         "notes": [
@@ -581,18 +581,18 @@
     "project": "print/kit-display.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 4597,
-    "grams": 23.94,
+    "seconds": 4721,
+    "grams": 24.15,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3927,
-        "grams": 20.32
+        "seconds": 4048,
+        "grams": 20.54
       },
       {
         "id": "lid",
-        "seconds": 726,
+        "seconds": 725,
         "grams": 3.71
       }
     ]

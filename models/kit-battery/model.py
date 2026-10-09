@@ -1,11 +1,12 @@
-"""Module pin 18650 + sạc: 3 x 4 x 2 units. 18650 holder against -x, TP4056 USB-C charger on four posts beside it. Millimetres, Z up."""
+"""Module pin 18650 + sạc: 3 x 4 x 2 units. 18650 holder against -x, TP4056 USB-C charger on four posts beside it, held by two lips
+on the -y wall beside the USB-C slot and one snap hook at its +y edge. Millimetres, Z up."""
 import itertools
 
 import cadquery as cq
 
 from printkit import Box, Solid
 from printkit.library.electronics import tp4056_usbc
-from printkit.modules import WALL, ModuleSpec, bounds, box, cyl, kit_model
+from printkit.modules import STOP_AND_HOOK, WALL, ModuleSpec, Pcb, bounds, box, cyl, edge_lip, kit_model, snap_hook
 
 CELLS = (3, 4, 2)
 LO, HI = bounds(ModuleSpec(CELLS, '+x'))
@@ -19,17 +20,26 @@ CHARGER = (36.0, 17.5, 16.75)                          # PCB underside centre; t
 CHARGER_POSTS = tuple(cyl((CHARGER[0] + sx, CHARGER[1] + sy, FLOOR - 0.5), (0, 0, 1), 1.5, CHARGER[2] - FLOOR + 0.5)
                       for sx, sy in itertools.product((-6, 6), (-10, 10)))
 USB_SLOT = box((CHARGER[0] - 5.2, 0, 17.7), (CHARGER[0] + 5.2, LO[1] + WALL + 1, 22.3))
+PCB = Pcb(CHARGER, (17, 28, 1.6), retention=STOP_AND_HOOK)
+# Front stop: two rigid lips on the -y wall over the PCB's -y edge, one each side of the USB-C slot (0.2 mm off it). The USB-C
+# receptacle ends 0.6 mm short of the wall, so the slot itself cannot stop the board lifting.
+LIPS = tuple(edge_lip(PCB, '-y', wall=LO[1] + WALL, span=span)
+             for span in ((CHARGER[0] - 8.5, CHARGER[0] - 5.4), (CHARGER[0] + 5.4, CHARGER[0] + 8.5)))
+# One snap hook at the +y edge, a stem from the floor. Its barb centre sits 2 mm towards +x so the root stays 0.19 mm outside the
+# floor washer counterbore at (30, 30) instead of standing on its 0.4 mm floor.
+HOOK = snap_hook(PCB, '+y', root=('z', FLOOR), at=CHARGER[0] + 2)
 
 cell = cq.Workplane('XY').add(cq.Solid.makeCylinder(9.25, 65.3, cq.Vector(HOLDER_X, CY - 32.65, CELL_Z), cq.Vector(0, 1, 0)))
 
 model = kit_model(
     'kit-battery', title='Module pin 18650 + sạc',
     description='Một viên 18650 trong khay hở cùng mạch sạc TP4056 USB-C, khối 3×4×2.',
-    spec=ModuleSpec(cells=CELLS, lid='+x', cuts=(USB_SLOT,), adds=CHARGER_POSTS), color='#5f8f5b',
+    spec=ModuleSpec(cells=CELLS, lid='+x', cuts=(USB_SLOT,), adds=CHARGER_POSTS + LIPS + (HOOK,)), color='#5f8f5b',
     refs=[('holder', 'Khay pin 18650', [Box('holder', HOLDER, (HOLDER_X, CY, HOLDER_Z + HOLDER[2] / 2), '#303d46')]),
           ('cell', 'Pin 18650', [Solid('cell', cell, '#87b483')]),
-          ('charger', 'Mạch sạc TP4056 USB-C', tp4056_usbc(at=CHARGER))],
+          ('charger', 'Mạch sạc TP4056 USB-C', tp4056_usbc(at=CHARGER))], boards=(PCB,),
     notes=['Khoảng trống trong chiều dài là 75,8 mm cho khay 75 mm: chỉ còn 0,8 mm cho cả hai đầu (0,4 mm mỗi đầu), hãy đo khay thật.',
            'Mạch sạc đặt trên bốn trụ; cổng USB-C nhìn ra khe ở mặt −y, nằm giữa hai hàng lỗ khoét.',
+           'Mạch sạc được giữ bằng hai gờ chặn ở thành −y cạnh khe USB-C và một móc gài ở cạnh +y: luồn cạnh USB-C vào dưới gờ rồi ấn đầu kia xuống. Yếu hơn hai móc; lực giữ chưa đo.',
            'Không có mạch tăng áp; bạn tự chọn cách nối pin với ESP32-C3 SuperMini.',
            'Thay pin bằng cách mở nắp ở mặt +x.'])

@@ -9,7 +9,7 @@
     "shell": {
       "watertight": true,
       "solid_count": 1,
-      "volume_mm3": 10604.38,
+      "volume_mm3": 10683.97,
       "bounds_mm": [
         [
           -19.9,
@@ -57,7 +57,26 @@
     "Connectors: pockets void, floors solid, interior flat, ports open": true,
     "Plain faces are solid wall": true,
     "Cut-outs clear every pocket": true,
-    "Reference parts clear shell and lid": true
+    "Reference parts clear shell and lid": true,
+    "Boards held in place": {
+      "boards": [
+        {
+          "retention": "snap hooks",
+          "grips": [
+            {
+              "side": "-x",
+              "overlap_mm": 0.6,
+              "gap_mm": 0.2
+            },
+            {
+              "side": "+x",
+              "overlap_mm": 0.6,
+              "gap_mm": 0.2
+            }
+          ]
+        }
+      ]
+    }
   },
   "printability": {
     "shell": {
@@ -593,7 +612,7 @@
             0,
             0
           ],
-          "overhang_mm2": 1650.6,
+          "overhang_mm2": 1654.7,
           "contact_mm2": 301.5,
           "height_mm": 37.8
         },
@@ -603,7 +622,7 @@
             0,
             0
           ],
-          "overhang_mm2": 1893.2,
+          "overhang_mm2": 1931.9,
           "contact_mm2": 992.5,
           "height_mm": 39.8
         },
@@ -613,7 +632,7 @@
             0,
             0
           ],
-          "overhang_mm2": 1946.3,
+          "overhang_mm2": 1988.6,
           "contact_mm2": 936.7,
           "height_mm": 39.8
         },
@@ -623,7 +642,7 @@
             90,
             0
           ],
-          "overhang_mm2": 2019.1,
+          "overhang_mm2": 2082.9,
           "contact_mm2": 991.9,
           "height_mm": 39.8
         },
@@ -633,7 +652,7 @@
             -90,
             0
           ],
-          "overhang_mm2": 2073.6,
+          "overhang_mm2": 2137.5,
           "contact_mm2": 937.3,
           "height_mm": 39.8
         }
@@ -843,18 +862,18 @@
     "project": "print/kit-esp32.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 3838,
-    "grams": 16.44,
+    "seconds": 3920,
+    "grams": 16.53,
     "layerCount": 236,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3203,
-        "grams": 12.94
+        "seconds": 3282,
+        "grams": 13.03
       },
       {
         "id": "lid",
-        "seconds": 699,
+        "seconds": 698,
         "grams": 3.59
       }
     ]

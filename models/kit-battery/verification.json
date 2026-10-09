@@ -9,7 +9,7 @@
     "shell": {
       "watertight": true,
       "solid_count": 1,
-      "volume_mm3": 24474.44,
+      "volume_mm3": 24589.99,
       "bounds_mm": [
         [
           -19.9,
@@ -57,11 +57,35 @@
     "Connectors: pockets void, floors solid, interior flat, ports open": true,
     "Plain faces are solid wall": true,
     "Cut-outs clear every pocket": true,
-    "Reference parts clear shell and lid": true
+    "Reference parts clear shell and lid": true,
+    "Boards held in place": {
+      "boards": [
+        {
+          "retention": "front stop and snap hook",
+          "grips": [
+            {
+              "side": "+y",
+              "overlap_mm": 0.6,
+              "gap_mm": 0.2
+            },
+            {
+              "side": "-y",
+              "overlap_mm": 0.6,
+              "gap_mm": 0.2
+            },
+            {
+              "side": "-y",
+              "overlap_mm": 0.6,
+              "gap_mm": 0.2
+            }
+          ]
+        }
+      ]
+    }
   },
   "printability": {
     "shell": {
-      "overhang_mm2": 1943.8,
+      "overhang_mm2": 1974.8,
       "bridges": [
         {
           "z": 1.6,
@@ -464,6 +488,14 @@
           "area_mm2": 0.19
         },
         {
+          "z": 27.4,
+          "size_mm": [
+            2.0,
+            3.0
+          ],
+          "area_mm2": 4.56
+        },
+        {
           "z": 28.276,
           "size_mm": [
             0.254,
@@ -670,6 +702,14 @@
             2.0
           ],
           "area_mm2": 0.25
+        },
+        {
+          "z": 35.9,
+          "size_mm": [
+            2.0,
+            17.65
+          ],
+          "area_mm2": 21.82
         },
         {
           "z": 35.946,
@@ -838,6 +878,14 @@
             4.6
           ],
           "area_mm2": 9.2
+        },
+        {
+          "z": 41.3,
+          "size_mm": [
+            2.0,
+            3.0
+          ],
+          "area_mm2": 4.56
         },
         {
           "z": 48.276,
@@ -1183,7 +1231,7 @@
             0,
             0
           ],
-          "overhang_mm2": 1943.8,
+          "overhang_mm2": 1974.8,
           "contact_mm2": 2034.4,
           "height_mm": 57.8
         },
@@ -1193,7 +1241,7 @@
             0,
             0
           ],
-          "overhang_mm2": 3263.0,
+          "overhang_mm2": 3333.6,
           "contact_mm2": 1547.4,
           "height_mm": 79.8
         },
@@ -1203,7 +1251,7 @@
             0,
             0
           ],
-          "overhang_mm2": 3392.8,
+          "overhang_mm2": 3460.2,
           "contact_mm2": 1417.7,
           "height_mm": 79.8
         },
@@ -1213,7 +1261,7 @@
             0,
             0
           ],
-          "overhang_mm2": 3586.6,
+          "overhang_mm2": 3617.5,
           "contact_mm2": 461.5,
           "height_mm": 57.8
         },
@@ -1223,7 +1271,7 @@
             -90,
             0
           ],
-          "overhang_mm2": 5558.4,
+          "overhang_mm2": 5575.3,
           "contact_mm2": 3213.8,
           "height_mm": 39.8
         },
@@ -1233,7 +1281,7 @@
             90,
             0
           ],
-          "overhang_mm2": 5722.0,
+          "overhang_mm2": 5737.6,
           "contact_mm2": 3050.2,
           "height_mm": 39.8
         }
@@ -1571,14 +1619,14 @@
     "project": "print/kit-battery.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 7867,
-    "grams": 36.54,
+    "seconds": 7909,
+    "grams": 36.69,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 6671,
-        "grams": 29.7
+        "seconds": 6713,
+        "grams": 29.85
       },
       {
         "id": "lid",

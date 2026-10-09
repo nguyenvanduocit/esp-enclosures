@@ -31,7 +31,7 @@
     "divisions": 12
   },
   "printInfo": {
-    "summary": "16,3 g PLA · 1 giờ 3 phút · Bambu P1S",
+    "summary": "16,5 g PLA · 1 giờ 5 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -91,7 +91,7 @@
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
           "Bo 32×24 mm, thấu kính Ø23; chiều cao các trang bán hàng ghi 18 đến 30 mm không khớp nhau, hãy đo.",
           "Mặt +z là cửa sổ cho thấu kính nên không có điểm nối.",
-          "Bo treo vào bốn trụ từ trần; lắp từ phía nắp −z rồi đóng nắp."
+          "Bo treo vào bốn trụ từ trần, hai móc gài ở hai cạnh dài giữ mặt dưới PCB: đẩy bo lên là móc bật vào; lắp từ phía nắp −z rồi đóng nắp."
         ],
         "links": []
       },
@@ -100,7 +100,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "13 g · 55 phút"
+            "13,2 g · 57 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -108,7 +108,7 @@
           ],
           [
             "Cả bàn in",
-            "16,3 g · 1 giờ 3 phút · 236 lớp"
+            "16,5 g · 1 giờ 5 phút · 236 lớp"
           ]
         ],
         "notes": [
@@ -585,14 +585,14 @@
     "project": "print/kit-pir.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 3776,
-    "grams": 16.29,
+    "seconds": 3892,
+    "grams": 16.51,
     "layerCount": 236,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3292,
-        "grams": 12.98
+        "seconds": 3407,
+        "grams": 13.2
       },
       {
         "id": "lid",

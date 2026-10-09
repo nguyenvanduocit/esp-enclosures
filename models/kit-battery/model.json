@@ -31,7 +31,7 @@
     "divisions": 24
   },
   "printInfo": {
-    "summary": "36,5 g PLA · 2 giờ 11 phút · Bambu P1S",
+    "summary": "36,7 g PLA · 2 giờ 12 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -91,6 +91,7 @@
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
           "Khoảng trống trong chiều dài là 75,8 mm cho khay 75 mm: chỉ còn 0,8 mm cho cả hai đầu (0,4 mm mỗi đầu), hãy đo khay thật.",
           "Mạch sạc đặt trên bốn trụ; cổng USB-C nhìn ra khe ở mặt −y, nằm giữa hai hàng lỗ khoét.",
+          "Mạch sạc được giữ bằng hai gờ chặn ở thành −y cạnh khe USB-C và một móc gài ở cạnh +y: luồn cạnh USB-C vào dưới gờ rồi ấn đầu kia xuống. Yếu hơn hai móc; lực giữ chưa đo.",
           "Không có mạch tăng áp; bạn tự chọn cách nối pin với ESP32-C3 SuperMini.",
           "Thay pin bằng cách mở nắp ở mặt +x."
         ],
@@ -101,7 +102,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "29,7 g · 1 giờ 51 phút"
+            "29,9 g · 1 giờ 52 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -109,7 +110,7 @@
           ],
           [
             "Cả bàn in",
-            "36,5 g · 2 giờ 11 phút · 361 lớp"
+            "36,7 g · 2 giờ 12 phút · 361 lớp"
           ]
         ],
         "notes": [
@@ -650,14 +651,14 @@
     "project": "print/kit-battery.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 7867,
-    "grams": 36.54,
+    "seconds": 7909,
+    "grams": 36.69,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 6671,
-        "grams": 29.7
+        "seconds": 6713,
+        "grams": 29.85
       },
       {
         "id": "lid",

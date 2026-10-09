@@ -9,7 +9,7 @@
     "shell": {
       "watertight": true,
       "solid_count": 1,
-      "volume_mm3": 10642.79,
+      "volume_mm3": 10835.11,
       "bounds_mm": [
         [
           -19.9,
@@ -57,11 +57,30 @@
     "Connectors: pockets void, floors solid, interior flat, ports open": true,
     "Plain faces are solid wall": true,
     "Cut-outs clear every pocket": true,
-    "Reference parts clear shell and lid": true
+    "Reference parts clear shell and lid": true,
+    "Boards held in place": {
+      "boards": [
+        {
+          "retention": "snap hooks",
+          "grips": [
+            {
+              "side": "-y",
+              "overlap_mm": 0.6,
+              "gap_mm": 0.2
+            },
+            {
+              "side": "+y",
+              "overlap_mm": 0.6,
+              "gap_mm": 0.2
+            }
+          ]
+        }
+      ]
+    }
   },
   "printability": {
     "shell": {
-      "overhang_mm2": 495.3,
+      "overhang_mm2": 501.7,
       "bridges": [
         {
           "z": 8.276,
@@ -286,6 +305,22 @@
             1.5
           ],
           "area_mm2": 0.38
+        },
+        {
+          "z": 20.3,
+          "size_mm": [
+            0.8,
+            4.0
+          ],
+          "area_mm2": 3.2
+        },
+        {
+          "z": 20.3,
+          "size_mm": [
+            0.8,
+            4.0
+          ],
+          "area_mm2": 3.2
         },
         {
           "z": 28.276,
@@ -519,7 +554,7 @@
             0,
             0
           ],
-          "overhang_mm2": 495.3,
+          "overhang_mm2": 501.7,
           "contact_mm2": 970.0,
           "height_mm": 37.8
         },
@@ -535,42 +570,42 @@
         },
         {
           "rotation": [
-            90,
-            0,
-            0
-          ],
-          "overhang_mm2": 1989.3,
-          "contact_mm2": 992.5,
-          "height_mm": 39.8
-        },
-        {
-          "rotation": [
             0,
             90,
             0
           ],
-          "overhang_mm2": 1994.2,
+          "overhang_mm2": 2042.3,
           "contact_mm2": 991.2,
           "height_mm": 39.8
         },
         {
           "rotation": [
-            -90,
             0,
+            -90,
             0
           ],
-          "overhang_mm2": 2042.4,
-          "contact_mm2": 936.7,
+          "overhang_mm2": 2098.2,
+          "contact_mm2": 938.0,
           "height_mm": 39.8
         },
         {
           "rotation": [
+            90,
             0,
-            -90,
             0
           ],
-          "overhang_mm2": 2050.1,
-          "contact_mm2": 938.0,
+          "overhang_mm2": 2146.6,
+          "contact_mm2": 992.5,
+          "height_mm": 39.8
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 2199.8,
+          "contact_mm2": 936.7,
           "height_mm": 39.8
         }
       ]
@@ -683,14 +718,14 @@
     "project": "print/kit-pir.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 3776,
-    "grams": 16.29,
+    "seconds": 3892,
+    "grams": 16.51,
     "layerCount": 236,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3292,
-        "grams": 12.98
+        "seconds": 3407,
+        "grams": 13.2
       },
       {
         "id": "lid",

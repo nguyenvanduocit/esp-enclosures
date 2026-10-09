@@ -31,7 +31,7 @@
     "divisions": 6
   },
   "printInfo": {
-    "summary": "3,8 g PLA · 18 phút · Bambu P1S",
+    "summary": "3,7 g PLA · 20 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -90,7 +90,8 @@
           "Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.",
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
           "Chiều rộng trong 15,8 mm cho bo 15,4 mm: chỉ còn 0,4 mm cho cả hai bên (0,2 mm mỗi bên). Hãy đo bo của bạn, nếu lớn hơn thì cần khối 2×1×1.",
-          "Dưới đầu cắm chỉ còn 4,2 mm tới sàn, không đủ cho đầu Dupont: hàn dây trực tiếp vào bo.",
+          "Bo trượt vào hai rãnh ở hai thành ±x, hàng chân cắm ở phía nắp; nắp đóng lại chặn bo không trượt ra. Bo không có tiếng tách khi vào.",
+          "Dưới đầu cắm còn 9,4 mm tới sàn, chưa đủ cho đầu Dupont: hàn dây trực tiếp vào bo.",
           "Mặt −y trơn có ba khe thoáng để cảm biến đo không khí ngoài."
         ],
         "links": []
@@ -100,7 +101,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "2,8 g · 15 phút"
+            "2,8 g · 17 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -108,7 +109,7 @@
           ],
           [
             "Cả bàn in",
-            "3,8 g · 18 phút · 111 lớp"
+            "3,7 g · 20 phút · 111 lớp"
           ]
         ],
         "notes": [
@@ -275,7 +276,7 @@
           "position": [
             0.0,
             -0.9,
-            9.5
+            14.7
           ],
           "color": "#6a3fa0"
         },
@@ -287,9 +288,9 @@
             0.9
           ],
           "position": [
-            2.0,
+            -2.0,
             -0.9,
-            10.75
+            15.95
           ],
           "color": "#c3cbd0"
         },
@@ -302,8 +303,8 @@
           ],
           "position": [
             0.0,
-            -4.4,
-            7.45
+            2.6,
+            12.65
           ],
           "color": "#27343c"
         }
@@ -595,14 +596,14 @@
     "project": "print/kit-bme280.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 1108,
-    "grams": 3.76,
+    "seconds": 1174,
+    "grams": 3.74,
     "layerCount": 111,
     "parts": [
       {
         "id": "shell",
-        "seconds": 928,
-        "grams": 2.84
+        "seconds": 991,
+        "grams": 2.83
       },
       {
         "id": "lid",
