@@ -31,7 +31,7 @@
     "divisions": 6
   },
   "printInfo": {
-    "summary": "3,7 g PLA · 20 phút · Bambu P1S",
+    "summary": "3,7 g PLA · 19 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -101,7 +101,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "2,8 g · 17 phút"
+            "2,8 g · 16 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -109,7 +109,7 @@
           ],
           [
             "Cả bàn in",
-            "3,7 g · 20 phút · 111 lớp"
+            "3,7 g · 19 phút · 111 lớp"
           ]
         ],
         "notes": [
@@ -596,14 +596,14 @@
     "project": "print/kit-bme280.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 1174,
-    "grams": 3.74,
+    "seconds": 1165,
+    "grams": 3.71,
     "layerCount": 111,
     "parts": [
       {
         "id": "shell",
-        "seconds": 991,
-        "grams": 2.83
+        "seconds": 983,
+        "grams": 2.79
       },
       {
         "id": "lid",

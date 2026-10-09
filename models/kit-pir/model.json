@@ -585,13 +585,13 @@
     "project": "print/kit-pir.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 3892,
+    "seconds": 3908,
     "grams": 16.51,
     "layerCount": 236,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3407,
+        "seconds": 3424,
         "grams": 13.2
       },
       {

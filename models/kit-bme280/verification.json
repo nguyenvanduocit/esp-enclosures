@@ -9,7 +9,7 @@
     "shell": {
       "watertight": true,
       "solid_count": 1,
-      "volume_mm3": 2254.44,
+      "volume_mm3": 2226.6,
       "bounds_mm": [
         [
           -9.9,
@@ -74,7 +74,15 @@
               "gap_mm": 0.2
             }
           ],
-          "lid_travel_mm": 0.6
+          "travel_mm": {
+            "+x": 0.2,
+            "-x": 0.2,
+            "+y": 0.6,
+            "-y": 0.2
+          },
+          "worst_overlap_mm": 0.4,
+          "insertion_lift_mm": 0.0,
+          "hook_strain_pct": []
         }
       ]
     }
@@ -204,7 +212,7 @@
             0
           ],
           "overhang_mm2": 144.0,
-          "contact_mm2": 277.7,
+          "contact_mm2": 263.8,
           "height_mm": 17.8
         },
         {
@@ -213,7 +221,7 @@
             0,
             0
           ],
-          "overhang_mm2": 302.2,
+          "overhang_mm2": 288.3,
           "contact_mm2": 141.5,
           "height_mm": 17.8
         },
@@ -229,16 +237,6 @@
         },
         {
           "rotation": [
-            0,
-            90,
-            0
-          ],
-          "overhang_mm2": 449.3,
-          "contact_mm2": 200.5,
-          "height_mm": 19.8
-        },
-        {
-          "rotation": [
             -90,
             0,
             0
@@ -250,10 +248,20 @@
         {
           "rotation": [
             0,
+            90,
+            0
+          ],
+          "overhang_mm2": 466.7,
+          "contact_mm2": 200.5,
+          "height_mm": 19.8
+        },
+        {
+          "rotation": [
+            0,
             -90,
             0
           ],
-          "overhang_mm2": 462.9,
+          "overhang_mm2": 480.3,
           "contact_mm2": 186.9,
           "height_mm": 19.8
         }
@@ -367,14 +375,14 @@
     "project": "print/kit-bme280.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 1174,
-    "grams": 3.74,
+    "seconds": 1165,
+    "grams": 3.71,
     "layerCount": 111,
     "parts": [
       {
         "id": "shell",
-        "seconds": 991,
-        "grams": 2.83
+        "seconds": 983,
+        "grams": 2.79
       },
       {
         "id": "lid",

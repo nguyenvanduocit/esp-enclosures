@@ -651,18 +651,18 @@
     "project": "print/kit-battery.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 7909,
+    "seconds": 7936,
     "grams": 36.69,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 6713,
+        "seconds": 6741,
         "grams": 29.85
       },
       {
         "id": "lid",
-        "seconds": 1242,
+        "seconds": 1243,
         "grams": 6.93
       }
     ]

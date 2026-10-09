@@ -27,13 +27,17 @@ from printkit.modules import (
     lid_thickness,
     outer,
     overlap_fraction,
-    SLIDE_RAILS,
-    STOP_AND_HOOK,
+    Hook,
+    Lip,
+    Mount,
     Pcb,
     barb_grips,
+    corner_stop,
     edge_lip,
+    edge_stop,
     grip_problems,
-    lid_travel,
+    hook_strain,
+    travel,
     plain_problems,
     pocket_problems,
     pocket_walls,
@@ -265,24 +269,31 @@ SUPERMINI = Pcb((20, 15.35, 16.8), (18, 22.5, 1.6))
 @pytest.mark.parametrize('side', ['+x', '-x'])
 def test_beam_hook_from_the_bed_wall_grips_the_board_and_prints_without_overhang(side):
     hook = snap_hook(SUPERMINI, side, root=('y', 2.1))
-    assert hook.isValid() and len(hook.Solids()) == 1
-    assert barb_grips(hook, SUPERMINI) == [(side, approx(0.6), approx(0.2))]
-    assert print_overhang(hook, '+y') == approx(0, abs=0.01)
+    assert hook.solid.isValid() and len(hook.solid.Solids()) == 1
+    assert barb_grips(hook.solid, SUPERMINI) == [(side, approx(0.6), approx(0.2))]
+    assert print_overhang(hook.solid, '+y') == approx(0, abs=0.01)
+    assert hook.length == approx(15.35 - 2 - 2.1)  # from the wall to the start of the barb
 
 
-def test_stem_hook_overhangs_only_by_its_catch_ledge():
-    pcb = Pcb((20, 20, 8.5), (20.5, 16, 1.6))
-    hook = snap_hook(pcb, '+x', root=('z', 2.1))
-    assert hook.BoundingBox().zmin == approx(2.1 - 0.5)
-    assert print_overhang(hook, '+z') == approx(0.8 * 4, abs=0.01)  # side gap 0.2 + overlap 0.6, 4 mm wide
+def test_stem_hook_overhangs_only_by_its_catch_ledge_and_has_a_rounded_root():
+    pcb = Pcb((20, 20, 9.8), (20.5, 16, 1.6))
+    hook = snap_hook(pcb, '+x', root=('z', 2.1), thickness=1.0)
+    bb = hook.solid.BoundingBox()
+    assert bb.zmin == approx(2.1 - 0.5)
+    root = hook.solid.intersect(box((0, 0, 2.1), (40, 40, 2.15))).BoundingBox()
+    assert (root.xmin, root.xmax) == approx((30.25 + 0.2 - 0.6, 30.25 + 1.2 + 0.6), abs=0.02)  # 0.6 mm fillet on both faces
+    assert bb.xmin == approx(30.25 - 0.6)  # the barb tip
+    assert print_overhang(hook.solid, '+z') == approx(0.8 * 4, abs=0.01)  # side gap 0.2 + overlap 0.6, 4 mm wide
+    assert hook.length == approx(0.6 + (11.4 - 2.1) - 0.6)  # floor to barb tip, less the fillet
+    assert hook_strain(hook, 0.25) == approx(1.5 * 1.0 * 0.85 / 9.3 ** 2)
 
 
 def test_hanging_hook_holds_the_underside():
     pcb = Pcb((20, 20, 19.8), (32, 24, 1.2), held=-1)
-    hook = snap_hook(pcb, '-y', root=('z', 37.9), at=14)
-    bb = hook.BoundingBox()
+    hook = snap_hook(pcb, '-y', root=('z', 37.9), at=14, fillet=0)
+    bb = hook.solid.BoundingBox()
     assert (bb.zmin, bb.zmax) == approx((19.8 - 1.4, 37.9 + 0.5))
-    assert barb_grips(hook, pcb) == [('-y', approx(0.6), approx(0.2))]
+    assert barb_grips(hook.solid, pcb) == [('-y', approx(0.6), approx(0.2))]
 
 
 def test_snap_hook_rejects_a_face_side_and_a_root_across_the_hook():
@@ -299,81 +310,135 @@ def test_grip_problems_need_two_sides_and_a_close_barb():
     assert len(grip_problems([('+x', 0.6, 0.2), ('-x', 0.6, 0.5)])) == 1
 
 
-HOOKED = Pcb((20, 10, 6), (6, 10, 1.6))
+def test_stops_stay_outside_the_board_and_print_cleanly():
+    floor_stop = edge_stop(SUPERMINI, '-y', root=('z', 2.1), span=(18, 22))
+    wall_stop = edge_stop(SUPERMINI, '-y', root=('y', 2.1), span=(11.2, 13.8))
+    corner = corner_stop(SUPERMINI, '+y', wall=37.7)
+    pcb = box((11, 4.1, 16.8), (29, 26.6, 18.4))
+    for stop in (floor_stop, wall_stop, corner):
+        assert stop.isValid()
+        assert stop.distance(pcb) == approx(0.2, abs=1e-3)
+        assert stop.BoundingBox().zmax == approx(18.4)  # never past the PCB top
+    assert print_overhang(wall_stop, '+y') == approx(0, abs=0.01)
+    assert print_overhang(corner, '+y') == approx((0.2 + 0.6) * 1.6, abs=0.01)  # only the stop face, gusset at 50°
+    assert corner.BoundingBox().xmin == approx(29 - 0.6)
 
 
-def hooked_model(*hooks, pcb=HOOKED):
-    spec = ModuleSpec(cells=(2, 1, 1), lid='+z', adds=hooks)
-    refs = [('board', 'Bo', [Box('pcb', pcb.size, (20, 10, 6.8), '#214f55')])]
-    return small_model(spec=spec, refs=refs, boards=(pcb,))
+def test_lip_covers_the_edge_and_reaches_over_the_board():
+    lip = edge_lip(HOOKED, '-y', wall=2.1, span=(18, 22))
+    assert isinstance(lip, Lip) and lip.solid.isValid()
+    assert barb_grips(lip.solid, HOOKED) == [('-y', approx(0.6), approx(0.2))]
+    bb = lip.solid.BoundingBox()
+    assert (bb.ymin, bb.ymax) == approx((2.1 - 0.2, 5 + 0.6))  # from 0.2 into the wall to 0.6 over the board
+    with pytest.raises(ValueError):
+        edge_lip(HOOKED, '-y', wall=6.0, span=(18, 22))
 
 
-def test_hooked_board_registers_and_passes_the_hook_check():
-    model = hooked_model(*(snap_hook(HOOKED, side, root=('z', 2.1)) for side in ('+y', '-y')))
+def test_travel_sweeps_the_board_to_the_first_obstacle():
+    pieces = [Box('pcb', HOOKED.size, (20, 10, HOOKED.at[2] + 0.8), '#214f55')]
+    wall = box((25, 0, 0), (26, 20, 20))
+    assert travel([wall], HOOKED, pieces, unit('+x')) == approx(2.0)
+    assert travel([wall], HOOKED, pieces, unit('-x')) == approx(15.0)  # nothing within reach
+
+
+HOOKED = Pcb((20, 10, 10), (6, 10, 1.6))
+HOOKED_SPEC = dict(cells=(2, 1, 1), lid='+z')
+
+
+def hooks_on(pcb, **options):
+    return tuple(snap_hook(pcb, side, root=('z', 2.1), **options) for side in ('+y', '-y'))
+
+
+def x_stops(pcb):
+    return tuple(edge_stop(pcb, side, root=('z', 2.1), span=(8, 12)) for side in ('+x', '-x'))
+
+
+def held_model(mount, *adds, cells=(2, 1, 1), lid='+z'):
+    pcb = mount.pcb
+    refs = [('board', 'Bo', [Box('pcb', pcb.size, (pcb.at[0], pcb.at[1], pcb.at[2] + pcb.size[2] / 2), '#214f55')])]
+    return small_model(spec=ModuleSpec(cells=cells, lid=lid, adds=adds), refs=refs, boards=(mount,))
+
+
+def hooked_model(*hooks, stops=True, pcb=HOOKED):
+    adds = tuple(part.solid for part in hooks) + (x_stops(pcb) if stops else ())
+    return held_model(Mount(pcb, 'board', hooks), *adds)
+
+
+def test_hooked_board_registers_and_passes_the_board_check():
+    model = hooked_model(*hooks_on(HOOKED))
     assert [name for name, _ in model.checks] == [*CHECK_NAMES, 'Boards held in place']
     for part in model.parts:
         if isinstance(part, PrintPart):
             build_part(part.id, part.build)
     board = run_checks(model)['Boards held in place']['boards'][0]
     assert board['retention'] == 'snap hooks'
-    grips = board['grips']
-    assert sorted(grip['side'] for grip in grips) == ['+y', '-y']
-    assert all(grip['overlap_mm'] == approx(0.6) and grip['gap_mm'] == approx(0.2) for grip in grips)
+    assert sorted(grip['side'] for grip in board['grips']) == ['+y', '-y']
+    assert all(grip['overlap_mm'] == approx(0.6) and grip['gap_mm'] == approx(0.2) for grip in board['grips'])
+    assert board['travel_mm'] == {'+x': 0.2, '-x': 0.2, '+y': 0.2, '-y': 0.2}
+    assert board['worst_overlap_mm'] == approx(0.4)
+    assert board['insertion_lift_mm'] == 0.0  # the lid is on top: the board comes straight down
 
 
 def test_one_hook_does_not_hold_a_board():
     with pytest.raises(ModelError, match='Boards held in place'):
-        run_checks(hooked_model(snap_hook(HOOKED, '+y', root=('z', 2.1))))
+        run_checks(hooked_model(hooks_on(HOOKED)[0]))
 
 
 def test_a_barb_too_far_from_the_board_fails():
-    hooks = [snap_hook(HOOKED, side, root=('z', 2.1), gap=0.5) for side in ('+y', '-y')]
     with pytest.raises(ModelError, match='more than 0.3'):
-        run_checks(hooked_model(*hooks))
+        run_checks(hooked_model(*hooks_on(HOOKED, gap=0.5)))
 
 
-def test_grip_problems_for_slide_rails_need_opposite_edges_and_a_close_lid():
-    rails = [('+x', 0.6, 0.2), ('-x', 0.6, 0.2)]
-    assert grip_problems(rails, SLIDE_RAILS, 0.6) == []
-    assert any('slide' in p for p in grip_problems(rails, SLIDE_RAILS, 2.4))
-    assert any('opposite' in p for p in grip_problems([('+x', 0.6, 0.2), ('+y', 0.6, 0.2)], SLIDE_RAILS, 0.6))
+def test_mutation_a_board_without_in_plane_stops_slides_out():
+    with pytest.raises(ModelError, match='slides 14.9 mm towards -x'):
+        run_checks(hooked_model(*hooks_on(HOOKED), stops=False))
 
 
-def test_lip_covers_the_edge_and_reaches_over_the_board():
-    lip = edge_lip(HOOKED, '-y', wall=2.1, span=(18, 22))
-    assert lip.isValid()
-    assert barb_grips(lip, HOOKED) == [('-y', approx(0.6), approx(0.2))]
-    bb = lip.BoundingBox()
-    assert (bb.ymin, bb.ymax) == approx((2.1 - 0.2, 5 + 0.6))  # from 0.2 into the wall to 0.6 over the board
-    with pytest.raises(ValueError):
-        edge_lip(HOOKED, '-y', wall=6.0, span=(18, 22))
+def test_mutation_rigid_lips_cannot_pass_as_hooks():
+    lips = tuple(edge_lip(HOOKED, side, wall=wall, span=(18, 22)) for side, wall in (('+y', 17.7), ('-y', 2.1)))
+    with pytest.raises(ModelError, match='rigid Lip, not a Hook'):
+        run_checks(hooked_model(*lips))
+
+
+def test_mutation_a_stiff_hook_fails_the_strain_limit():
+    low = HOOKED._replace(at=(20, 10, 6))  # stems 5.5 mm long
+    with pytest.raises(ModelError, match='bends 4.5% to let the board in'):
+        run_checks(hooked_model(*hooks_on(low), pcb=low))
+
+
+def test_mutation_a_hook_moved_away_lets_the_board_slide_off_the_other():
+    far = (snap_hook(HOOKED, '+y', root=('z', 2.1), side_gap=0.8), snap_hook(HOOKED, '-y', root=('z', 2.1)))
+    with pytest.raises(ModelError, match='after sliding 0.80 mm towards \\+y'):
+        run_checks(hooked_model(*far))
 
 
 def test_front_stop_and_one_hook_hold_a_board():
-    pcb = HOOKED._replace(retention=STOP_AND_HOOK)
-    model = hooked_model(snap_hook(pcb, '+y', root=('z', 2.1)), edge_lip(pcb, '-y', wall=2.1, span=(18, 22)), pcb=pcb)
-    board = run_checks(model)['Boards held in place']['boards'][0]
+    hook = snap_hook(HOOKED, '+y', root=('z', 2.1))
+    lip = edge_lip(HOOKED, '-y', wall=2.1, span=(18, 22))
+    board = run_checks(held_model(Mount(HOOKED, 'board', (hook,), (lip,)), hook.solid, lip.solid, *x_stops(HOOKED)))
+    board = board['Boards held in place']['boards'][0]
     assert board['retention'] == 'front stop and snap hook'
     assert sorted(grip['side'] for grip in board['grips']) == ['+y', '-y']
+    assert board['hook_strain_pct'] == [approx(100 * hook_strain(hook, 0.3), abs=0.01)]  # one hook takes the whole tolerance
 
 
-RAILED = Pcb((10, 9.1, 14.0), (15.4, 11.6, 1.6), retention=SLIDE_RAILS)
+RAILED = Pcb((10, 9.1, 14.0), (15.4, 11.6, 1.6))
 
 
 def railed_model(pcb):
     rails = tuple(edge_lip(pcb, side, wall=wall, span=(1.9, 15.3)) for side, wall in (('+x', 17.9), ('-x', 2.1)))
-    refs = [('board', 'Bo', [Box('pcb', pcb.size, (10, pcb.at[1], 14.8), '#214f55')])]
-    return small_model(spec=ModuleSpec(cells=(1, 1, 1), lid='+y', adds=rails), refs=refs, boards=(pcb,))
+    stop = edge_stop(pcb, '-y', root=('y', 2.1), span=(6, 14))
+    return held_model(Mount(pcb, 'board', lips=rails), *(rail.solid for rail in rails), stop, cells=(1, 1, 1), lid='+y')
 
 
 def test_slide_rails_pass_when_the_closed_lid_stops_the_board():
     board = run_checks(railed_model(RAILED))['Boards held in place']['boards'][0]
     assert board['retention'] == 'slide rails, lid-locked'
-    assert board['lid_travel_mm'] == approx(0.6)  # PCB +y edge 14.9, lid skirt from 15.5
+    assert board['travel_mm']['+y'] == approx(0.6)  # PCB +y edge 14.9, lid skirt from 15.5
+    assert board['insertion_lift_mm'] == 0.0
 
 
-def test_slide_rails_fail_when_the_board_can_slide_out_from_under_the_lid():
+def test_mutation_slide_rails_fail_when_the_lid_does_not_stop_the_board():
     short = RAILED._replace(at=(10, 7.9, 14.0), size=(15.4, 9.2, 1.6))  # +y edge at 12.5, 3 mm from the skirt
-    assert lid_travel(shell_and_lid(ModuleSpec(cells=(1, 1, 1), lid='+y'))[1], short, unit('+y')) == approx(3.0)
-    with pytest.raises(ModelError, match='slide 3.0 mm'):
+    with pytest.raises(ModelError, match='slides 3.0 mm towards \\+y'):
         run_checks(railed_model(short))

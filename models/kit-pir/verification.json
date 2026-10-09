@@ -73,6 +73,18 @@
               "overlap_mm": 0.6,
               "gap_mm": 0.2
             }
+          ],
+          "travel_mm": {
+            "+x": 0.7,
+            "-x": 0.7,
+            "+y": 0.2,
+            "-y": 0.2
+          },
+          "worst_overlap_mm": 0.4,
+          "insertion_lift_mm": 0.0,
+          "hook_strain_pct": [
+            0.39,
+            0.39
           ]
         }
       ]
@@ -718,13 +730,13 @@
     "project": "print/kit-pir.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 3892,
+    "seconds": 3908,
     "grams": 16.51,
     "layerCount": 236,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3407,
+        "seconds": 3424,
         "grams": 13.2
       },
       {

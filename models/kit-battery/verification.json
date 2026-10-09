@@ -9,7 +9,7 @@
     "shell": {
       "watertight": true,
       "solid_count": 1,
-      "volume_mm3": 24589.99,
+      "volume_mm3": 24590.64,
       "bounds_mm": [
         [
           -19.9,
@@ -78,14 +78,26 @@
               "overlap_mm": 0.6,
               "gap_mm": 0.2
             }
-          ]
+          ],
+          "travel_mm": {
+            "+x": 0.9,
+            "-x": 0.9,
+            "+y": 0.2,
+            "-y": 0.2
+          },
+          "worst_overlap_mm": 0.4,
+          "insertion_lift_mm": 3.1,
+          "hook_strain_pct": [
+            0.61
+          ],
+          "tilt": 0.057
         }
       ]
     }
   },
   "printability": {
     "shell": {
-      "overhang_mm2": 1974.8,
+      "overhang_mm2": 1974.9,
       "bridges": [
         {
           "z": 1.6,
@@ -704,60 +716,60 @@
           "area_mm2": 0.25
         },
         {
-          "z": 35.9,
+          "z": 35.946,
           "size_mm": [
-            2.0,
+            0.603,
+            1.6
+          ],
+          "area_mm2": 0.97
+        },
+        {
+          "z": 35.946,
+          "size_mm": [
+            0.603,
+            1.6
+          ],
+          "area_mm2": 0.97
+        },
+        {
+          "z": 35.946,
+          "size_mm": [
+            0.603,
+            1.6
+          ],
+          "area_mm2": 0.97
+        },
+        {
+          "z": 35.946,
+          "size_mm": [
+            0.603,
+            1.6
+          ],
+          "area_mm2": 0.97
+        },
+        {
+          "z": 35.948,
+          "size_mm": [
+            0.302,
+            1.6
+          ],
+          "area_mm2": 0.48
+        },
+        {
+          "z": 35.948,
+          "size_mm": [
+            0.302,
+            1.6
+          ],
+          "area_mm2": 0.48
+        },
+        {
+          "z": 36.1,
+          "size_mm": [
+            2.6,
             17.65
           ],
-          "area_mm2": 21.82
-        },
-        {
-          "z": 35.946,
-          "size_mm": [
-            0.603,
-            1.6
-          ],
-          "area_mm2": 0.97
-        },
-        {
-          "z": 35.946,
-          "size_mm": [
-            0.603,
-            1.6
-          ],
-          "area_mm2": 0.97
-        },
-        {
-          "z": 35.946,
-          "size_mm": [
-            0.603,
-            1.6
-          ],
-          "area_mm2": 0.97
-        },
-        {
-          "z": 35.946,
-          "size_mm": [
-            0.603,
-            1.6
-          ],
-          "area_mm2": 0.97
-        },
-        {
-          "z": 35.948,
-          "size_mm": [
-            0.302,
-            1.6
-          ],
-          "area_mm2": 0.48
-        },
-        {
-          "z": 35.948,
-          "size_mm": [
-            0.302,
-            1.6
-          ],
-          "area_mm2": 0.48
+          "area_mm2": 21.98
         },
         {
           "z": 36.62,
@@ -1231,7 +1243,7 @@
             0,
             0
           ],
-          "overhang_mm2": 1974.8,
+          "overhang_mm2": 1974.9,
           "contact_mm2": 2034.4,
           "height_mm": 57.8
         },
@@ -1241,7 +1253,7 @@
             0,
             0
           ],
-          "overhang_mm2": 3333.6,
+          "overhang_mm2": 3333.1,
           "contact_mm2": 1547.4,
           "height_mm": 79.8
         },
@@ -1251,7 +1263,7 @@
             0,
             0
           ],
-          "overhang_mm2": 3460.2,
+          "overhang_mm2": 3459.7,
           "contact_mm2": 1417.7,
           "height_mm": 79.8
         },
@@ -1261,7 +1273,7 @@
             0,
             0
           ],
-          "overhang_mm2": 3617.5,
+          "overhang_mm2": 3617.7,
           "contact_mm2": 461.5,
           "height_mm": 57.8
         },
@@ -1271,7 +1283,7 @@
             -90,
             0
           ],
-          "overhang_mm2": 5575.3,
+          "overhang_mm2": 5574.2,
           "contact_mm2": 3213.8,
           "height_mm": 39.8
         },
@@ -1619,18 +1631,18 @@
     "project": "print/kit-battery.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 7909,
+    "seconds": 7936,
     "grams": 36.69,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 6713,
+        "seconds": 6741,
         "grams": 29.85
       },
       {
         "id": "lid",
-        "seconds": 1242,
+        "seconds": 1243,
         "grams": 6.93
       }
     ]
