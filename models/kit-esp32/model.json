@@ -99,7 +99,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "13,3 g · 57 phút"
+            "13,3 g · 56 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -860,13 +860,13 @@
     "project": "print/kit-esp32.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 4024,
+    "seconds": 4023,
     "grams": 16.79,
     "layerCount": 236,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3391,
+        "seconds": 3385,
         "grams": 13.29
       },
       {

@@ -9,7 +9,7 @@
     "shell": {
       "watertight": true,
       "solid_count": 1,
-      "volume_mm3": 16895.81,
+      "volume_mm3": 16897.15,
       "bounds_mm": [
         [
           -39.9,
@@ -62,29 +62,79 @@
       "boards": [
         {
           "retention": "snap hooks",
+          "tolerance_mm": 0.3,
+          "size_range_mm": [
+            [
+              70.2,
+              70.8
+            ],
+            [
+              43.0,
+              43.6
+            ]
+          ],
           "grips": [
             {
               "side": "-x",
-              "overlap_mm": 0.6,
+              "overlap_mm": 0.8,
               "gap_mm": 0.2
             },
             {
               "side": "+x",
-              "overlap_mm": 0.6,
+              "overlap_mm": 0.8,
               "gap_mm": 0.2
             }
           ],
           "travel_mm": {
-            "+x": 0.2,
-            "-x": 0.2,
-            "+y": 0.2,
-            "-y": 0.8
+            "nominal": {
+              "+x": 0.1,
+              "-x": 0.1,
+              "+y": 0.2,
+              "-y": 0.8
+            },
+            "undersize": {
+              "+x": 0.25,
+              "-x": 0.25,
+              "+y": 0.35,
+              "-y": 0.95
+            }
           },
-          "worst_overlap_mm": 0.4,
-          "insertion_lift_mm": 3.1,
+          "stopped_by": {
+            "nominal": {
+              "+x": "pcb",
+              "-x": "pcb",
+              "+y": "pcb",
+              "-y": "pcb"
+            },
+            "undersize": {
+              "+x": "pcb",
+              "-x": "pcb",
+              "+y": "pcb",
+              "-y": "pcb"
+            }
+          },
+          "worst_overlap_mm": {
+            "nominal": 0.7,
+            "undersize": 0.4
+          },
+          "oversize_overlap_mm3": 0.0,
+          "insertion_lift_mm": {
+            "nominal": 3.2000000000000006,
+            "oversize": 3.2000000000000006
+          },
           "hook_strain_pct": [
-            0.32,
-            0.32
+            0.41,
+            0.41
+          ],
+          "hook_length_mm": [
+            {
+              "declared": 20.45,
+              "measured": 20.49
+            },
+            {
+              "declared": 20.45,
+              "measured": 20.49
+            }
           ]
         }
       ]
@@ -528,7 +578,7 @@
             0,
             0
           ],
-          "overhang_mm2": 1573.4,
+          "overhang_mm2": 1573.9,
           "contact_mm2": 381.5,
           "height_mm": 57.8
         },
@@ -538,7 +588,7 @@
             90,
             0
           ],
-          "overhang_mm2": 1654.3,
+          "overhang_mm2": 1655.0,
           "contact_mm2": 714.2,
           "height_mm": 79.8
         },
@@ -548,7 +598,7 @@
             -90,
             0
           ],
-          "overhang_mm2": 1695.3,
+          "overhang_mm2": 1695.9,
           "contact_mm2": 673.2,
           "height_mm": 79.8
         },
@@ -558,7 +608,7 @@
             0,
             0
           ],
-          "overhang_mm2": 3990.9,
+          "overhang_mm2": 3991.2,
           "contact_mm2": 3049.0,
           "height_mm": 19.8
         },
@@ -568,7 +618,7 @@
             0,
             0
           ],
-          "overhang_mm2": 4415.3,
+          "overhang_mm2": 4415.9,
           "contact_mm2": 2632.8,
           "height_mm": 19.8
         }
@@ -778,18 +828,18 @@
     "project": "print/kit-display.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 4772,
+    "seconds": 4734,
     "grams": 24.19,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 4099,
+        "seconds": 4062,
         "grams": 20.57
       },
       {
         "id": "lid",
-        "seconds": 725,
+        "seconds": 726,
         "grams": 3.71
       }
     ]

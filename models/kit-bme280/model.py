@@ -2,7 +2,7 @@
 sliding out. The -y face is plain with vent slots. Millimetres, Z up."""
 from printkit import Box
 from printkit.library.electronics import bme280
-from printkit.modules import HOOK_GAP, HOOK_SIDE_GAP, HOOK_T, WALL, ModuleSpec, Mount, Pcb, bounds, box, edge_lip, kit_model
+from printkit.modules import HOOK_GAP, HOOK_T, STOP_GAP, WALL, ModuleSpec, Mount, Pcb, bounds, box, edge_lip, kit_model
 
 CELLS = (1, 1, 1)
 LO, HI = bounds(ModuleSpec(CELLS, '+y'))
@@ -14,19 +14,23 @@ BOARD = (CX, 9.1, 14.0)
 # board and across the 2.3 mm gap above it, where the chip sits (z 15.6 to 16.5)
 VENT_LOW, VENT_TOP = CZ - 4.5, HI[2] - WALL - 0.5
 VENTS = tuple(box((CX + dx - 0.8, 0, VENT_LOW), (CX + dx + 0.8, LO[1] + WALL + 0.5, VENT_TOP)) for dx in (-4, 0, 4))
-PCB = Pcb(BOARD, (15.4, 11.6, 1.6))
+# The rails are the walls themselves, 0.2 mm off each PCB edge, so a board 0.3 mm smaller would keep only 0.3 mm under the far
+# rail when pushed against the near wall: the check proves ±0.2 mm (15.2 to 15.6 x 11.4 to 11.8).
+PCB = Pcb(BOARD, (15.4, 11.6, 1.6), tolerance=0.2)
+WALL_GAP = HI[0] - WALL - (BOARD[0] + PCB.size[0] / 2)
 UNDER = PCB._replace(held=-1)
 # Each groove is a rail over the PCB top along the whole board and a ledge under it up to y 11.0. Both grow from the -y wall, which
 # lies on the bed, so they print upright. The header under the board rides at its +y end (y 11.35 to 13.85) and never crosses a ledge.
 RAIL_END, LEDGE_END = 15.3, 11.0
 WALLS = (('+x', HI[0] - WALL), ('-x', LO[0] + WALL))
-RAILS = tuple(edge_lip(PCB, side, wall=wall, span=(LO[1] + WALL - 0.2, RAIL_END)) for side, wall in WALLS)
-LEDGES = tuple(edge_lip(UNDER, side, wall=wall, span=(LO[1] + WALL - 0.2, LEDGE_END), gap=0).solid for side, wall in WALLS)
-# Two end stops at the -y corners, the full groove height, stop the board HOOK_SIDE_GAP before the -y wall, so it slides 0.2 mm
+RAILS = tuple(edge_lip(PCB, side, wall=wall, span=(LO[1] + WALL - 0.2, RAIL_END), side_gap=WALL_GAP) for side, wall in WALLS)
+LEDGES = tuple(edge_lip(UNDER, side, wall=wall, span=(LO[1] + WALL - 0.2, LEDGE_END), side_gap=WALL_GAP, gap=0).solid
+               for side, wall in WALLS)
+# Two end stops at the -y corners, the full groove height, stop the board STOP_GAP before the -y wall, so it slides 0.2 mm
 # towards the wall and 0.6 mm towards the closed lid; without them the header under the board would hit the ledge ends first.
 PCB_LO = (BOARD[0] - PCB.size[0] / 2, BOARD[1] - PCB.size[1] / 2)
 Z0, Z1 = BOARD[2] - HOOK_T, BOARD[2] + PCB.size[2] + HOOK_GAP + HOOK_T
-STOPS = tuple(box((x0, LO[1] + WALL - 0.2, Z0), (x1, PCB_LO[1] - HOOK_SIDE_GAP, Z1))
+STOPS = tuple(box((x0, LO[1] + WALL - 0.2, Z0), (x1, PCB_LO[1] - STOP_GAP, Z1))
               for x0, x1 in ((LO[0] + WALL - 0.2, PCB_LO[0] + 0.6), (PCB_LO[0] + PCB.size[0] - 0.6, HI[0] - WALL + 0.2)))
 
 

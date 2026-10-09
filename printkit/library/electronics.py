@@ -43,11 +43,15 @@ def bme280(at=(0, 0, 0)):
 
 
 def mpu6050(at=(0, 0, 0)):
-    """GY-521 MPU6050, about 20.5 x 16 mm per listings; the 8-pin header body sits under the board along X."""
+    """GY-521 MPU6050, about 20.5 x 16 mm per listings; the 8-pin header body sits under the board along X, its pins
+    (a standard 11.5 mm header, as on the SuperMini) reach 8.5 mm below the PCB underside and 1.4 mm above its top."""
     x, y, z = at
-    return [Box('pcb', MPU6050_PCB, (x, y, z + MPU6050_PCB[2] / 2), '#2b6fb3'),
-            Box('chip', (4, 4, 0.9), (x, y, z + 1.6 + 0.45), '#24343c'),
-            Box('header', (20.32, 2.5, 2.5), (x, y - 5, z - 1.25), '#27343c')]
+    pieces = [Box('pcb', MPU6050_PCB, (x, y, z + MPU6050_PCB[2] / 2), '#2b6fb3'),
+              Box('chip', (4, 4, 0.9), (x, y, z + 1.6 + 0.45), '#24343c'),
+              Box('header', (20.32, 2.5, 2.5), (x, y - 5, z - 1.25), '#27343c')]
+    for i in range(8):
+        pieces.append(Box(f'pin_{i}', (0.64, 0.64, 11.5), (x + (i - 3.5) * 2.54, y - 5, z - 2.75), '#c99b49'))
+    return pieces
 
 
 def hc_sr501(at=(0, 0, 0)):

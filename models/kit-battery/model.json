@@ -102,7 +102,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "29,9 g · 1 giờ 52 phút"
+            "29,9 g · 1 giờ 53 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -651,18 +651,18 @@
     "project": "print/kit-battery.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 7936,
+    "seconds": 7948,
     "grams": 36.69,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 6741,
+        "seconds": 6751,
         "grams": 29.85
       },
       {
         "id": "lid",
-        "seconds": 1243,
+        "seconds": 1242,
         "grams": 6.93
       }
     ]

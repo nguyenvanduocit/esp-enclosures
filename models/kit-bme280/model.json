@@ -597,13 +597,13 @@
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
     "seconds": 1165,
-    "grams": 3.71,
+    "grams": 3.72,
     "layerCount": 111,
     "parts": [
       {
         "id": "shell",
         "seconds": 983,
-        "grams": 2.79
+        "grams": 2.8
       },
       {
         "id": "lid",

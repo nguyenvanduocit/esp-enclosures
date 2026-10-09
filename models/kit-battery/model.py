@@ -38,7 +38,7 @@ model = kit_model(
     spec=ModuleSpec(cells=CELLS, lid='+x', cuts=(USB_SLOT,), adds=CHARGER_POSTS + tuple(lip.solid for lip in LIPS) + (HOOK.solid,)), color='#5f8f5b',
     refs=[('holder', 'Khay pin 18650', [Box('holder', HOLDER, (HOLDER_X, CY, HOLDER_Z + HOLDER[2] / 2), '#303d46')]),
           ('cell', 'Pin 18650', [Solid('cell', cell, '#87b483')]),
-          ('charger', 'Mạch sạc TP4056 USB-C', tp4056_usbc(at=CHARGER))], boards=(Mount(PCB, 'charger', hooks=(HOOK,), lips=LIPS),),
+          ('charger', 'Mạch sạc TP4056 USB-C', tp4056_usbc(at=CHARGER))], boards=(Mount(PCB, 'charger', hooks=(HOOK,), lips=LIPS, stoppers=('usb',)),),
     notes=['Khoảng trống trong chiều dài là 75,8 mm cho khay 75 mm: chỉ còn 0,8 mm cho cả hai đầu (0,4 mm mỗi đầu), hãy đo khay thật.',
            'Mạch sạc đặt trên bốn trụ; cổng USB-C nhìn ra khe ở mặt −y, nằm giữa hai hàng lỗ khoét.',
            'Mạch sạc được giữ bằng hai gờ chặn ở thành −y cạnh khe USB-C và một móc gài ở cạnh +y: luồn cạnh USB-C vào dưới gờ rồi ấn đầu kia xuống. Yếu hơn hai móc; lực giữ chưa đo.',

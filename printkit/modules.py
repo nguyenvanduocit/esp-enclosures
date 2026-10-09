@@ -379,6 +379,19 @@ def overlap_fraction(disc_centre, ring_centre):
     return hit / total
 
 
+# A hook or lip stands HOOK_SIDE_GAP off the PCB edge and reaches HOOK_OVERLAP over it, so a board BOARD_TOL smaller still keeps
+# MIN_OVERLAP under the far barb when pushed against the near one (0.8 - 0.1 - 0.3 = 0.4); a larger board pushes the hooks aside.
+HOOK_T, HOOK_W, HOOK_SIDE_GAP, HOOK_GAP, HOOK_OVERLAP, HOOK_LAND = 1.2, 4.0, 0.1, 0.2, 0.8, 0.4
+BOARD_TOL = 0.3
+STOP_GAP, STOP_REACH = 0.2, 0.6  # rigid stops stand off more than BOARD_TOL / 2, so a board BOARD_TOL larger still fits
+HOOK_FILLET = 0.6  # a stem's root is rounded on both faces so the bend does not start at a sharp corner
+HOOK_EMBED = 0.5  # a hook root reaches this far into its wall so the fuse is solid
+HOOK_SLOPE = 1.2  # support chamfers rise 50°, so slicers never count them as 45° overhang
+LIP_EMBED = 0.2  # lips and stops are fused along their whole length, so they reach only this far into the wall and stay off pocket floors
+MIN_OVERLAP, MAX_GAP, MAX_TRAVEL, MAX_STRAIN = 0.4, 0.3, 1.0, 0.02
+IN_PLANE = ('+x', '-x', '+y', '-y')
+
+
 SNAP_HOOKS, SLIDE_RAILS, STOP_AND_HOOK = 'snap hooks', 'slide rails, lid-locked', 'front stop and snap hook'
 
 
@@ -389,7 +402,7 @@ class Pcb(NamedTuple):
     at: tuple
     size: tuple
     held: int = 1
-    tolerance: float = 0.3
+    tolerance: float = BOARD_TOL
 
 
 class Hook(NamedTuple):
@@ -410,20 +423,15 @@ class Lip(NamedTuple):
 
 class Mount(NamedTuple):
     """How a module holds one board: the board, the reference id of its parts, its snap hooks and its rigid lips.
-    Two or more hooks make SNAP_HOOKS, one hook and lips STOP_AND_HOOK, lips on two opposite edges SLIDE_RAILS."""
+    Two or more hooks make SNAP_HOOKS, one hook and lips STOP_AND_HOOK, lips on two opposite edges SLIDE_RAILS.
+    `stoppers` names the reference pieces other than the PCB that may stop the board sliding (a lens in its hole)."""
     pcb: Pcb
     ref: str
     hooks: tuple = ()
     lips: tuple = ()
+    stoppers: tuple = ()
 
 
-HOOK_T, HOOK_W, HOOK_SIDE_GAP, HOOK_GAP, HOOK_OVERLAP, HOOK_LAND = 1.2, 4.0, 0.2, 0.2, 0.6, 0.4
-HOOK_FILLET = 0.6  # a stem's root is rounded on both faces so the bend does not start at a sharp corner
-HOOK_EMBED = 0.5  # a hook root reaches this far into its wall so the fuse is solid
-HOOK_SLOPE = 1.2  # support chamfers rise 50°, so slicers never count them as 45° overhang
-LIP_EMBED = 0.2  # lips and stops are fused along their whole length, so they reach only this far into the wall and stay off pocket floors
-MIN_OVERLAP, MAX_GAP, MAX_TRAVEL, MAX_STRAIN = 0.4, 0.3, 1.0, 0.02
-IN_PLANE = ('+x', '-x', '+y', '-y')
 
 
 def held_face(pcb):
@@ -468,7 +476,7 @@ def snap_hook(pcb, side, *, root, at=None, width=HOOK_W, thickness=HOOK_T, side_
     axis along the edge makes a beam from that wall, as tall as the PCB edge plus `gap` and `back`, with the barb on its
     last `width` mm; that end is chamfered towards the wall so the beam prints without support when the wall lies on the
     bed. `at` is the barb centre along the edge, by default the middle of the edge. The Hook's length is the bending
-    length from the root (past its fillet) to the barb, for the strain check."""
+    length from the root (past its fillet) to where the barb starts, for the strain check."""
     axis, sign, e, basis, origin = _frame(pcb, side)
     centre = pcb.at[e] if at is None else at
     inner, outside = side_gap, side_gap + thickness
@@ -483,7 +491,7 @@ def snap_hook(pcb, side, *, root, at=None, width=HOOK_W, thickness=HOOK_T, side_
         rounded_in = _arc((inner - r, surface + r), r, 0, -90) if r > 0 else [(inner, surface)]
         outline = [(outside + r, foot), *rounded_out, *barb[::-1], (inner, gap), *rounded_in, (inner - r, foot)]
         solid = _prism(origin, basis, 'uwv', outline, (centre - width / 2, centre + width / 2))
-        return Hook(solid, side, gap + land - surface - r, thickness, overlap)
+        return Hook(solid, side, gap - surface - r, thickness, overlap)
     if root_axis != 'xyz'[e]:
         raise ValueError(f"a hook at {side} grows from the floor or ceiling (z) or from a wall across {'xyz'[e]}")
     s = 1.0 if centre > root_at else -1.0
@@ -516,7 +524,7 @@ def edge_lip(pcb, side, *, wall, span, side_gap=HOOK_SIDE_GAP, gap=HOOK_GAP, ove
     return Lip(_prism(origin, basis, 'uwv', outline, sorted(span)), side)
 
 
-def edge_stop(pcb, side, *, root, span, side_gap=HOOK_SIDE_GAP, thickness=HOOK_T, embed=LIP_EMBED):
+def edge_stop(pcb, side, *, root, span, side_gap=STOP_GAP, thickness=HOOK_T, embed=LIP_EMBED):
     """A rigid block `side_gap` outside the `side` edge of `pcb`, over `span` along that edge, that stops the board
     sliding that way; it ends in the held face plane, so it never reaches past the PCB towards the barbs.
 
@@ -538,7 +546,7 @@ def edge_stop(pcb, side, *, root, span, side_gap=HOOK_SIDE_GAP, thickness=HOOK_T
     return _prism(origin, basis, 'uwv', outline, sorted(span))
 
 
-def corner_stop(pcb, side, *, wall, reach=HOOK_OVERLAP, side_gap=HOOK_SIDE_GAP, thickness=HOOK_T, embed=LIP_EMBED):
+def corner_stop(pcb, side, *, wall, reach=STOP_REACH, side_gap=STOP_GAP, thickness=HOOK_T, embed=LIP_EMBED):
     """A rigid stop `side_gap` outside the `side` edge of `pcb`, reaching `reach` along that edge past the PCB corner
     next to `wall` (the inner face of the side wall across the edge), as tall as the PCB edge. A gusset holds it out
     from that wall; the gusset's face towards the board rises at 50°, so with the side direction up in print only the
@@ -606,24 +614,103 @@ def hook_strain(hook, tolerance):
     return 1.5 * hook.thickness * (hook.overlap + tolerance) / hook.length ** 2
 
 
-def board_boxes(pcb, pieces):
-    """(lo, hi) of the PCB slab and every box of the board's reference pieces, and the other (solid) pieces."""
+def _solids(a, b):
+    return [p for p in a.intersect(b).Solids() if p.Volume() > 1e-6]
+
+
+def _volume_outside(shape, tools):
+    """Volume of `shape` left after cutting away every one of `tools`."""
+    rest = shape
+    for tool in tools:
+        if rest.isNull() or not rest.Solids():
+            return 0.0
+        if _solids(rest, tool):
+            rest = rest.cut(tool)
+    return 0.0 if rest.isNull() else sum(p.Volume() for p in rest.Solids())
+
+
+def beam_length(hook, samples=24):
+    """The free length of `hook` measured on its solid: the longest run along its long axis where its section, across
+    the PCB edge, is no thicker than the declared thickness + 0.05 mm, less HOOK_EMBED when that run starts at the
+    buried root end. It matches the declared length of a hook built by snap_hook to within the 0.02 mm bisection."""
+    axis = FACES[hook.side][0]
+    bb = hook.solid.BoundingBox()
+    lo, hi = np.array([bb.xmin, bb.ymin, bb.zmin]), np.array([bb.xmax, bb.ymax, bb.zmax])
+    along = 1 - axis if hi[1 - axis] - lo[1 - axis] > hi[2] - lo[2] else 2
+
+    def thin(t):
+        a, b = lo - 1, hi + 1
+        a[along], b[along] = t - 0.01, t + 0.01
+        cut = _solids(hook.solid, box(a, b))
+        if not cut:
+            return False
+        c = cq.Compound.makeCompound(cut).BoundingBox()
+        return (c.xlen, c.ylen, c.zlen)[axis] <= hook.thickness + 0.05
+
+    ts = list(np.linspace(lo[along] + 0.02, hi[along] - 0.02, samples))
+    flags = [thin(t) for t in ts]
+    runs, i = [], 0
+    while i < len(ts):
+        if flags[i]:
+            j = i
+            while j + 1 < len(ts) and flags[j + 1]:
+                j += 1
+            runs.append((i, j))
+            i = j + 1
+        else:
+            i += 1
+    if not runs:
+        return 0.0
+    i, j = max(runs, key=lambda r: r[1] - r[0])
+
+    def edge(inside, outside):
+        while abs(outside - inside) > 0.02:
+            mid = (inside + outside) / 2
+            inside, outside = (mid, outside) if thin(mid) else (inside, mid)
+        return inside
+
+    start = edge(ts[i], ts[i - 1]) if i > 0 else lo[along]
+    stop = edge(ts[j], ts[j + 1]) if j < len(ts) - 1 else hi[along]
+    buried = HOOK_EMBED if i == 0 or j == len(ts) - 1 else 0.0
+    return float(stop - start - buried)
+
+
+def board_parts(pcb, pieces):
+    """[(name, lo, hi)] of the PCB slab and every box of the board's reference pieces, and [(name, solid)] of the others."""
     slab = np.array([pcb.at[0] - pcb.size[0] / 2, pcb.at[1] - pcb.size[1] / 2, pcb.at[2]])
-    boxes = [(slab, slab + np.array(pcb.size))]
+    boxes = [('pcb', slab, slab + np.array(pcb.size))]
     solids = []
     for piece in pieces:
         if isinstance(piece, Box):
-            c, s = np.array(piece.center, float), np.array(piece.size, float)
-            boxes.append((c - s / 2, c + s / 2))
+            c, size = np.array(piece.center, float), np.array(piece.size, float)
+            boxes.append((piece.name, c - size / 2, c + size / 2))
         else:
-            solids.append(wp(piece.shape).val())
+            solids.append((piece.name, wp(piece.shape).val()))
     return boxes, solids
 
 
+def resized(pcb, pieces, delta):
+    """The board `delta` mm larger in x and y: every box of its reference scales in-plane about the PCB centre, so the
+    PCB grows by `delta` and its parts with it; other pieces (a lens) stay as they are."""
+    board = pcb._replace(size=(pcb.size[0] + delta, pcb.size[1] + delta, pcb.size[2]))
+    scale = np.array([board.size[0] / pcb.size[0], board.size[1] / pcb.size[1], 1.0])
+    middle = np.array([pcb.at[0], pcb.at[1], 0.0])
+    parts = [Box(p.name, tuple(np.array(p.size, float) * scale), tuple(middle + (np.array(p.center, float) - middle) * scale), p.color)
+             if isinstance(p, Box) else p for p in pieces]
+    return board, parts
+
+
+def shifted(pcb, pieces, offset):
+    """The board and its reference pieces moved by `offset`."""
+    offset = np.asarray(offset, float)
+    return (pcb._replace(at=tuple(np.array(pcb.at, float) + offset)),
+            [moved_piece(p, tuple(offset)) for p in pieces])
+
+
 def _swept(lo, hi, direction, distance):
-    a, s = int(np.flatnonzero(direction)[0]), float(direction[np.flatnonzero(direction)[0]])
+    a = int(np.flatnonzero(direction)[0])
     lo, hi = lo.copy(), hi.copy()
-    if s > 0:
+    if direction[a] > 0:
         hi[a] += distance
     else:
         lo[a] -= distance
@@ -631,84 +718,96 @@ def _swept(lo, hi, direction, distance):
 
 
 def _crop(obstacles, lo, hi):
-    pieces = [p for o in obstacles for p in o.intersect(box(lo, hi)).Solids() if p.Volume() > 1e-6]
+    pieces = [p for o in obstacles for p in _solids(o, box(lo, hi))]
     return cq.Compound.makeCompound(pieces) if pieces else None
 
 
 def _hits(obstacle, solid):
-    return obstacle is not None and solid.intersect(obstacle).Volume() > 1e-4
+    return obstacle is not None and bool(_solids(solid, obstacle))
 
 
 def travel(obstacles, pcb, pieces, direction, reach=15.0):
-    """How far the board (PCB slab and reference pieces) slides along the unit axis `direction` before it touches one
-    of `obstacles`; boxes are swept exactly, other pieces are found by bisection to 0.01 mm."""
+    """(distance, piece): how far the board (PCB slab and reference pieces) slides along the unit axis `direction` before
+    it touches one of `obstacles`, and the name of the piece that touches first ('pcb' wins ties within 0.01 mm).
+    Boxes are swept exactly, other pieces are found by bisection to 0.01 mm."""
     direction = np.asarray(direction, float)
     a = int(np.flatnonzero(direction)[0])
     s = float(direction[a])
-    boxes, solids = board_boxes(pcb, pieces)
-    lows, highs = np.min([b[0] for b in boxes], axis=0), np.max([b[1] for b in boxes], axis=0)
-    for solid in solids:
+    boxes, solids = board_parts(pcb, pieces)
+    lows, highs = np.min([b[1] for b in boxes], axis=0), np.max([b[2] for b in boxes], axis=0)
+    for _, solid in solids:
         bb = solid.BoundingBox()
         lows, highs = np.minimum(lows, (bb.xmin, bb.ymin, bb.zmin)), np.maximum(highs, (bb.xmax, bb.ymax, bb.zmax))
     near = _crop(obstacles, *_swept(lows - 0.01, highs + 0.01, direction, reach))
-    best = reach
+    best, by = reach, None
     if near is None:
-        return best
-    for lo, hi in boxes:
-        for hit in near.intersect(box(*_swept(lo, hi, direction, reach))).Solids():
-            if hit.Volume() < 1e-6:
-                continue
+        return best, by
+
+    def offer(distance, name):
+        nonlocal best, by
+        if distance < best - 0.01 or (abs(distance - best) <= 0.01 and name == 'pcb'):
+            best, by = min(best, distance), name
+
+    for name, lo, hi in boxes:
+        for hit in _solids(near, box(*_swept(lo, hi, direction, reach))):
             bb = hit.BoundingBox()
             first = (bb.xmin, bb.ymin, bb.zmin)[a] - hi[a] if s > 0 else lo[a] - (bb.xmax, bb.ymax, bb.zmax)[a]
-            best = min(best, max(first, 0.0))
-    for solid in solids:
+            offer(max(first, 0.0), name)
+    for name, solid in solids:
         if not _hits(near, solid.translate(vec(direction * best))):
             continue
         free, blocked = 0.0, best
         while blocked - free > 0.01:
             mid = (free + blocked) / 2
             free, blocked = (free, mid) if _hits(near, solid.translate(vec(direction * mid))) else (mid, blocked)
-        best = free
-    return float(best)
+        offer(free, name)
+    return float(best), by
 
 
-def insertion_height(shell, mount, pieces, lid_axis, heights):
+def insertion_height(shell, mount, pcb, pieces, lid_axis, heights):
     """The first lift h in `heights` by which the board leaves its seat along the held-face normal, passing only through
     its flexing hooks (and, for a front stop, the lips it tilts under), and then slides out along `lid_axis` through the
     open lid face touching nothing; None if no h works. Slide rails only slide out. Boxes are swept exactly, other
     pieces are tested every 1 mm."""
-    pcb = mount.pcb
     up = np.array([0.0, 0.0, float(pcb.held)])
     out = np.asarray(lid_axis, float)
     flex = [h.solid for h in mount.hooks] + ([lip.solid for lip in mount.lips] if retention(mount) == STOP_AND_HOOK else [])
-    flexing = cq.Compound.makeCompound(flex) if flex else None
-    boxes, solids = board_boxes(pcb, pieces)
+    boxes, solids = board_parts(pcb, pieces)
     bb = shell.BoundingBox()
     reach = 2 * max(bb.xlen, bb.ylen, bb.zlen)
 
     def blocked(lift, path, distance, through):
-        moved = [(lo + up * lift, hi + up * lift) for lo, hi in boxes]
-        swept = cq.Compound.makeCompound([box(*_swept(lo, hi, path, distance)) for lo, hi in moved])
-        volume = swept.intersect(shell)
-        if through is not None:
-            volume = volume.cut(through)
-        if volume.Volume() > 1e-3:
-            return True
+        for _, lo, hi in boxes:
+            for hit in _solids(shell, box(*_swept(lo + up * lift, hi + up * lift, path, distance))):
+                if _volume_outside(hit, through) > 1e-3:
+                    return True
         steps = np.arange(0.0, distance + 1e-9, 1.0)
-        return any(_hits(shell, solid.translate(vec(up * lift + path * t))) for solid in solids for t in steps)
+        return any(_hits(shell, solid.translate(vec(up * lift + path * t))) for _, solid in solids for t in steps)
 
     if retention(mount) == SLIDE_RAILS:
-        return 0.0 if not blocked(0.0, out, reach, None) else None
+        return 0.0 if not blocked(0.0, out, reach, []) else None
     if np.allclose(out, up):
-        return 0.0 if not blocked(0.0, up, reach, flexing) else None
+        return 0.0 if not blocked(0.0, up, reach, flex) else None
     for h in heights:
-        if not blocked(0.0, up, h, flexing) and not blocked(h, out, reach, None):
+        if not blocked(0.0, up, h, flex) and not blocked(h, out, reach, []):
             return float(h)
     return None
 
 
+def overlap_except(obstacles, pcb, pieces, flexing):
+    """Volume in mm³ where the board's parts overlap `obstacles`, not counting the `flexing` solids."""
+    boxes, solids = board_parts(pcb, pieces)
+    total = 0.0
+    for shape in [box(lo, hi) for _, lo, hi in boxes] + [solid for _, solid in solids]:
+        for obstacle in obstacles:
+            for hit in _solids(shape, obstacle):
+                total += _volume_outside(hit, flexing)
+    return total
+
+
 def mount_report(mount, shell, lid, pieces, lid_axis):
-    """Measure how `mount` holds its board in the built `shell` with the closed `lid`; returns (report, problems)."""
+    """Measure how `mount` holds its board in the built `shell` with the closed `lid`, at nominal size and at the
+    board's tolerance either way; returns (report, problems)."""
     pcb = mount.pcb
     kind = retention(mount)
     problems = [] if kind else ['hooks and lips do not make snap hooks, a front stop with a hook, or slide rails']
@@ -716,44 +815,68 @@ def mount_report(mount, shell, lid, pieces, lid_axis):
     problems += [f'lip {i} is not a Lip' for i, lip in enumerate(mount.lips) if not isinstance(lip, Lip)]
     if problems:
         return {'retention': kind}, problems
+    parts = (*mount.hooks, *mount.lips)
+    problems += [f'the {type(part).__name__.lower()} at {part.side} is not part of the shell' for part in parts
+                 if sum(p.Volume() for p in _solids(shell, part.solid)) < 0.99 * part.solid.Volume()]
+    if problems:
+        return {'retention': kind}, problems
+    tol = pcb.tolerance
+    measured = [beam_length(h) for h in mount.hooks]
+    problems += [f'the hook at {h.side} declares a {h.length:.2f} mm beam but its solid measures {m:.2f} mm'
+                 for h, m in zip(mount.hooks, measured) if abs(h.length - m) > 0.3]
     grips = barb_grips(shell, pcb)
     problems += grip_problems(grips)
-    declared = {part.side for part in (*mount.hooks, *mount.lips)}
+    declared = {part.side for part in parts}
     problems += [f'the grip at {side} comes from no declared hook or lip' for side, _, _ in grips if side not in declared]
     problems += [f'the hook or lip at {side} grips nothing' for side in declared if side not in {g[0] for g in grips}]
-    share = pcb.tolerance if kind == STOP_AND_HOOK else pcb.tolerance / 2
+    share = tol if kind == STOP_AND_HOOK else tol / 2
     strains = [hook_strain(h, share) for h in mount.hooks]
-    problems += [f'hook at {h.side} bends {e:.1%} to let the board in, more than {MAX_STRAIN:.0%}'
+    problems += [f'hook at {h.side} bends {e:.1%} to let a board {tol} mm larger in, more than {MAX_STRAIN:.0%}'
                  for h, e in zip(mount.hooks, strains) if e > MAX_STRAIN]
-    moves, worst = {}, MIN_OVERLAP * 10
-    for side in IN_PLANE:
-        t = travel([shell, lid], pcb, pieces, unit(side))
-        moves[side] = round(t, 2)
-        if t > MAX_TRAVEL:
-            problems.append(f'the board slides {t:.1f} mm towards {side}, more than {MAX_TRAVEL}')
-            continue
-        shifted = pcb._replace(at=tuple(np.array(pcb.at) + t * unit(side)))
-        moved = barb_grips(shell, shifted)
-        problems += [f'after sliding {t:.2f} mm towards {side}: {p}' for p in grip_problems(moved)]
-        by_side = {}
-        for side_held, o, _ in moved:
-            by_side[side_held] = max(o, by_side.get(side_held, 0.0))
-        worst = min(worst, sorted(by_side.values())[-2] if len(by_side) >= 2 else 0.0)
-    lift = insertion_height(shell, mount, pieces, lid_axis, heights=np.arange(1.6, 8.0, 0.5))
-    if lift is None:
-        problems.append('the board cannot get in: no lift up to 7.6 mm clears everything but its hooks')
-    report = {'retention': kind,
+    moves, stopped, worst = {}, {}, {}
+    for label, delta in (('nominal', 0.0), ('undersize', -tol)):
+        board, board_pieces = resized(pcb, pieces, delta)
+        moves[label], stopped[label], worst[label] = {}, {}, MIN_OVERLAP * 10
+        for side in IN_PLANE:
+            t, by = travel([shell, lid], board, board_pieces, unit(side))
+            moves[label][side], stopped[label][side] = round(t, 2), by
+            if t > MAX_TRAVEL:
+                problems.append(f'{label}: the board slides {t:.1f} mm towards {side}, more than {MAX_TRAVEL}')
+                continue
+            if by not in ('pcb', *mount.stoppers):
+                problems.append(f'{label}: towards {side} the board is stopped by its {by}, not by its PCB or a declared stopper')
+            moved = barb_grips(shell, board._replace(at=tuple(np.array(board.at) + t * unit(side))))
+            problems += [f'{label}: after sliding {t:.2f} mm towards {side}: {p}' for p in grip_problems(moved)]
+            by_side = {}
+            for held_side, o, _ in moved:
+                by_side[held_side] = max(o, by_side.get(held_side, 0.0))
+            worst[label] = min(worst[label], sorted(by_side.values())[-2] if len(by_side) >= 2 else 0.0)
+    big, big_pieces = resized(pcb, pieces, tol)
+    if kind == STOP_AND_HOOK:  # a larger board sits against its rigid lips and pushes the one hook aside
+        big, big_pieces = shifted(big, big_pieces, unit(mount.hooks[0].side) * tol / 2)
+    flexing = [h.solid for h in mount.hooks]
+    clash = overlap_except([shell, lid], big, big_pieces, flexing)
+    if clash > 1e-3:
+        problems.append(f'oversize: a board {tol} mm larger overlaps the shell or lid by {clash:.3f} mm³ beside its hooks')
+    heights = np.arange(HOOK_GAP + HOOK_LAND + HOOK_SIDE_GAP + HOOK_OVERLAP + 0.2, 8.0, 0.5)
+    lifts = {label: insertion_height(shell, mount, board, board_pieces, lid_axis, heights)
+             for label, (board, board_pieces) in (('nominal', (pcb, pieces)), ('oversize', (big, big_pieces)))}
+    problems += [f'{label}: the board cannot get in: no lift up to {heights[-1]:.1f} mm clears everything but its hooks'
+                 for label, lift in lifts.items() if lift is None]
+    report = {'retention': kind, 'tolerance_mm': tol,
+              'size_range_mm': [[round(pcb.size[i] - tol, 2), round(pcb.size[i] + tol, 2)] for i in (0, 1)],
               'grips': [{'side': side, 'overlap_mm': round(o, 2), 'gap_mm': round(g, 2)} for side, o, g in grips],
-              'travel_mm': moves, 'worst_overlap_mm': round(worst, 2), 'insertion_lift_mm': lift,
-              'hook_strain_pct': [round(100 * e, 2) for e in strains]}
+              'travel_mm': moves, 'stopped_by': stopped,
+              'worst_overlap_mm': {label: round(v, 2) for label, v in worst.items()},
+              'oversize_overlap_mm3': round(clash, 4), 'insertion_lift_mm': lifts,
+              'hook_strain_pct': [round(100 * e, 2) for e in strains],
+              'hook_length_mm': [{'declared': round(h.length, 2), 'measured': round(m, 2)} for h, m in zip(mount.hooks, measured)]}
     if kind == STOP_AND_HOOK:
         hook = mount.hooks[0]
-        a = FACES[hook.side][0]
-        tilt = (HOOK_GAP + HOOK_LAND + HOOK_SIDE_GAP + hook.overlap + 0.2) / pcb.size[a]
-        lip_grips = [(o, g) for side, o, g in grips if side in {lip.side for lip in mount.lips}]
+        tilt = (HOOK_GAP + HOOK_LAND + HOOK_SIDE_GAP + hook.overlap + 0.2) / pcb.size[FACES[hook.side][0]]
         report['tilt'] = round(tilt, 3)
         problems += [f'a lip {g:.2f} mm over the board is too low to tilt under: the board must rise {o * tilt:.2f} mm there'
-                     for o, g in lip_grips if g < o * tilt]
+                     for side, o, g in grips if side in {lip.side for lip in mount.lips} and g < o * tilt]
     return report, problems
 
 

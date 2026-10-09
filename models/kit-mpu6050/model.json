@@ -31,7 +31,7 @@
     "divisions": 12
   },
   "printInfo": {
-    "summary": "10,9 g PLA · 42 phút · Bambu P1S",
+    "summary": "10,9 g PLA · 43 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -91,7 +91,7 @@
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
           "Bo khoảng 20,5×16 mm theo trang bán hàng, các nơi ghi 20×16 đến 21×16,4; đo bo của bạn.",
           "Hàng chân cắm nằm gần cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình); mô hình không đánh dấu trục của chip.",
-          "Hàn dây trực tiếp hoặc dùng dải chân cắm ngắn: từ đỉnh chip tới tấm nắp còn 5,6 mm.",
+          "Hàng chân cắm hàn chân dài xuống dưới: đầu chân cách sàn 0,6 mm, đầu chân phía trên cách tấm nắp 3,7 mm.",
           "Bốn trụ đỡ mặt dưới PCB, hai móc gài ở hai cạnh ngắn giữ mặt trên: ấn bo xuống là móc bật vào, không cần keo."
         ],
         "links": []
@@ -101,7 +101,7 @@
         "rows": [
           [
             "Thân (in riêng)",
-            "7,4 g · 31 phút"
+            "7,4 g · 32 phút"
           ],
           [
             "Nắp (in riêng)",
@@ -109,7 +109,7 @@
           ],
           [
             "Cả bàn in",
-            "10,9 g · 42 phút · 111 lớp"
+            "10,9 g · 43 phút · 111 lớp"
           ]
         ],
         "notes": [
@@ -276,7 +276,7 @@
           "position": [
             0.0,
             0.0,
-            10.5
+            11.9
           ],
           "color": "#2b6fb3"
         },
@@ -290,7 +290,7 @@
           "position": [
             0.0,
             0.0,
-            11.75
+            13.15
           ],
           "color": "#24343c"
         },
@@ -304,9 +304,121 @@
           "position": [
             0.0,
             -5.0,
-            8.45
+            9.85
           ],
           "color": "#27343c"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -8.89,
+            -5.0,
+            8.35
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -6.35,
+            -5.0,
+            8.35
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -3.81,
+            -5.0,
+            8.35
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -1.27,
+            -5.0,
+            8.35
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            1.27,
+            -5.0,
+            8.35
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            3.81,
+            -5.0,
+            8.35
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            6.35,
+            -5.0,
+            8.35
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            8.89,
+            -5.0,
+            8.35
+          ],
+          "color": "#c99b49"
         }
       ]
     }
@@ -596,18 +708,18 @@
     "project": "print/kit-mpu6050.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 2521,
-    "grams": 10.87,
+    "seconds": 2552,
+    "grams": 10.93,
     "layerCount": 111,
     "parts": [
       {
         "id": "shell",
-        "seconds": 1885,
-        "grams": 7.37
+        "seconds": 1917,
+        "grams": 7.44
       },
       {
         "id": "lid",
-        "seconds": 696,
+        "seconds": 697,
         "grams": 3.59
       }
     ]

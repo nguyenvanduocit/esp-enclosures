@@ -9,7 +9,7 @@
     "shell": {
       "watertight": true,
       "solid_count": 1,
-      "volume_mm3": 10835.11,
+      "volume_mm3": 10837.07,
       "bounds_mm": [
         [
           -19.9,
@@ -62,29 +62,79 @@
       "boards": [
         {
           "retention": "snap hooks",
+          "tolerance_mm": 0.3,
+          "size_range_mm": [
+            [
+              31.7,
+              32.3
+            ],
+            [
+              23.7,
+              24.3
+            ]
+          ],
           "grips": [
             {
               "side": "-y",
-              "overlap_mm": 0.6,
+              "overlap_mm": 0.8,
               "gap_mm": 0.2
             },
             {
               "side": "+y",
-              "overlap_mm": 0.6,
+              "overlap_mm": 0.8,
               "gap_mm": 0.2
             }
           ],
           "travel_mm": {
-            "+x": 0.7,
-            "-x": 0.7,
-            "+y": 0.2,
-            "-y": 0.2
+            "nominal": {
+              "+x": 0.7,
+              "-x": 0.7,
+              "+y": 0.1,
+              "-y": 0.1
+            },
+            "undersize": {
+              "+x": 0.7,
+              "-x": 0.7,
+              "+y": 0.25,
+              "-y": 0.25
+            }
           },
-          "worst_overlap_mm": 0.4,
-          "insertion_lift_mm": 0.0,
+          "stopped_by": {
+            "nominal": {
+              "+x": "lens",
+              "-x": "lens",
+              "+y": "pcb",
+              "-y": "pcb"
+            },
+            "undersize": {
+              "+x": "lens",
+              "-x": "lens",
+              "+y": "pcb",
+              "-y": "pcb"
+            }
+          },
+          "worst_overlap_mm": {
+            "nominal": 0.7,
+            "undersize": 0.4
+          },
+          "oversize_overlap_mm3": 0.0,
+          "insertion_lift_mm": {
+            "nominal": 0.0,
+            "oversize": 0.0
+          },
           "hook_strain_pct": [
-            0.39,
-            0.39
+            0.51,
+            0.51
+          ],
+          "hook_length_mm": [
+            {
+              "declared": 18.3,
+              "measured": 18.29
+            },
+            {
+              "declared": 18.3,
+              "measured": 18.29
+            }
           ]
         }
       ]
@@ -92,7 +142,7 @@
   },
   "printability": {
     "shell": {
-      "overhang_mm2": 501.7,
+      "overhang_mm2": 502.5,
       "bridges": [
         {
           "z": 8.276,
@@ -321,18 +371,18 @@
         {
           "z": 20.3,
           "size_mm": [
-            0.8,
+            0.9,
             4.0
           ],
-          "area_mm2": 3.2
+          "area_mm2": 3.6
         },
         {
           "z": 20.3,
           "size_mm": [
-            0.8,
+            0.9,
             4.0
           ],
-          "area_mm2": 3.2
+          "area_mm2": 3.6
         },
         {
           "z": 28.276,
@@ -566,7 +616,7 @@
             0,
             0
           ],
-          "overhang_mm2": 501.7,
+          "overhang_mm2": 502.5,
           "contact_mm2": 970.0,
           "height_mm": 37.8
         },
@@ -576,7 +626,7 @@
             0,
             0
           ],
-          "overhang_mm2": 1209.7,
+          "overhang_mm2": 1219.9,
           "contact_mm2": 301.5,
           "height_mm": 37.8
         },
@@ -586,7 +636,7 @@
             90,
             0
           ],
-          "overhang_mm2": 2042.3,
+          "overhang_mm2": 2042.7,
           "contact_mm2": 991.2,
           "height_mm": 39.8
         },
@@ -596,7 +646,7 @@
             -90,
             0
           ],
-          "overhang_mm2": 2098.2,
+          "overhang_mm2": 2098.7,
           "contact_mm2": 938.0,
           "height_mm": 39.8
         },
@@ -606,7 +656,7 @@
             0,
             0
           ],
-          "overhang_mm2": 2146.6,
+          "overhang_mm2": 2142.5,
           "contact_mm2": 992.5,
           "height_mm": 39.8
         },
@@ -616,7 +666,7 @@
             0,
             0
           ],
-          "overhang_mm2": 2199.8,
+          "overhang_mm2": 2195.6,
           "contact_mm2": 936.7,
           "height_mm": 39.8
         }
@@ -730,13 +780,13 @@
     "project": "print/kit-pir.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 3908,
+    "seconds": 3873,
     "grams": 16.51,
     "layerCount": 236,
     "parts": [
       {
         "id": "shell",
-        "seconds": 3424,
+        "seconds": 3387,
         "grams": 13.2
       },
       {

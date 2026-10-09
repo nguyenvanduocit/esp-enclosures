@@ -31,7 +31,7 @@
     "divisions": 24
   },
   "printInfo": {
-    "summary": "24,2 g PLA · 1 giờ 20 phút · Bambu P1S",
+    "summary": "24,2 g PLA · 1 giờ 19 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -108,7 +108,7 @@
           ],
           [
             "Cả bàn in",
-            "24,2 g · 1 giờ 20 phút · 361 lớp"
+            "24,2 g · 1 giờ 19 phút · 361 lớp"
           ]
         ],
         "notes": [
@@ -581,18 +581,18 @@
     "project": "print/kit-display.gcode.3mf",
     "layers": "print/layers.json",
     "slicer": "Bambu Studio 02.08.02.61",
-    "seconds": 4772,
+    "seconds": 4734,
     "grams": 24.19,
     "layerCount": 361,
     "parts": [
       {
         "id": "shell",
-        "seconds": 4099,
+        "seconds": 4062,
         "grams": 20.57
       },
       {
         "id": "lid",
-        "seconds": 725,
+        "seconds": 726,
         "grams": 3.71
       }
     ]

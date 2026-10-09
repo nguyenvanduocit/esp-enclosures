@@ -39,6 +39,10 @@ def test_mpu6050_envelope():
     by_name = {p.name: p for p in mpu6050(at=(20, 20, 6))}
     assert by_name['pcb'].size == (20.5, 16, 1.6)
     assert by_name['header'].size == (20.32, 2.5, 2.5)
+    pins = [p for p in by_name.values() if p.name.startswith('pin_')]
+    assert len(pins) == 8
+    assert min(p.center[2] - p.size[2] / 2 for p in pins) == approx(6 - 8.5)  # long ends 8.5 mm under the PCB underside
+    assert max(p.center[2] + p.size[2] / 2 for p in pins) == approx(6 + 1.6 + 1.4)  # short ends 1.4 mm over its top
 
 
 def test_hc_sr501_lens_is_a_solid_above_the_pcb():

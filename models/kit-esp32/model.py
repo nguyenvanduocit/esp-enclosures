@@ -12,7 +12,7 @@ BOARD_Z = (LO[2] + HI[2]) / 2 - 3.2                  # USB-C axis at mid height,
 BOARD_Y = LO[1] + WALL + 0.5 + 12.75                 # USB front 0.5 mm from the -y wall (PCB front 2.0 mm), USB overhang 1.5 mm
 USB_SLOT = box((CX - 6, 0, BOARD_Z + 0.2), (CX + 6, LO[1] + WALL + 1, BOARD_Z + 6.2))
 POSTS = tuple(cyl((CX + sx, BOARD_Y + sy, FLOOR - 0.5), (0, 0, 1), 1.5, BOARD_Z - FLOOR + 0.5)
-              for sx, sy in itertools.product((-4.6, 4.6), (-7.4, 7.4)))
+              for sx, sy in itertools.product((-4.4, 4.4), (-7.4, 7.4)))  # 0.45 mm inside the header bodies, so the PCB, not a header, meets the hooks
 PCB = Pcb((CX, BOARD_Y, BOARD_Z), SUPERMINI_PCB)
 # two beams from the -y wall along the +-x edges, barbs over the PCB top at mid length; the -y wall lies on the bed, so the beams print upright
 HOOKS = tuple(snap_hook(PCB, side, root=('y', LO[1] + WALL)) for side in ('+x', '-x'))
