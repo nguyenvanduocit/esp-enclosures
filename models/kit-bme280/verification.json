@@ -1,0 +1,362 @@
+{
+  "units": "mm",
+  "dimensions": [
+    19.8,
+    19.8,
+    19.8
+  ],
+  "parts": {
+    "shell": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 2269.73,
+      "bounds_mm": [
+        [
+          -9.9,
+          -9.9,
+          0.0
+        ],
+        [
+          9.9,
+          9.9,
+          17.8
+        ]
+      ]
+    },
+    "lid": {
+      "watertight": true,
+      "solid_count": 1,
+      "volume_mm3": 768.07,
+      "bounds_mm": [
+        [
+          -9.9,
+          -9.9,
+          0.0
+        ],
+        [
+          9.9,
+          9.9,
+          4.4
+        ]
+      ]
+    }
+  },
+  "checks": {
+    "Outer size equals units x 20 - 0.2 mm": {
+      "outer_mm": [
+        19.8,
+        19.8,
+        19.8
+      ]
+    },
+    "Lid clears shell": true,
+    "Magnets and washers sit in their pockets": {
+      "magnets": 12,
+      "washers": 2
+    },
+    "Connectors: pockets void, floors solid, interior flat, ports open": true,
+    "Plain faces are solid wall": true,
+    "Cut-outs clear every pocket": true,
+    "Reference parts clear shell and lid": true
+  },
+  "printability": {
+    "shell": {
+      "overhang_mm2": 168.8,
+      "bridges": [
+        {
+          "z": 8.277,
+          "size_mm": [
+            0.127,
+            1.5
+          ],
+          "area_mm2": 0.19
+        },
+        {
+          "z": 8.277,
+          "size_mm": [
+            0.127,
+            1.5
+          ],
+          "area_mm2": 0.19
+        },
+        {
+          "z": 8.277,
+          "size_mm": [
+            0.127,
+            1.5
+          ],
+          "area_mm2": 0.19
+        },
+        {
+          "z": 8.277,
+          "size_mm": [
+            0.127,
+            1.5
+          ],
+          "area_mm2": 0.19
+        },
+        {
+          "z": 10.2,
+          "size_mm": [
+            0.06,
+            6.7
+          ],
+          "area_mm2": 0.4
+        },
+        {
+          "z": 10.2,
+          "size_mm": [
+            0.06,
+            6.7
+          ],
+          "area_mm2": 0.4
+        },
+        {
+          "z": 12.399,
+          "size_mm": [
+            0.125,
+            0.4
+          ],
+          "area_mm2": 0.05
+        },
+        {
+          "z": 12.399,
+          "size_mm": [
+            0.125,
+            0.4
+          ],
+          "area_mm2": 0.05
+        },
+        {
+          "z": 12.399,
+          "size_mm": [
+            0.125,
+            2.0
+          ],
+          "area_mm2": 0.25
+        },
+        {
+          "z": 12.399,
+          "size_mm": [
+            0.125,
+            2.0
+          ],
+          "area_mm2": 0.25
+        },
+        {
+          "z": 15.948,
+          "size_mm": [
+            0.302,
+            1.6
+          ],
+          "area_mm2": 0.48
+        },
+        {
+          "z": 15.948,
+          "size_mm": [
+            0.302,
+            1.6
+          ],
+          "area_mm2": 0.48
+        },
+        {
+          "z": 16.621,
+          "size_mm": [
+            0.127,
+            1.5
+          ],
+          "area_mm2": 0.19
+        },
+        {
+          "z": 16.621,
+          "size_mm": [
+            0.127,
+            1.5
+          ],
+          "area_mm2": 0.19
+        },
+        {
+          "z": 16.621,
+          "size_mm": [
+            0.127,
+            1.5
+          ],
+          "area_mm2": 0.19
+        },
+        {
+          "z": 16.621,
+          "size_mm": [
+            0.127,
+            1.5
+          ],
+          "area_mm2": 0.19
+        }
+      ],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 168.8,
+          "contact_mm2": 277.7,
+          "height_mm": 17.8
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 327.1,
+          "contact_mm2": 141.5,
+          "height_mm": 17.8
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 405.2,
+          "contact_mm2": 200.8,
+          "height_mm": 19.8
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 418.2,
+          "contact_mm2": 186.6,
+          "height_mm": 19.8
+        },
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 475.0,
+          "contact_mm2": 200.5,
+          "height_mm": 19.8
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 488.6,
+          "contact_mm2": 186.9,
+          "height_mm": 19.8
+        }
+      ]
+    },
+    "lid": {
+      "overhang_mm2": 129.9,
+      "bridges": [
+        {
+          "z": 1.5,
+          "size_mm": [
+            5.098,
+            5.1
+          ],
+          "area_mm2": 20.42
+        },
+        {
+          "z": 1.5,
+          "size_mm": [
+            5.098,
+            5.1
+          ],
+          "area_mm2": 20.42
+        },
+        {
+          "z": 1.5,
+          "size_mm": [
+            5.098,
+            5.1
+          ],
+          "area_mm2": 20.42
+        },
+        {
+          "z": 1.5,
+          "size_mm": [
+            5.098,
+            5.1
+          ],
+          "area_mm2": 20.42
+        }
+      ],
+      "orientations": [
+        {
+          "rotation": [
+            0,
+            90,
+            0
+          ],
+          "overhang_mm2": 113.4,
+          "contact_mm2": 18.9,
+          "height_mm": 19.8
+        },
+        {
+          "rotation": [
+            0,
+            -90,
+            0
+          ],
+          "overhang_mm2": 113.4,
+          "contact_mm2": 18.9,
+          "height_mm": 19.8
+        },
+        {
+          "rotation": [
+            -90,
+            0,
+            0
+          ],
+          "overhang_mm2": 114.3,
+          "contact_mm2": 18.8,
+          "height_mm": 19.8
+        },
+        {
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "overhang_mm2": 114.6,
+          "contact_mm2": 19.1,
+          "height_mm": 19.8
+        },
+        {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "overhang_mm2": 129.9,
+          "contact_mm2": 219.6,
+          "height_mm": 4.4
+        },
+        {
+          "rotation": [
+            180,
+            0,
+            0
+          ],
+          "overhang_mm2": 303.4,
+          "contact_mm2": 68.2,
+          "height_mm": 4.4
+        }
+      ],
+      "warning": "set print_rotation to (-90, 0, 90) to cut overhang from 129.9 mm² to 113.4 mm²"
+    }
+  },
+  "warnings": [
+    "lid: set print_rotation to (-90, 0, 90) to cut overhang from 129.9 mm² to 113.4 mm²"
+  ]
+}

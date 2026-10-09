@@ -1,0 +1,564 @@
+{
+  "$schema": "../../model.schema.json",
+  "schemaVersion": 1,
+  "units": "mm",
+  "category": "Module",
+  "status": "Chưa in thử",
+  "thumbnail": "thumbnail.png",
+  "title": "Module cảm biến BME280",
+  "description": "Cảm biến nhiệt độ, độ ẩm, áp suất GY-BME280 trong khối 1×1×1, mặt trước có khe thoáng.",
+  "dimensions": [
+    19.8,
+    19.8,
+    19.8
+  ],
+  "camera": {
+    "position": [
+      23.76,
+      -39.6,
+      27.72
+    ],
+    "target": [
+      0,
+      0,
+      9.9
+    ],
+    "minDistance": 11.88,
+    "maxDistance": 118.8
+  },
+  "grid": {
+    "size": 60,
+    "divisions": 6
+  },
+  "printInfo": {
+    "summary": "Chưa in thử",
+    "sections": [
+      {
+        "title": "Cấu hình in",
+        "rows": [
+          [
+            "Máy / nhựa",
+            "Bambu Lab P1S · nozzle 0,4 mm · PLA"
+          ],
+          [
+            "Bàn in",
+            "Textured PEI Plate"
+          ],
+          [
+            "Layer / lớp đầu",
+            "0,16 / 0,2 mm"
+          ],
+          [
+            "Thành",
+            "3 vòng"
+          ],
+          [
+            "Infill",
+            "15% gyroid"
+          ],
+          [
+            "Support",
+            "Tắt"
+          ],
+          [
+            "Brim",
+            "Tự động"
+          ],
+          [
+            "top_shell_layers",
+            "5"
+          ],
+          [
+            "bottom_shell_layers",
+            "5"
+          ],
+          [
+            "wall_generator",
+            "arachne"
+          ]
+        ],
+        "notes": [],
+        "links": []
+      },
+      {
+        "title": "Lắp nam châm và vòng đệm",
+        "rows": [],
+        "notes": [
+          "Mặt dương (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.",
+          "Mua vòng đệm thép mạ kẽm, không mua inox 304/316 vì inox không hút nam châm.",
+          "Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.",
+          "Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.",
+          "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
+          "Chiều rộng trong 15,8 mm cho bo 15,4 mm: chỉ còn 0,4 mm cho cả hai bên (0,2 mm mỗi bên). Hãy đo bo của bạn, nếu lớn hơn thì cần khối 2×1×1.",
+          "Dưới đầu cắm chỉ còn 4,2 mm tới sàn, không đủ cho đầu Dupont: hàn dây trực tiếp vào bo.",
+          "Mặt −y trơn có ba khe thoáng để cảm biến đo không khí ngoài."
+        ],
+        "links": []
+      }
+    ]
+  },
+  "id": "kit-bme280",
+  "parts": [
+    {
+      "id": "shell",
+      "label": "Thân",
+      "kind": "print",
+      "position": [
+        0.0,
+        -9.9,
+        9.9
+      ],
+      "rotation": [
+        -90.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "shell.stl",
+          "color": "#c9884a"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "maxDistance": 60
+      }
+    },
+    {
+      "id": "lid",
+      "label": "Nắp",
+      "kind": "print",
+      "position": [
+        0.0,
+        9.9,
+        9.9
+      ],
+      "rotation": [
+        90.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "lid.stl",
+          "color": "#d9d2b8"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "maxDistance": 90
+      }
+    },
+    {
+      "id": "magnets",
+      "label": "Nam châm 5×1.5",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/magnets.stl",
+          "color": "#ef5b5b"
+        }
+      ]
+    },
+    {
+      "id": "washers",
+      "label": "Vòng đệm M6",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/washers.stl",
+          "color": "#c9d3d9"
+        }
+      ]
+    },
+    {
+      "id": "lidMagnets",
+      "label": "Nam châm ở nắp",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/lidMagnets.stl",
+          "color": "#ef5b5b"
+        }
+      ]
+    },
+    {
+      "id": "board",
+      "label": "GY-BME280",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "primitive": "box",
+          "size": [
+            15.4,
+            11.6,
+            1.6
+          ],
+          "position": [
+            0.0,
+            -0.9,
+            9.5
+          ],
+          "color": "#6a3fa0"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            2.5,
+            2.5,
+            0.9
+          ],
+          "position": [
+            2.0,
+            -0.9,
+            10.75
+          ],
+          "color": "#c3cbd0"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            15.24,
+            2.5,
+            2.5
+          ],
+          "position": [
+            0.0,
+            -4.4,
+            7.45
+          ],
+          "color": "#27343c"
+        }
+      ]
+    }
+  ],
+  "measurements": [
+    {
+      "id": "case",
+      "label": "Vỏ module",
+      "kind": "case",
+      "followPart": "shell",
+      "color": "#efb96e",
+      "labelWidth": 32,
+      "lines": [
+        {
+          "a": [
+            -9.9,
+            -15.9,
+            0
+          ],
+          "b": [
+            9.9,
+            -15.9,
+            0
+          ],
+          "anchorA": [
+            -9.9,
+            -9.9,
+            0
+          ],
+          "anchorB": [
+            9.9,
+            -9.9,
+            0
+          ],
+          "label": "19.8 mm · Rộng",
+          "labelOffset": [
+            0,
+            -4.8,
+            0
+          ]
+        },
+        {
+          "a": [
+            15.9,
+            -9.9,
+            0
+          ],
+          "b": [
+            15.9,
+            9.9,
+            0
+          ],
+          "anchorA": [
+            9.9,
+            -9.9,
+            0
+          ],
+          "anchorB": [
+            9.9,
+            9.9,
+            0
+          ],
+          "label": "19.8 mm · Dài",
+          "labelOffset": [
+            7.6,
+            0,
+            0
+          ]
+        },
+        {
+          "a": [
+            -15.9,
+            -9.9,
+            0
+          ],
+          "b": [
+            -15.9,
+            -9.9,
+            19.8
+          ],
+          "anchorA": [
+            -9.9,
+            -9.9,
+            0
+          ],
+          "anchorB": [
+            -9.9,
+            -9.9,
+            19.8
+          ],
+          "label": "19.8 mm · Cao",
+          "labelOffset": [
+            -9,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "id": "open",
+      "label": "Mở nắp",
+      "duration": 8,
+      "openPose": {
+        "lid": [
+          0.0,
+          50.0,
+          0.0
+        ],
+        "lidMagnets": [
+          0.0,
+          50.0,
+          0.0
+        ]
+      },
+      "tracks": [
+        {
+          "part": "lid",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0.0,
+                50.0,
+                0.0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0.0,
+                50.0,
+                0.0
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "lidMagnets",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0.0,
+                50.0,
+                0.0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0.0,
+                50.0,
+                0.0
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.08,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.72,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.97,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "measureReveal": [
+        0.34,
+        0.64
+      ]
+    }
+  ],
+  "downloads": {
+    "bundle": "kit-bme280.zip",
+    "step": "assembly.step"
+  }
+}
