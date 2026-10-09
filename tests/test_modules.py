@@ -1,10 +1,10 @@
-import itertools
-
+import cadquery as cq
 import numpy as np
 import pytest
 from pytest import approx
 
 from printkit.modules import (
+    cyl,
     DISC_R,
     DOWN,
     FACES,
@@ -14,7 +14,6 @@ from printkit.modules import (
     ModuleSpec,
     axes,
     bom,
-    bounds,
     box,
     cut_clash_volume,
     disc_offsets,
@@ -77,10 +76,8 @@ def built():
 
 
 def test_smallest_module_has_exact_outer_size(built):
-    import cadquery as cq
-
-    box = cq.Compound.makeCompound(list(built)).BoundingBox()
-    assert (box.xlen, box.ylen, box.zlen) == approx((19.8, 19.8, 19.8), abs=0.01)
+    size = cq.Compound.makeCompound(list(built)).BoundingBox()
+    assert (size.xlen, size.ylen, size.zlen) == approx((19.8, 19.8, 19.8), abs=0.01)
 
 
 def test_smallest_module_probes_are_clean(built):
@@ -94,6 +91,7 @@ def test_lid_does_not_touch_shell(built):
 def test_pocket_walls_stay_printable():
     adjacent, same_face, to_port = pocket_walls(SPEC)
     assert adjacent >= 0.8 and same_face >= 0.8 and to_port >= 0.8
+    assert (adjacent, same_face, to_port) == approx((2.37, 3.24, 0.85), abs=0.02)
 
 
 def test_fastener_counts_of_one_unit():
@@ -116,3 +114,35 @@ def test_plain_face_is_solid_and_cut_clash_is_zero():
     shell, _ = shell_and_lid(spec)
     assert plain_problems(spec, shell) == 0
     assert cut_clash_volume(spec) == approx(0, abs=1e-6)
+
+
+LID_ONLY = ModuleSpec(
+    cells=(1, 1, 1), lid="+y", plain=tuple(f for f in FACES if f != "+y")
+)
+ADDS_AND_CUTS = ModuleSpec(
+    cells=(1, 1, 1),
+    lid="+y",
+    plain=("-y",),
+    adds=(cyl((4, 4, 1.6), (0, 0, 1), 1.5, 6),),
+    cuts=(box((8, 0, 8), (12, 3, 12)),),
+)
+ZLID = ModuleSpec(cells=(2, 1, 1), lid="-z")
+PRINT_SPECS = {
+    "unit": SPEC,
+    "long-z-lid": ZLID,
+    "plain-lid": ModuleSpec(cells=(1, 1, 1), lid="+y", plain=("+y",)),
+    "adds-and-cuts": ADDS_AND_CUTS,
+    "lid-only-connector": LID_ONLY,
+}
+
+
+@pytest.mark.parametrize("spec", PRINT_SPECS.values(), ids=PRINT_SPECS.keys())
+def test_shell_and_lid_are_each_one_valid_solid(spec):
+    for part in shell_and_lid(spec):
+        assert part.isValid()
+        assert len(part.Solids()) == 1
+
+
+@pytest.mark.parametrize("spec", [ZLID, ADDS_AND_CUTS], ids=["long-z-lid", "adds-and-cuts"])
+def test_pocket_probes_are_clean_on_other_lids_and_posts(spec):
+    assert pocket_problems(spec, *shell_and_lid(spec)) == 0

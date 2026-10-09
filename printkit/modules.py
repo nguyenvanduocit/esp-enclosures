@@ -195,7 +195,10 @@ def shell_and_lid(spec):
     ]
     if spec.adds:
         shell = shell.fuse(*spec.adds)
-    shell = shell.cut(*shell_cutters, *spec.cuts).clean()
+    tools = [*shell_cutters, *spec.cuts]
+    if tools:
+        shell = shell.cut(*tools)
+    shell = shell.clean()
     if spec.lid in connector_faces(spec):
         plate = plate.cut(*cutters(spec, spec.lid))
     s_lo, s_hi = cav_lo + FIT, cav_hi - FIT  # skirt inset FIT from every wall
@@ -318,11 +321,12 @@ def plain_problems(spec, shell):
 
 
 def cut_clash_volume(spec):
+    cutter_lists = [cutters(spec, face) for face in connector_faces(spec)]
     return sum(
         cut.intersect(c).Volume()
         for cut in spec.cuts
-        for face in connector_faces(spec)
-        for c in cutters(spec, face)
+        for face_cutters in cutter_lists
+        for c in face_cutters
     )
 
 
