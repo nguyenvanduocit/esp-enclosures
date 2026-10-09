@@ -10,7 +10,7 @@ printkit/library/          Linh kiện tham khảo dùng lại (điện tử…)
 printkit/modules.py        Chuẩn module: đơn vị 20 mm, điểm nối, vỏ, nắp, kiểm tra
 models/<id>/model.py       Nguồn duy nhất của model
 models/<id>/README.md      Ghi chú, giả định, nguồn số liệu
-models/<id>/thumbnail.png  Ảnh gallery (chụp tay)
+models/<id>/thumbnail.png  Ảnh gallery (chụp từ viewer bằng Chrome headless)
 index.html, viewer/        App xem model; viewer/vendor/ là Three.js 0.169.0, MIT
 model.schema.json          Hợp đồng giữa printkit và viewer, schemaVersion: 1
 models.json                Danh sách model.json
@@ -44,6 +44,8 @@ Các model `kit-*` theo chuẩn module trong `printkit/modules.py`: kích thư�
 ```sh
 uv run printkit cad kit-esp32
 ```
+
+`cad` bỏ khối `print` trong `model.json` (trang xem mô phỏng in sẽ trống); chạy `uv run printkit slice kit-esp32` để cắt lớp lại trước khi commit.
 
 ## Khai báo model
 

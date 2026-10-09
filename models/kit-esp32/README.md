@@ -12,7 +12,7 @@ Mở trong [app chung](../../#model/kit-esp32). Khối 2×2×2 đơn vị (39,8 
 ## Giả định
 - Kích thước bo từ trang bán hàng; đo bo của bạn trước khi in.
 - Lực hút nam châm chưa đo: in một mối ghép và kéo thử trước khi in cả bộ.
-- Hai hàng chân header hàn xuống, nằm ngoài các trụ (cách mép trụ 1,2 mm theo trục x) và dài 8,5 mm dưới PCB, còn cách sàn 6,2 mm.
+- Hai hàng chân header hàn xuống, nằm ngoài các trụ (thân nhựa header cách mép trụ chỉ 0,25 mm theo trục x, chân kim loại cách 1,2 mm; kích thước board lệch khoảng 0,5 mm giữa các người bán nên đo header thật trước khi in) và dài 8,5 mm dưới PCB, còn cách sàn 6,2 mm.
 - Khe USB-C rộng 12 mm, cao 6 mm, thừa hơn đầu cắm 9 × 3,2 mm của bo; ốp lưng cáp quá to có thể không vừa.
 
 ## Lắp
