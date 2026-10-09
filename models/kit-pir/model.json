@@ -1,0 +1,554 @@
+{
+  "$schema": "../../model.schema.json",
+  "schemaVersion": 1,
+  "units": "mm",
+  "category": "Module",
+  "status": "Chưa in thử",
+  "thumbnail": "thumbnail.png",
+  "title": "Module cảm biến PIR",
+  "description": "Cảm biến chuyển động HC-SR501, thấu kính nhô qua lỗ ở mặt trên, khối 2×2×2.",
+  "dimensions": [
+    39.8,
+    39.8,
+    39.8
+  ],
+  "camera": {
+    "position": [
+      47.76,
+      -79.6,
+      55.72
+    ],
+    "target": [
+      0,
+      0,
+      19.9
+    ],
+    "minDistance": 23.88,
+    "maxDistance": 238.8
+  },
+  "grid": {
+    "size": 120,
+    "divisions": 12
+  },
+  "printInfo": {
+    "summary": "Chưa in thử",
+    "sections": [
+      {
+        "title": "Cấu hình in",
+        "rows": [
+          [
+            "Máy / nhựa",
+            "Bambu Lab P1S · nozzle 0,4 mm · PLA"
+          ],
+          [
+            "Bàn in",
+            "Textured PEI Plate"
+          ],
+          [
+            "Layer / lớp đầu",
+            "0,16 / 0,2 mm"
+          ],
+          [
+            "Thành",
+            "3 vòng"
+          ],
+          [
+            "Infill",
+            "15% gyroid"
+          ],
+          [
+            "Support",
+            "Tắt"
+          ],
+          [
+            "Brim",
+            "Tự động"
+          ],
+          [
+            "top_shell_layers",
+            "5"
+          ],
+          [
+            "bottom_shell_layers",
+            "5"
+          ],
+          [
+            "wall_generator",
+            "arachne"
+          ]
+        ],
+        "notes": [],
+        "links": []
+      },
+      {
+        "title": "Lắp nam châm và vòng đệm",
+        "rows": [],
+        "notes": [
+          "Mặt dương (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.",
+          "Mua vòng đệm thép mạ kẽm, không mua inox 304/316 vì inox không hút nam châm.",
+          "Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.",
+          "Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.",
+          "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
+          "Bo 32×24 mm, thấu kính Ø23; chiều cao các trang bán hàng ghi 18 đến 30 mm không khớp nhau, hãy đo.",
+          "Mặt +z là cửa sổ cho thấu kính nên không có điểm nối.",
+          "Bo treo vào bốn trụ từ trần; lắp từ phía nắp −z rồi đóng nắp."
+        ],
+        "links": []
+      }
+    ]
+  },
+  "id": "kit-pir",
+  "parts": [
+    {
+      "id": "shell",
+      "label": "Thân",
+      "kind": "print",
+      "position": [
+        0.0,
+        0.0,
+        39.799999
+      ],
+      "rotation": [
+        180.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "shell.stl",
+          "color": "#4d9d7a"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "maxDistance": 60
+      }
+    },
+    {
+      "id": "lid",
+      "label": "Nắp",
+      "kind": "print",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "lid.stl",
+          "color": "#d9d2b8"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "maxDistance": 90
+      }
+    },
+    {
+      "id": "magnets",
+      "label": "Nam châm 5×1.5",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/magnets.stl",
+          "color": "#ef5b5b"
+        }
+      ]
+    },
+    {
+      "id": "washers",
+      "label": "Vòng đệm M6",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/washers.stl",
+          "color": "#c9d3d9"
+        }
+      ]
+    },
+    {
+      "id": "lidWashers",
+      "label": "Vòng đệm ở nắp",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/lidWashers.stl",
+          "color": "#c9d3d9"
+        }
+      ]
+    },
+    {
+      "id": "board",
+      "label": "HC-SR501",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "primitive": "box",
+          "size": [
+            32,
+            24,
+            1.2
+          ],
+          "position": [
+            0.0,
+            0.0,
+            20.3
+          ],
+          "color": "#2e8b57"
+        },
+        {
+          "src": "reference/lens.stl",
+          "color": "#e8e2d0"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            7.62,
+            2.5,
+            2.5
+          ],
+          "position": [
+            12.0,
+            -9.0,
+            18.45
+          ],
+          "color": "#27343c"
+        }
+      ]
+    }
+  ],
+  "measurements": [
+    {
+      "id": "case",
+      "label": "Vỏ module",
+      "kind": "case",
+      "followPart": "shell",
+      "color": "#efb96e",
+      "labelWidth": 32,
+      "lines": [
+        {
+          "a": [
+            -19.9,
+            -25.9,
+            0
+          ],
+          "b": [
+            19.9,
+            -25.9,
+            0
+          ],
+          "anchorA": [
+            -19.9,
+            -19.9,
+            0
+          ],
+          "anchorB": [
+            19.9,
+            -19.9,
+            0
+          ],
+          "label": "39.8 mm · Rộng",
+          "labelOffset": [
+            0,
+            -4.8,
+            0
+          ]
+        },
+        {
+          "a": [
+            25.9,
+            -19.9,
+            0
+          ],
+          "b": [
+            25.9,
+            19.9,
+            0
+          ],
+          "anchorA": [
+            19.9,
+            -19.9,
+            0
+          ],
+          "anchorB": [
+            19.9,
+            19.9,
+            0
+          ],
+          "label": "39.8 mm · Dài",
+          "labelOffset": [
+            7.6,
+            0,
+            0
+          ]
+        },
+        {
+          "a": [
+            -25.9,
+            -19.9,
+            0
+          ],
+          "b": [
+            -25.9,
+            -19.9,
+            39.8
+          ],
+          "anchorA": [
+            -19.9,
+            -19.9,
+            0
+          ],
+          "anchorB": [
+            -19.9,
+            -19.9,
+            39.8
+          ],
+          "label": "39.8 mm · Cao",
+          "labelOffset": [
+            -9,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "id": "open",
+      "label": "Mở nắp",
+      "duration": 8,
+      "openPose": {
+        "lid": [
+          0.0,
+          0.0,
+          -50.0
+        ],
+        "lidWashers": [
+          0.0,
+          0.0,
+          -50.0
+        ]
+      },
+      "tracks": [
+        {
+          "part": "lid",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0.0,
+                0.0,
+                -50.0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0.0,
+                0.0,
+                -50.0
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "lidWashers",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0.0,
+                0.0,
+                -50.0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0.0,
+                0.0,
+                -50.0
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.08,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.72,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.97,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "measureReveal": [
+        0.34,
+        0.64
+      ]
+    }
+  ],
+  "downloads": {
+    "bundle": "kit-pir.zip",
+    "step": "assembly.step"
+  }
+}
