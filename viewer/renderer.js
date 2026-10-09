@@ -62,7 +62,8 @@ export async function createViewer({model, folder, canvas, stage, tooltip, signa
   const state = () => ({playing, time, opened, animation: animation.id, manualPose});
   const notify = () => onState(state());
   const partDrag = createPartDrag({THREE, scene, camera, controls, canvas, tooltip,
-    parts: model.parts.filter(part => part.drag).map(part => ({id: part.id, label: part.label, object: parts[part.id], ...part.drag})),
+    parts: model.parts.filter(part => part.drag).map(part => ({id: part.id, label: part.label, object: parts[part.id], ...part.drag,
+      carries: (part.drag.carries ?? []).map(id => parts[id])})),
     onStart() { playing = false; measureProgress = 1; notify(); },
     onMove() { opened = true; manualPose = true; notify(); }
   });

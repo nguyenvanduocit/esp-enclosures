@@ -67,6 +67,13 @@ def test_part_decorator_caches_build():
     assert model.parts[0].print_rotation == (0, 0, 0)
 
 
+def test_drag_carries_are_rendered():
+    model = make_model()
+    model.reference("box", "Hộp", [Box("b", (2, 2, 2), (0, 0, 0), "#214f55")], drag=Drag((0, 0, 1), 5, ("magnet",)))
+    data = render(model, {}, "../../model.schema.json")
+    assert data["parts"][0]["drag"] == {"axis": [0, 0, 1], "maxDistance": 5, "carries": ["magnet"]}
+
+
 def test_render_parts_measurements_animations():
     model = make_model()
 
@@ -129,6 +136,7 @@ def test_render_parts_measurements_animations():
         {"src": "reference/cell.stl", "color": "#87b483"},
     ]
     assert board["drag"] == {"axis": [0, 0, 1], "maxDistance": 50}
+    assert "carries" not in board["drag"]
     measure = data["measurements"][0]
     assert (
         measure["color"] == "#efb96e"

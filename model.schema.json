@@ -294,6 +294,13 @@
             "maxDistance": {
               "type": "number",
               "exclusiveMinimum": 0
+            },
+            "carries": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
             }
           },
           "required": [

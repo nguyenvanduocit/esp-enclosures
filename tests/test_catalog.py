@@ -84,6 +84,47 @@ def test_drag_limits(battery_model):
         validate_model(model, folder)
 
 
+def drag_of(model, part_id):
+    return next(part for part in model["parts"] if part["id"] == part_id)["drag"]
+
+
+def test_drag_carries_existing_parts(battery_model):
+    model, folder = battery_model
+    drag_of(model, "shell")["carries"] = ["magnets", "board"]
+    assert validate_model(model, folder) is model
+
+
+def test_drag_carries_unknown_part(battery_model):
+    model, folder = battery_model
+    drag_of(model, "shell")["carries"] = ["missing"]
+    with pytest.raises(ValueError, match="carries an unknown part"):
+        validate_model(model, folder)
+
+
+def test_drag_carries_itself(battery_model):
+    model, folder = battery_model
+    drag_of(model, "lid")["carries"] = ["lid"]
+    with pytest.raises(ValueError, match="carries an unknown part or the part itself"):
+        validate_model(model, folder)
+
+
+def test_drag_carries_must_be_unique_strings(battery_model):
+    model, folder = battery_model
+    drag_of(model, "lid")["carries"] = ["lidMagnets", "lidMagnets"]
+    with pytest.raises(ValidationError):
+        validate_model(model, folder)
+
+
+@pytest.mark.parametrize("model_id, shell, lid", [
+    ("kit-battery", ["magnets", "washers", "holder", "cell", "charger"], ["lidMagnets"]),
+    ("kit-pir", ["magnets", "washers", "board"], ["lidWashers"]),
+])
+def test_kit_boxes_carry_their_fasteners_and_boards(model_id, shell, lid):
+    model = next(model for _, model in load_catalog() if model["id"] == model_id)
+    assert drag_of(model, "shell")["carries"] == shell
+    assert drag_of(model, "lid")["carries"] == lid
+
+
 def test_measurement_part(battery_model):
     model, folder = battery_model
     model["measurements"][0]["followPart"] = "missing"

@@ -148,7 +148,14 @@
           0.0,
           0.0
         ],
-        "maxDistance": 60
+        "maxDistance": 60,
+        "carries": [
+          "magnets",
+          "washers",
+          "holder",
+          "cell",
+          "charger"
+        ]
       }
     },
     {
@@ -177,7 +184,10 @@
           0.0,
           0.0
         ],
-        "maxDistance": 90
+        "maxDistance": 90,
+        "carries": [
+          "lidMagnets"
+        ]
       }
     },
     {

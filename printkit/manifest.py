@@ -14,6 +14,7 @@ MEASURE_COLORS = {"case": "#efb96e", "component": "#83caff"}
 class Drag:
     axis: tuple
     max_distance: float
+    carries: tuple = ()  # ids of parts that travel with this one along the same axis
 
 
 @dataclass(frozen=True)
@@ -367,6 +368,8 @@ def render(model, poses, schema_ref, sliced=None):
                 "axis": list(part.drag.axis),
                 "maxDistance": part.drag.max_distance,
             }
+            if part.drag.carries:
+                item["drag"]["carries"] = list(part.drag.carries)
         parts.append(item)
     declared = model.info["printInfo"]
     summary = declared["summary"]

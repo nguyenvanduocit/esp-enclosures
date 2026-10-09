@@ -147,7 +147,12 @@
           0.0,
           -1.0
         ],
-        "maxDistance": 60
+        "maxDistance": 60,
+        "carries": [
+          "magnets",
+          "washers",
+          "board"
+        ]
       }
     },
     {
@@ -176,7 +181,10 @@
           0.0,
           1.0
         ],
-        "maxDistance": 90
+        "maxDistance": 90,
+        "carries": [
+          "lidMagnets"
+        ]
       }
     },
     {

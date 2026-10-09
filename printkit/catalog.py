@@ -38,6 +38,9 @@ def validate_data(model):
             math.hypot(*part["drag"]["axis"]), 1, abs_tol=ROUNDING
         ):
             raise ValueError("Drag axis must be a unit vector")
+        carried = set(part.get("drag", {}).get("carries", ()))
+        if part["id"] in carried or not carried <= ids:
+            raise ValueError("Drag carries an unknown part or the part itself")
         if part["kind"] == "print" and any(
             "src" not in mesh for mesh in part["meshes"]
         ):

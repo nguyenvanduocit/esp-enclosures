@@ -174,6 +174,14 @@ def test_kit_model_registers_parts_references_and_checks():
     assert model.info['dimensions'] == approx([19.8, 19.8, 19.8])
 
 
+def test_dragging_a_box_carries_the_fasteners_and_boards_glued_to_it():
+    board = ('board', 'Bo', [Box('pcb', (2, 2, 2), (0, 0, 0), '#214f55')])
+    drags = {part.id: part.drag for part in small_model(refs=[board]).parts if part.drag}
+    assert drags['shell'].carries == ('magnets', 'washers', 'board')
+    assert drags['lid'].carries == ('lidMagnets',)
+    assert {part.id: part.drag.carries for part in small_model().parts if part.drag}['shell'] == ('magnets', 'washers')
+
+
 def test_kit_model_builds_single_solids_and_passes_its_checks():
     model = small_model()
     for part in model.parts:

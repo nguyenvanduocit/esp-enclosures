@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {sampleTrack, sampleAnimation, measurementLines, layerStarts, loadFraction} from '../viewer/model-core.js';
+import {sampleTrack, sampleAnimation, shiftAlong, measurementLines, layerStarts, loadFraction} from '../viewer/model-core.js';
 
 const load = id => JSON.parse(readFileSync(new URL(`../models/${id}/model.json`, import.meta.url)));
 const esp32 = load('kit-esp32');
@@ -101,4 +101,22 @@ test('load progress is known only once every download reports a size', () => {
   assert.equal(loadFraction([{loaded: 50, total: 100}, {loaded: 150, total: 300}]), .5);
   assert.equal(loadFraction([{loaded: 120, total: 100}]), 1);
   assert.equal(loadFraction([]), null);
+});
+
+test('a dragged box moves each carried part along its own axis from where that part started', () => {
+  assert.deepEqual(shiftAlong([1, 2, 3], [-1, 0, 0], 10), [-9, 2, 3]);
+  assert.deepEqual(shiftAlong([1, 2, 3], [0, 0, 1], 0), [1, 2, 3]);
+});
+
+test('every kit box carries parts that exist, never itself, and the open animation moves its lid fasteners the same way', () => {
+  for (const id of ['kit-esp32', 'kit-battery', 'kit-display', 'kit-bme280', 'kit-mpu6050', 'kit-pir']) {
+    const model = load(id);
+    const ids = new Set(model.parts.map(part => part.id));
+    for (const part of model.parts) for (const carried of part.drag?.carries ?? []) {
+      assert.ok(ids.has(carried) && carried !== part.id, `${id}: ${part.id} carries ${carried}`);
+    }
+    const lid = model.parts.find(part => part.id === 'lid');
+    const open = model.animations.find(item => item.id === 'open');
+    assert.deepEqual(new Set(open.tracks.map(track => track.part)), new Set(['lid', ...lid.drag.carries]), id);
+  }
 });

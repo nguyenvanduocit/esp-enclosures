@@ -422,9 +422,13 @@ def declare(model, spec, *, color, refs=()):
     def groups():
         return fastener_groups(spec)
 
-    model.part('shell', 'Thân', color=color, drag=Drag(tuple(-v for v in axis), 60),
+    shell_fasteners = tuple(name for name in ('magnets', 'washers') if name in groups())
+    lid_fasteners = tuple(name for name in ('lidMagnets', 'lidWashers') if name in groups())
+    carried_by_shell = shell_fasteners + tuple(ref_id for ref_id, _, _ in refs)
+
+    model.part('shell', 'Thân', color=color, drag=Drag(tuple(-v for v in axis), 60, carried_by_shell),
                print_rotation=UP[spec.lid])(lambda: wp(shapes()[0]).translate(offset))
-    model.part('lid', 'Nắp', color=LID_COLOR, drag=Drag(axis, 90),
+    model.part('lid', 'Nắp', color=LID_COLOR, drag=Drag(axis, 90, lid_fasteners),
                print_rotation=DOWN[spec.lid])(lambda: wp(shapes()[1]).translate(offset))
     for name in ('magnets', 'washers', 'lidMagnets', 'lidWashers'):
         if name in groups():
@@ -439,7 +443,7 @@ def declare(model, spec, *, color, refs=()):
     model.measure('case', 'Vỏ module', kind='case', follow='shell', lines=lines)
 
     lift = tuple(50 * v for v in axis)
-    moving = ['lid'] + [name for name in ('lidMagnets', 'lidWashers') if name in groups()]
+    moving = ['lid', *lid_fasteners]
     model.animation('open', 'Mở nắp', duration=8, open_pose={name: lift for name in moving},
                     tracks={name: pulse(lift) for name in moving}, camera=pulse((0, 0, 0)), measure_reveal=(0.34, 0.64))
 

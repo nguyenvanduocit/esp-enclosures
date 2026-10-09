@@ -1,4 +1,6 @@
 // Pointer interaction for the viewer; part axes are in world coordinates.
+import {shiftAlong} from './model-core.js';
+
 export function createPartDrag({THREE, scene, camera, controls, canvas, parts, tooltip, onStart, onMove}) {
   const events = new AbortController();
   const raycaster = new THREE.Raycaster();
@@ -72,7 +74,10 @@ export function createPartDrag({THREE, scene, camera, controls, canvas, parts, t
     if (!drag) return;
     const ended = drag;
     drag = null;
-    if (cancel) ended.part.object.position.copy(ended.startPosition);
+    if (cancel) {
+      ended.part.object.position.copy(ended.startPosition);
+      ended.part.carries.forEach((object, i) => object.position.copy(ended.carriedStarts[i]));
+    }
     controls.enabled = ended.controlsEnabled;
     if (canvas.hasPointerCapture(ended.pointerId)) canvas.releasePointerCapture(ended.pointerId);
     canvas.style.cursor = hovered ? 'grab' : '';
@@ -99,7 +104,7 @@ export function createPartDrag({THREE, scene, camera, controls, canvas, parts, t
       pixelsPerMM = rect.height/(2*camera.position.distanceTo(center)*Math.tan(THREE.MathUtils.degToRad(camera.fov/2)));
     } else screenAxis.normalize();
     drag = {part, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY,
-      startPosition: part.object.position.clone(), startOffset: offset(part), screenAxis, pixelsPerMM, fallback,
+      startPosition: part.object.position.clone(), carriedStarts: part.carries.map(object => object.position.clone()), startOffset: offset(part), screenAxis, pixelsPerMM, fallback,
       controlsEnabled: controls.enabled};
     controls.enabled = false;
     canvas.setPointerCapture(event.pointerId);
@@ -122,6 +127,7 @@ export function createPartDrag({THREE, scene, camera, controls, canvas, parts, t
     const dx = event.clientX-drag.startX, dy = event.clientY-drag.startY;
     const amount = THREE.MathUtils.clamp(drag.startOffset+(dx*drag.screenAxis.x+dy*drag.screenAxis.y)/drag.pixelsPerMM, 0, drag.part.maxDistance);
     drag.part.object.position.copy(drag.part.home).addScaledVector(drag.part.axis, amount);
+    drag.part.carries.forEach((object, i) => object.position.set(...shiftAlong(drag.carriedStarts[i].toArray(), drag.part.axis.toArray(), amount-drag.startOffset)));
     onMove(drag.part, amount);
     update();
   }, {capture: true, signal: events.signal});

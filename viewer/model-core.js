@@ -12,6 +12,11 @@ export function sampleTrack(keyframes, time) {
   return [...keyframes.at(-1).value];
 }
 
+// A carried part moves by the dragged part's displacement along the same axis, from wherever it started.
+export function shiftAlong(position, axis, distance) {
+  return position.map((value, i) => value + axis[i] * distance);
+}
+
 // Offsets are relative to the installed pose, never to the previous frame.
 export function sampleAnimation(model, animation, time) {
   const offsets = Object.fromEntries(model.parts.map(part => [part.id, [0, 0, 0]]));
