@@ -3,6 +3,8 @@ import numpy as np
 import pytest
 from pytest import approx
 
+from printkit.export import ModelError, built as build_part, run_checks
+from printkit.manifest import Box, PrintPart
 from printkit.modules import (
     cyl,
     DISC_R,
@@ -19,6 +21,7 @@ from printkit.modules import (
     disc_offsets,
     fastener_groups,
     kind,
+    kit_model,
     lid_thickness,
     outer,
     overlap_fraction,
@@ -146,3 +149,40 @@ def test_shell_and_lid_are_each_one_valid_solid(spec):
 @pytest.mark.parametrize("spec", [ZLID, ADDS_AND_CUTS], ids=["long-z-lid", "adds-and-cuts"])
 def test_pocket_probes_are_clean_on_other_lids_and_posts(spec):
     assert pocket_problems(spec, *shell_and_lid(spec)) == 0
+
+
+def small_model(**changes):
+    options = dict(title='T', description='d', spec=SPEC, color='#367c85')
+    options.update(changes)
+    return kit_model('kit-test', **options)
+
+
+def test_kit_model_registers_parts_references_and_checks():
+    model = small_model()
+    ids = [part.id for part in model.parts]
+    assert ids == ['shell', 'lid', 'magnets', 'washers', 'lidMagnets']
+    assert [name for name, _ in model.checks][:3] == ['Outer size equals units x 20 - 0.2 mm', 'Lid clears shell',
+                                                        'Magnets and washers sit in their pockets']
+    assert [a['id'] for a in model.animations] == ['open']
+    assert model.info['dimensions'] == approx([19.8, 19.8, 19.8])
+
+
+def test_kit_model_builds_single_solids_and_passes_its_checks():
+    model = small_model()
+    for part in model.parts:
+        if isinstance(part, PrintPart):
+            build_part(part.id, part.build)
+    results = run_checks(model)
+    assert results['Outer size equals units x 20 - 0.2 mm']['outer_mm'] == approx([19.8, 19.8, 19.8])
+
+
+def test_reference_inside_wall_fails():
+    bad = [('big', 'Big', [Box('b', (30, 30, 30), (10, 10, 10), '#fff')])]
+    with pytest.raises(ModelError, match='Reference parts clear shell and lid'):
+        run_checks(small_model(refs=bad))
+
+
+def test_cut_into_pocket_fails():
+    spec = ModuleSpec(cells=(1, 1, 1), lid='+y', cuts=(box((8, 0, 8), (12, 3, 12)),))
+    with pytest.raises(ModelError, match='Cut-outs clear every pocket'):
+        run_checks(small_model(spec=spec))

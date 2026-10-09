@@ -6,11 +6,17 @@ Module coordinates start at the outer corner (CLEAR, CLEAR, CLEAR); `declare` sh
 is centred in X/Y and sits on Z = 0."""
 
 import itertools
+import math
 from dataclasses import dataclass
+from functools import cache
 from typing import NamedTuple
 
 import cadquery as cq
 import numpy as np
+
+from printkit.checks import CheckFailed, clear
+from printkit.manifest import Box, Drag, Model, Print, Solid, dim, pulse
+from printkit.shapes import box_solid
 
 GRID, CLEAR, EDGE_R, WALL = 20.0, 0.1, 1.0, 2.0
 LID_PLAIN, LID_SKIRT, SKIRT_WALL, FIT = 1.8, 2.4, 1.2, 0.2
@@ -366,3 +372,129 @@ def overlap_fraction(disc_centre, ring_centre):
             )
             hit += WASH_ID / 2 <= r <= WASH_OD / 2
     return hit / total
+
+
+MAGNET_COLOR, WASHER_COLOR, LID_COLOR = '#ef5b5b', '#c9d3d9', '#d9d2b8'
+GROUP_LABELS = {'magnets': ('Nam châm 5×1.5', MAGNET_COLOR), 'washers': ('Vòng đệm M6', WASHER_COLOR),
+                'lidMagnets': ('Nam châm ở nắp', MAGNET_COLOR), 'lidWashers': ('Vòng đệm ở nắp', WASHER_COLOR)}
+STANDARD_NOTES = [
+    'Mặt dương (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.',
+    'Mua vòng đệm thép mạ kẽm, không mua inox 304/316 vì inox không hút nam châm.',
+    'Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.',
+    'Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.',
+    'Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.',
+]
+
+
+def moved_piece(piece, offset):
+    if isinstance(piece, Box):
+        return Box(piece.name, piece.size, tuple(c + o for c, o in zip(piece.center, offset)), piece.color)
+    return Solid(piece.name, wp(piece.shape).translate(offset), piece.color)
+
+
+def reference_solid(piece):
+    return box_solid(piece) if isinstance(piece, Box) else wp(piece.shape)
+
+
+def declare(model, spec, *, color, refs=()):
+    """Register shell, lid, fasteners, references, measurements, the open-lid animation and the standard checks."""
+    lo, hi = bounds(spec)
+    offset = (-(lo[0] + hi[0]) / 2, -(lo[1] + hi[1]) / 2, -lo[2])
+    W, L, H = outer(spec.cells)
+    axis = tuple(float(v) for v in unit(spec.lid))
+
+    @cache
+    def shapes():
+        return shell_and_lid(spec)
+
+    @cache
+    def groups():
+        return fastener_groups(spec)
+
+    model.part('shell', 'Thân', color=color, drag=Drag(tuple(-v for v in axis), 60),
+               print_rotation=UP[spec.lid])(lambda: wp(shapes()[0]).translate(offset))
+    model.part('lid', 'Nắp', color=LID_COLOR, drag=Drag(axis, 90),
+               print_rotation=DOWN[spec.lid])(lambda: wp(shapes()[1]).translate(offset))
+    for name in ('magnets', 'washers', 'lidMagnets', 'lidWashers'):
+        if name in groups():
+            label, colour = GROUP_LABELS[name]
+            model.reference(name, label, [Solid(name, wp(groups()[name]).translate(offset), colour)])
+    for ref_id, label, pieces in refs:
+        model.reference(ref_id, label, [moved_piece(piece, offset) for piece in pieces])
+
+    lines = [dim((-W / 2, -L / 2, 0), (W / 2, -L / 2, 0), (0, -6, 0), 'Rộng', (0, -4.8, 0)),
+             dim((W / 2, -L / 2, 0), (W / 2, L / 2, 0), (6, 0, 0), 'Dài', (7.6, 0, 0)),
+             dim((-W / 2, -L / 2, 0), (-W / 2, -L / 2, H), (-6, 0, 0), 'Cao', (-9, 0, 0))]
+    model.measure('case', 'Vỏ module', kind='case', follow='shell', lines=lines)
+
+    lift = tuple(50 * v for v in axis)
+    moving = ['lid'] + [name for name in ('lidMagnets', 'lidWashers') if name in groups()]
+    model.animation('open', 'Mở nắp', duration=8, open_pose={name: lift for name in moving},
+                    tracks={name: pulse(lift) for name in moving}, camera=pulse((0, 0, 0)), measure_reveal=(0.34, 0.64))
+
+    @model.check('Outer size equals units x 20 - 0.2 mm')
+    def outer_size():
+        bb = cq.Compound.makeCompound(list(shapes())).BoundingBox()
+        got = (bb.xlen, bb.ylen, bb.zlen)
+        if any(abs(g - w) > 0.01 for g, w in zip(got, (W, L, H))):
+            raise CheckFailed(f'outer {tuple(round(g, 2) for g in got)} differs from {(W, L, H)}')
+        return {'outer_mm': [round(v, 2) for v in got]}
+
+    @model.check('Lid clears shell')
+    def lid_clears_shell():
+        volume = shapes()[0].intersect(shapes()[1]).Volume()
+        if volume >= 1e-3:
+            raise CheckFailed(f'lid overlaps shell by {volume:.4f} mm³')
+
+    @model.check('Magnets and washers sit in their pockets')
+    def fasteners_in_pockets():
+        shell, lid = shapes()
+        volume = sum(g.intersect(shell).Volume() + g.intersect(lid).Volume() for g in groups().values())
+        bb = cq.Compound.makeCompound(list(groups().values())).BoundingBox()
+        out = [bb.xmin < lo[0] - 1e-6, bb.ymin < lo[1] - 1e-6, bb.zmin < lo[2] - 1e-6,
+               bb.xmax > hi[0] + 1e-6, bb.ymax > hi[1] + 1e-6, bb.zmax > hi[2] + 1e-6]
+        if volume >= 1e-3 or any(out):
+            raise CheckFailed(f'fasteners cut the wall by {volume:.4f} mm³ or stand out of the outer box')
+        return {'magnets': bom(spec)['magnets'], 'washers': bom(spec)['washers']}
+
+    @model.check('Connectors: pockets void, floors solid, interior flat, ports open')
+    def connectors():
+        wrong = pocket_problems(spec, *shapes())
+        if wrong:
+            raise CheckFailed(f'{wrong} probes failed')
+
+    @model.check('Plain faces are solid wall')
+    def plain_faces():
+        wrong = plain_problems(spec, shapes()[0])
+        if wrong:
+            raise CheckFailed(f'{wrong} sample points are open')
+
+    @model.check('Cut-outs clear every pocket')
+    def cut_outs():
+        volume = cut_clash_volume(spec)
+        if volume >= 1e-3:
+            raise CheckFailed(f'cut-outs overlap pockets by {volume:.4f} mm³')
+
+    @model.check('Reference parts clear shell and lid')
+    def reference_parts():
+        shell, lid = wp(shapes()[0]), wp(shapes()[1])
+        for ref_id, _, pieces in refs:
+            for piece in pieces:
+                clear(reference_solid(piece), shell=shell, lid=lid)
+
+
+def kit_model(model_id, *, title, description, spec, color, refs=(), notes=(), sections=()):
+    W, L, H = outer(spec.cells)
+    size = max(W, L, H)
+    grid = int(20 * math.ceil(3 * size / 20))
+    info = {'summary': 'Chưa in thử', 'sections': [
+        {'title': 'Lắp nam châm và vòng đệm', 'rows': [], 'notes': [*STANDARD_NOTES, *notes], 'links': []}, *sections]}
+    model = Model(model_id, title=title, description=description, category='Module', status='Chưa in thử',
+                  thumbnail='thumbnail.png', dimensions=(W, L, H),
+                  camera={'position': [1.2 * size, -2.0 * size, 1.4 * size], 'target': [0, 0, H / 2],
+                          'minDistance': 0.6 * size, 'maxDistance': 6 * size},
+                  grid={'size': grid, 'divisions': grid // 10}, print_info=info,
+                  print=Print(layer=0.16, first_layer=0.2, walls=3, infill=(15, 'gyroid'), supports=False, brim='auto',
+                              extra={'top_shell_layers': 5, 'bottom_shell_layers': 5, 'wall_generator': 'arachne'}))
+    declare(model, spec, color=color, refs=refs)
+    return model
