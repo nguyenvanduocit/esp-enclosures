@@ -31,7 +31,7 @@
     "divisions": 24
   },
   "printInfo": {
-    "summary": "Chưa in thử",
+    "summary": "23,9 g PLA · 1 giờ 17 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -92,6 +92,28 @@
           "Mặt +z là màn hình nên không có điểm nối.",
           "Cửa sổ 49×37 mm theo vùng hiển thị 48,96×36,72 mm; kính 60×40 mm là giả định, hãy đo màn hình của bạn.",
           "Bo lắp từ phía nắp +y rồi trượt vào dưới khung."
+        ],
+        "links": []
+      },
+      {
+        "title": "Kết quả slice",
+        "rows": [
+          [
+            "Thân (in riêng)",
+            "20,3 g · 1 giờ 5 phút"
+          ],
+          [
+            "Nắp (in riêng)",
+            "3,7 g · 12 phút"
+          ],
+          [
+            "Cả bàn in",
+            "23,9 g · 1 giờ 17 phút · 361 lớp"
+          ]
+        ],
+        "notes": [
+          "Bambu Studio 02.08.02.61 với cấu hình ở trên. Số liệu từng chi tiết tính cho việc in riêng chi tiết đó (mỗi lần gồm nhựa và thời gian mồi/kết thúc), nên không cộng lại thành số của cả bàn in.",
+          "Mở file .gcode.3mf trong Bambu Studio để xem preview hoặc gửi sang máy in."
         ],
         "links": []
       }
@@ -546,5 +568,25 @@
   "downloads": {
     "bundle": "kit-display.zip",
     "step": "assembly.step"
+  },
+  "print": {
+    "project": "print/kit-display.gcode.3mf",
+    "layers": "print/layers.json",
+    "slicer": "Bambu Studio 02.08.02.61",
+    "seconds": 4593,
+    "grams": 23.94,
+    "layerCount": 361,
+    "parts": [
+      {
+        "id": "shell",
+        "seconds": 3924,
+        "grams": 20.32
+      },
+      {
+        "id": "lid",
+        "seconds": 725,
+        "grams": 3.71
+      }
+    ]
   }
 }

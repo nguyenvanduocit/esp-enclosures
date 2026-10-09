@@ -69,7 +69,9 @@ test('layer starts count two vertices per polyline segment', () => {
 
 test('sliced models ship toolpaths for every layer', () => {
   const ids = JSON.parse(readFileSync(new URL('../models.json', import.meta.url))).map(path => path.split('/')[1]);
-  for (const id of ids.filter(id => load(id).print)) {
+  const sliced = ids.filter(id => load(id).print);
+  assert.deepEqual(sliced, ['kit-esp32', 'kit-battery', 'kit-display', 'kit-bme280', 'kit-mpu6050', 'kit-pir']);
+  for (const id of sliced) {
     const model = load(id);
     const data = JSON.parse(readFileSync(new URL(`../models/${id}/${model.print.layers}`, import.meta.url)));
     assert.equal(data.layers.length, model.print.layerCount);

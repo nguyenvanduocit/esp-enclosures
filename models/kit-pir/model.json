@@ -31,7 +31,7 @@
     "divisions": 12
   },
   "printInfo": {
-    "summary": "Chưa in thử",
+    "summary": "16,3 g PLA · 1 giờ 3 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -92,6 +92,28 @@
           "Bo 32×24 mm, thấu kính Ø23; chiều cao các trang bán hàng ghi 18 đến 30 mm không khớp nhau, hãy đo.",
           "Mặt +z là cửa sổ cho thấu kính nên không có điểm nối.",
           "Bo treo vào bốn trụ từ trần; lắp từ phía nắp −z rồi đóng nắp."
+        ],
+        "links": []
+      },
+      {
+        "title": "Kết quả slice",
+        "rows": [
+          [
+            "Thân (in riêng)",
+            "13 g · 55 phút"
+          ],
+          [
+            "Nắp (in riêng)",
+            "3,4 g · 9 phút"
+          ],
+          [
+            "Cả bàn in",
+            "16,3 g · 1 giờ 3 phút · 236 lớp"
+          ]
+        ],
+        "notes": [
+          "Bambu Studio 02.08.02.61 với cấu hình ở trên. Số liệu từng chi tiết tính cho việc in riêng chi tiết đó (mỗi lần gồm nhựa và thời gian mồi/kết thúc), nên không cộng lại thành số của cả bàn in.",
+          "Mở file .gcode.3mf trong Bambu Studio để xem preview hoặc gửi sang máy in."
         ],
         "links": []
       }
@@ -550,5 +572,25 @@
   "downloads": {
     "bundle": "kit-pir.zip",
     "step": "assembly.step"
+  },
+  "print": {
+    "project": "print/kit-pir.gcode.3mf",
+    "layers": "print/layers.json",
+    "slicer": "Bambu Studio 02.08.02.61",
+    "seconds": 3776,
+    "grams": 16.29,
+    "layerCount": 236,
+    "parts": [
+      {
+        "id": "shell",
+        "seconds": 3292,
+        "grams": 12.98
+      },
+      {
+        "id": "lid",
+        "seconds": 546,
+        "grams": 3.4
+      }
+    ]
   }
 }

@@ -1566,5 +1566,25 @@
   },
   "warnings": [
     "lid: set print_rotation to (90, 90, 0) to cut overhang from 804.9 mm² to 442.0 mm²"
-  ]
+  ],
+  "print": {
+    "project": "print/kit-battery.gcode.3mf",
+    "layers": "print/layers.json",
+    "slicer": "Bambu Studio 02.08.02.61",
+    "seconds": 7870,
+    "grams": 36.54,
+    "layerCount": 361,
+    "parts": [
+      {
+        "id": "shell",
+        "seconds": 6675,
+        "grams": 29.7
+      },
+      {
+        "id": "lid",
+        "seconds": 1243,
+        "grams": 6.93
+      }
+    ]
+  }
 }

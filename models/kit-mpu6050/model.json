@@ -31,7 +31,7 @@
     "divisions": 12
   },
   "printInfo": {
-    "summary": "Chưa in thử",
+    "summary": "10,6 g PLA · 39 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -92,6 +92,28 @@
           "Bo khoảng 20,5×16 mm theo trang bán hàng, các nơi ghi 20×16 đến 21×16,4; đo bo của bạn.",
           "Hàng chân cắm nằm ở cạnh −y của bo, dọc theo chiều dài bo (trục x của mô hình); mô hình không đánh dấu trục của chip.",
           "Hàn dây trực tiếp hoặc dùng dải chân cắm ngắn: từ đỉnh chip tới tấm nắp còn 9,4 mm."
+        ],
+        "links": []
+      },
+      {
+        "title": "Kết quả slice",
+        "rows": [
+          [
+            "Thân (in riêng)",
+            "7,1 g · 29 phút"
+          ],
+          [
+            "Nắp (in riêng)",
+            "3,6 g · 12 phút"
+          ],
+          [
+            "Cả bàn in",
+            "10,6 g · 39 phút · 111 lớp"
+          ]
+        ],
+        "notes": [
+          "Bambu Studio 02.08.02.61 với cấu hình ở trên. Số liệu từng chi tiết tính cho việc in riêng chi tiết đó (mỗi lần gồm nhựa và thời gian mồi/kết thúc), nên không cộng lại thành số của cả bàn in.",
+          "Mở file .gcode.3mf trong Bambu Studio để xem preview hoặc gửi sang máy in."
         ],
         "links": []
       }
@@ -560,5 +582,25 @@
   "downloads": {
     "bundle": "kit-mpu6050.zip",
     "step": "assembly.step"
+  },
+  "print": {
+    "project": "print/kit-mpu6050.gcode.3mf",
+    "layers": "print/layers.json",
+    "slicer": "Bambu Studio 02.08.02.61",
+    "seconds": 2366,
+    "grams": 10.58,
+    "layerCount": 111,
+    "parts": [
+      {
+        "id": "shell",
+        "seconds": 1730,
+        "grams": 7.09
+      },
+      {
+        "id": "lid",
+        "seconds": 696,
+        "grams": 3.59
+      }
+    ]
   }
 }

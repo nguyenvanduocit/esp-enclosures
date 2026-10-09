@@ -31,7 +31,7 @@
     "divisions": 12
   },
   "printInfo": {
-    "summary": "Chưa in thử",
+    "summary": "16,4 g PLA · 1 giờ 4 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -91,6 +91,28 @@
           "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
           "Bốn trụ đỡ mặt dưới PCB; bo cần cố định thêm bằng keo hoặc băng dính.",
           "Khe USB-C nằm trong dải giữa hai hàng lỗ khoét ở mặt −y, nên không cắt vào lỗ nào."
+        ],
+        "links": []
+      },
+      {
+        "title": "Kết quả slice",
+        "rows": [
+          [
+            "Thân (in riêng)",
+            "12,9 g · 53 phút"
+          ],
+          [
+            "Nắp (in riêng)",
+            "3,6 g · 12 phút"
+          ],
+          [
+            "Cả bàn in",
+            "16,4 g · 1 giờ 4 phút · 236 lớp"
+          ]
+        ],
+        "notes": [
+          "Bambu Studio 02.08.02.61 với cấu hình ở trên. Số liệu từng chi tiết tính cho việc in riêng chi tiết đó (mỗi lần gồm nhựa và thời gian mồi/kết thúc), nên không cộng lại thành số của cả bàn in.",
+          "Mở file .gcode.3mf trong Bambu Studio để xem preview hoặc gửi sang máy in."
         ],
         "links": []
       }
@@ -825,5 +847,25 @@
   "downloads": {
     "bundle": "kit-esp32.zip",
     "step": "assembly.step"
+  },
+  "print": {
+    "project": "print/kit-esp32.gcode.3mf",
+    "layers": "print/layers.json",
+    "slicer": "Bambu Studio 02.08.02.61",
+    "seconds": 3839,
+    "grams": 16.44,
+    "layerCount": 236,
+    "parts": [
+      {
+        "id": "shell",
+        "seconds": 3203,
+        "grams": 12.94
+      },
+      {
+        "id": "lid",
+        "seconds": 698,
+        "grams": 3.59
+      }
+    ]
   }
 }

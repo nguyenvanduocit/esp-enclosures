@@ -31,7 +31,7 @@
     "divisions": 6
   },
   "printInfo": {
-    "summary": "Chưa in thử",
+    "summary": "3,8 g PLA · 18 phút · Bambu P1S",
     "sections": [
       {
         "title": "Cấu hình in",
@@ -92,6 +92,28 @@
           "Chiều rộng trong 15,8 mm cho bo 15,4 mm: chỉ còn 0,4 mm cho cả hai bên (0,2 mm mỗi bên). Hãy đo bo của bạn, nếu lớn hơn thì cần khối 2×1×1.",
           "Dưới đầu cắm chỉ còn 4,2 mm tới sàn, không đủ cho đầu Dupont: hàn dây trực tiếp vào bo.",
           "Mặt −y trơn có ba khe thoáng để cảm biến đo không khí ngoài."
+        ],
+        "links": []
+      },
+      {
+        "title": "Kết quả slice",
+        "rows": [
+          [
+            "Thân (in riêng)",
+            "2,8 g · 15 phút"
+          ],
+          [
+            "Nắp (in riêng)",
+            "1 g · 4 phút"
+          ],
+          [
+            "Cả bàn in",
+            "3,8 g · 18 phút · 111 lớp"
+          ]
+        ],
+        "notes": [
+          "Bambu Studio 02.08.02.61 với cấu hình ở trên. Số liệu từng chi tiết tính cho việc in riêng chi tiết đó (mỗi lần gồm nhựa và thời gian mồi/kết thúc), nên không cộng lại thành số của cả bàn in.",
+          "Mở file .gcode.3mf trong Bambu Studio để xem preview hoặc gửi sang máy in."
         ],
         "links": []
       }
@@ -560,5 +582,25 @@
   "downloads": {
     "bundle": "kit-bme280.zip",
     "step": "assembly.step"
+  },
+  "print": {
+    "project": "print/kit-bme280.gcode.3mf",
+    "layers": "print/layers.json",
+    "slicer": "Bambu Studio 02.08.02.61",
+    "seconds": 1108,
+    "grams": 3.76,
+    "layerCount": 111,
+    "parts": [
+      {
+        "id": "shell",
+        "seconds": 928,
+        "grams": 2.84
+      },
+      {
+        "id": "lid",
+        "seconds": 267,
+        "grams": 1.01
+      }
+    ]
   }
 }

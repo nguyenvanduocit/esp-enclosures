@@ -678,5 +678,25 @@
   },
   "warnings": [
     "lid: set print_rotation to (90, 0, 0) to cut overhang from 481.1 mm² to 257.4 mm²"
-  ]
+  ],
+  "print": {
+    "project": "print/kit-pir.gcode.3mf",
+    "layers": "print/layers.json",
+    "slicer": "Bambu Studio 02.08.02.61",
+    "seconds": 3776,
+    "grams": 16.29,
+    "layerCount": 236,
+    "parts": [
+      {
+        "id": "shell",
+        "seconds": 3292,
+        "grams": 12.98
+      },
+      {
+        "id": "lid",
+        "seconds": 546,
+        "grams": 3.4
+      }
+    ]
+  }
 }
