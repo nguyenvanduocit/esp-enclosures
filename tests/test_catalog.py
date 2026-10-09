@@ -12,17 +12,20 @@ from printkit.catalog import ROOT, load_catalog, validate_model
 @pytest.fixture
 def battery_model():
     manifest = next(
-        path
-        for path, model in load_catalog()
-        if model["id"] == "esp32-c3-supermini-18650"
+        path for path, model in load_catalog() if model["id"] == "kit-esp32"
     )
     return json.loads(manifest.read_text()), manifest.parent
 
 
 def test_all_models():
-    assert {"esp32-c3-supermini", "esp32-c3-supermini-18650"} <= {
-        model["id"] for _, model in load_catalog()
-    }
+    assert {
+        "kit-esp32",
+        "kit-battery",
+        "kit-display",
+        "kit-bme280",
+        "kit-mpu6050",
+        "kit-pir",
+    } <= {model["id"] for _, model in load_catalog()}
 
 
 def test_unknown_schema_version(battery_model):
@@ -76,7 +79,7 @@ def test_keyframe_order(battery_model):
 
 def test_drag_limits(battery_model):
     model, folder = battery_model
-    model["animations"][0]["openPose"]["usbCap"] = [0, -100, 0]
+    model["animations"][0]["openPose"]["lid"] = [0, -100, 0]
     with pytest.raises(ValueError, match="removal axis or limits"):
         validate_model(model, folder)
 
@@ -90,6 +93,10 @@ def test_measurement_part(battery_model):
 
 def test_variant_line_count(battery_model):
     model, folder = battery_model
+    measurement = model["measurements"][0]
+    measurement["variants"] = [
+        {"whenHidden": "lid", "lines": list(measurement["lines"])}
+    ]
     model["measurements"][0]["variants"][0]["lines"].pop()
     with pytest.raises(ValueError, match="same number"):
         validate_model(model, folder)
@@ -97,11 +104,9 @@ def test_variant_line_count(battery_model):
 
 @pytest.fixture
 def broken_catalog(tmp_path, monkeypatch):
-    folder = tmp_path / "models/esp32-c3-supermini-18650"
-    shutil.copytree(ROOT / "models/esp32-c3-supermini-18650", folder)
-    (tmp_path / "models.json").write_text(
-        json.dumps(["models/esp32-c3-supermini-18650/model.json"])
-    )
+    folder = tmp_path / "models/kit-esp32"
+    shutil.copytree(ROOT / "models/kit-esp32", folder)
+    (tmp_path / "models.json").write_text(json.dumps(["models/kit-esp32/model.json"]))
     monkeypatch.setattr(catalog, "ROOT", tmp_path)
     manifest = folder / "model.json"
 
@@ -126,21 +131,35 @@ def test_catalog_errors_start_with_manifest_path(broken_catalog, change):
     with pytest.raises(ValueError) as error:
         load_catalog()
     message = str(error.value)
-    assert message.startswith("models/esp32-c3-supermini-18650/model.json: ")
+    assert message.startswith("models/kit-esp32/model.json: ")
     assert len(message) < 300
 
 
 def test_print_block_parts_must_be_print_parts(battery_model):
     model, folder = battery_model
-    model['print'] = {'project': 'base.stl', 'layers': 'base.stl', 'slicer': 'Bambu Studio x', 'seconds': 1,
-                      'grams': 1, 'layerCount': 1, 'parts': [{'id': 'board', 'seconds': 1, 'grams': 1}]}
-    with pytest.raises(ValueError, match='Print stats'):
+    model["print"] = {
+        "project": "base.stl",
+        "layers": "base.stl",
+        "slicer": "Bambu Studio x",
+        "seconds": 1,
+        "grams": 1,
+        "layerCount": 1,
+        "parts": [{"id": "board", "seconds": 1, "grams": 1}],
+    }
+    with pytest.raises(ValueError, match="Print stats"):
         validate_model(model, folder)
 
 
 def test_print_files_must_exist(battery_model):
     model, folder = battery_model
-    model['print'] = {'project': 'print/missing.gcode.3mf', 'layers': 'print/layers.json', 'slicer': 'Bambu Studio x',
-                      'seconds': 1, 'grams': 1, 'layerCount': 1, 'parts': []}
-    with pytest.raises(ValueError, match='Missing or invalid asset'):
+    model["print"] = {
+        "project": "print/missing.gcode.3mf",
+        "layers": "print/layers.json",
+        "slicer": "Bambu Studio x",
+        "seconds": 1,
+        "grams": 1,
+        "layerCount": 1,
+        "parts": [],
+    }
+    with pytest.raises(ValueError, match="Missing or invalid asset"):
         validate_model(model, folder)

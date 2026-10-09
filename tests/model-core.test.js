@@ -4,8 +4,8 @@ import {readFileSync} from 'node:fs';
 import {sampleTrack, sampleAnimation, measurementLines, layerStarts, loadFraction} from '../viewer/model-core.js';
 
 const load = id => JSON.parse(readFileSync(new URL(`../models/${id}/model.json`, import.meta.url)));
-const battery = load('esp32-c3-supermini-18650');
-const small = load('esp32-c3-supermini');
+const esp32 = load('kit-esp32');
+const battery = load('kit-battery');
 
 test('keyframes interpolate and clamp independently of frame history', () => {
   const keys = [{time: 0, value: [0, 0, 0]}, {time: 1, value: [2, -10, 30]}];
@@ -16,7 +16,7 @@ test('keyframes interpolate and clamp independently of frame history', () => {
 });
 
 test('all model animations return every part and camera to its installed pose', () => {
-  for (const model of [battery, small]) for (const animation of model.animations) {
+  for (const model of [esp32, battery]) for (const animation of model.animations) {
     for (const time of [0, 1]) {
       const frame = sampleAnimation(model, animation, time);
       assert.ok(Object.values(frame.offsets).every(offset => offset.every(value => value === 0)));
@@ -25,30 +25,27 @@ test('all model animations return every part and camera to its installed pose', 
   }
 });
 
-test('battery replacement opens its lid before lifting the cell; other parts stay home', () => {
-  const animation = battery.animations.find(item => item.id === 'battery');
-  const early = sampleAnimation(battery, animation, .2);
-  assert.ok(early.offsets.batteryLid[2] > 0);
-  assert.equal(early.offsets.cell[2], 0);
-  const open = sampleAnimation(battery, animation, .5);
-  assert.equal(open.offsets.batteryLid[2], 65);
-  assert.equal(open.offsets.cell[2], 40);
-  assert.deepEqual(open.offsets.electronicsLid, [0, 0, 0]);
-  assert.deepEqual(open.offsets.usbCap, [0, 0, 0]);
+test('opening the lid lifts it and its fasteners; other parts stay home', () => {
+  const animation = battery.animations.find(item => item.id === 'open');
+  const moving = new Set(animation.tracks.map(track => track.part));
+  const frame = sampleAnimation(battery, animation, .4);
+  assert.ok(frame.offsets.lid.some(value => value !== 0));
+  for (const part of battery.parts) if (!moving.has(part.id)) assert.deepEqual(frame.offsets[part.id], [0, 0, 0]);
 });
 
-test('USB removal follows its own axis without moving lids', () => {
-  const frame = sampleAnimation(battery, battery.animations.find(item => item.id === 'usb'), .5);
-  assert.deepEqual(frame.offsets.usbCap, [0, -24, 0]);
-  assert.deepEqual(frame.offsets.batteryLid, [0, 0, 0]);
+test('lid follows its own removal axis without moving the shell', () => {
+  const animation = battery.animations.find(item => item.id === 'open');
+  const frame = sampleAnimation(battery, animation, .5);
+  assert.deepEqual(frame.offsets.lid, animation.openPose.lid);
+  assert.deepEqual(frame.offsets.shell, [0, 0, 0]);
 });
 
-test('measurements keep assembled height; hidden cap changes only the configured variant', () => {
+test('measurements keep assembled size; a variant replaces lines only while its part is hidden', () => {
   const spec = battery.measurements.find(item => item.kind === 'case');
-  assert.equal(measurementLines(spec, {usbCap: true})[1].label, '85.2 mm · Dài');
-  const hidden = measurementLines(spec, {usbCap: false});
-  assert.equal(hidden[1].label, '84 mm · Dài');
-  assert.equal(hidden[2].b[2] - hidden[2].a[2], 27.2);
+  assert.equal(measurementLines(spec, {lid: true})[2].label, '39.8 mm · Cao');
+  const variant = {...spec, variants: [{whenHidden: 'lid', lines: spec.lines.slice(0, 2)}]};
+  assert.equal(measurementLines(variant, {lid: true}).length, 3);
+  assert.equal(measurementLines(variant, {lid: false}).length, 2);
 });
 
 test('arbitrary model and part ids work without enclosure-specific branches', () => {
@@ -71,7 +68,8 @@ test('layer starts count two vertices per polyline segment', () => {
 });
 
 test('sliced models ship toolpaths for every layer', () => {
-  for (const id of ['esp32-c3-supermini', 'esp32-c3-supermini-18650']) {
+  const ids = JSON.parse(readFileSync(new URL('../models.json', import.meta.url))).map(path => path.split('/')[1]);
+  for (const id of ids.filter(id => load(id).print)) {
     const model = load(id);
     const data = JSON.parse(readFileSync(new URL(`../models/${id}/${model.print.layers}`, import.meta.url)));
     assert.equal(data.layers.length, model.print.layerCount);

@@ -7,6 +7,7 @@ Mỗi model là một file `model.py`. `printkit` dựng CAD, kiểm tra, xuất
 ```text
 printkit/                  Toolkit Python: khai báo, CAD, kiểm tra, xuất, đóng gói
 printkit/library/          Linh kiện tham khảo dùng lại (điện tử…)
+printkit/modules.py        Chuẩn module: đơn vị 20 mm, điểm nối, vỏ, nắp, kiểm tra
 models/<id>/model.py       Nguồn duy nhất của model
 models/<id>/README.md      Ghi chú, giả định, nguồn số liệu
 models/<id>/thumbnail.png  Ảnh gallery (chụp tay)
@@ -35,6 +36,14 @@ python3 -m http.server 8000  # mở http://localhost:8000
 Với model đã `slice`, màn hình model có nút **Mô phỏng in** mở `#print/<id>`: màn hình riêng chỉ có bàn in và đường chạy đầu in. Kéo thanh lớp hoặc bấm phát để chạy từng lớp, bật/tắt từng loại đường (thành ngoài, thành trong, infill…); các lớp bên dưới lớp đang xem được làm mờ. Sidebar có khối lượng nhựa, thời gian và số lớp từ khối `print`, và nút **Xem mô hình 3D** để quay lại. Dữ liệu đọc từ `print/layers.json` do `slice` sinh ra; model chưa slice không hiện nút này và không tải dữ liệu in, còn `#print/<id>` của nó báo chưa có dữ liệu in.
 
 `cad` in cảnh báo hướng in ra stderr, dạng `warning: lid: set print_rotation to (0, 0, 180) …`: giá trị gợi ý là `print_rotation` tuyệt đối, dán thẳng vào `model.py`. Cùng thông tin nằm trong `verification.json`: khối `printability` (mỗi chi tiết có `overhang_mm2`, `bridges`, xếp hạng 6 hướng in `orientations`) và danh sách `warnings`.
+
+## Module
+
+Các model `kit-*` theo chuẩn module trong `printkit/modules.py`: kích thước tính theo đơn vị 20 mm, mỗi đơn vị có một điểm nối ở giữa mặt. Mặt `+x +y +z` mang 4 nam châm tròn mỗi đơn vị; mặt `−x −y −z` mang 1 vòng đệm thép mỗi đơn vị, nên hai module luôn ghép nam châm với thép và giữ được ở mọi góc xoay quanh trục nối. Mọi hốc điểm nối sâu đúng bằng chi tiết đặt trong đó, nên nam châm và vòng đệm nằm phẳng với mặt vỏ. Ví dụ dựng một module:
+
+```sh
+uv run printkit cad kit-esp32
+```
 
 ## Khai báo model
 

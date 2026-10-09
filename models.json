@@ -1,5 +1,9 @@
 [
-  "models/esp32-c3-supermini-18650/model.json",
-  "models/esp32-c3-supermini/model.json",
+  "models/kit-esp32/model.json",
+  "models/kit-battery/model.json",
+  "models/kit-display/model.json",
+  "models/kit-bme280/model.json",
+  "models/kit-mpu6050/model.json",
+  "models/kit-pir/model.json",
   "models/ps4-wraeclast-stand/model.json"
 ]
