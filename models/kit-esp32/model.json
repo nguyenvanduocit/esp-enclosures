@@ -1,0 +1,829 @@
+{
+  "$schema": "../../model.schema.json",
+  "schemaVersion": 1,
+  "units": "mm",
+  "category": "Module",
+  "status": "Chưa in thử",
+  "thumbnail": "thumbnail.png",
+  "title": "Module ESP32-C3 mini",
+  "description": "Bo ESP32-C3 SuperMini trong khối 2×2×2, cổng USB-C ở mặt trước.",
+  "dimensions": [
+    39.8,
+    39.8,
+    39.8
+  ],
+  "camera": {
+    "position": [
+      47.76,
+      -79.6,
+      55.72
+    ],
+    "target": [
+      0,
+      0,
+      19.9
+    ],
+    "minDistance": 23.88,
+    "maxDistance": 238.8
+  },
+  "grid": {
+    "size": 120,
+    "divisions": 12
+  },
+  "printInfo": {
+    "summary": "Chưa in thử",
+    "sections": [
+      {
+        "title": "Cấu hình in",
+        "rows": [
+          [
+            "Máy / nhựa",
+            "Bambu Lab P1S · nozzle 0,4 mm · PLA"
+          ],
+          [
+            "Bàn in",
+            "Textured PEI Plate"
+          ],
+          [
+            "Layer / lớp đầu",
+            "0,16 / 0,2 mm"
+          ],
+          [
+            "Thành",
+            "3 vòng"
+          ],
+          [
+            "Infill",
+            "15% gyroid"
+          ],
+          [
+            "Support",
+            "Tắt"
+          ],
+          [
+            "Brim",
+            "Tự động"
+          ],
+          [
+            "top_shell_layers",
+            "5"
+          ],
+          [
+            "bottom_shell_layers",
+            "5"
+          ],
+          [
+            "wall_generator",
+            "arachne"
+          ]
+        ],
+        "notes": [],
+        "links": []
+      },
+      {
+        "title": "Lắp nam châm và vòng đệm",
+        "rows": [],
+        "notes": [
+          "Mặt dương (+x, +y, +z) lắp 4 nam châm tròn 5×1,5 mỗi đơn vị. Mặt âm (−x, −y, −z) lắp 1 vòng đệm thép M6 (12×6,4×1,6) mỗi đơn vị. Mối ghép luôn là nam châm hút sắt.",
+          "Mua vòng đệm thép mạ kẽm, không mua inox 304/316 vì inox không hút nam châm.",
+          "Dán từng nam châm và vòng đệm bằng keo; phía sau chúng chỉ còn sàn 0,4 đến 0,5 mm nên lực hút kéo chúng ra khỏi lỗ nếu không dán.",
+          "Không cần lắp kín mọi lỗ: một mối ghép cần 4 nam châm ở mặt dương và 1 vòng đệm ở mặt âm.",
+          "Lực hút chưa đo. In một mối ghép và kéo thử trước khi in cả bộ.",
+          "Bốn trụ đỡ mặt dưới PCB; bo cần cố định thêm bằng keo hoặc băng dính.",
+          "Khe USB-C nằm trong dải giữa hai hàng lỗ khoét ở mặt −y, nên không cắt vào lỗ nào."
+        ],
+        "links": []
+      }
+    ]
+  },
+  "id": "kit-esp32",
+  "parts": [
+    {
+      "id": "shell",
+      "label": "Thân",
+      "kind": "print",
+      "position": [
+        0.0,
+        -19.9,
+        19.9
+      ],
+      "rotation": [
+        -90.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "shell.stl",
+          "color": "#367c85"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "maxDistance": 60
+      }
+    },
+    {
+      "id": "lid",
+      "label": "Nắp",
+      "kind": "print",
+      "position": [
+        0.0,
+        19.9,
+        19.9
+      ],
+      "rotation": [
+        90.0,
+        0.0,
+        0.0
+      ],
+      "meshes": [
+        {
+          "src": "lid.stl",
+          "color": "#d9d2b8"
+        }
+      ],
+      "drag": {
+        "axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "maxDistance": 90
+      }
+    },
+    {
+      "id": "magnets",
+      "label": "Nam châm 5×1.5",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/magnets.stl",
+          "color": "#ef5b5b"
+        }
+      ]
+    },
+    {
+      "id": "washers",
+      "label": "Vòng đệm M6",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/washers.stl",
+          "color": "#c9d3d9"
+        }
+      ]
+    },
+    {
+      "id": "lidMagnets",
+      "label": "Nam châm ở nắp",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "src": "reference/lidMagnets.stl",
+          "color": "#ef5b5b"
+        }
+      ]
+    },
+    {
+      "id": "board",
+      "label": "ESP32-C3 SuperMini",
+      "kind": "reference",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "meshes": [
+        {
+          "primitive": "box",
+          "size": [
+            18.0,
+            22.5,
+            1.6
+          ],
+          "position": [
+            0.0,
+            -4.65,
+            17.5
+          ],
+          "color": "#214f55"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            9,
+            7.2,
+            3.2
+          ],
+          "position": [
+            0.0,
+            -13.8,
+            19.9
+          ],
+          "color": "#c3cbd0"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            5,
+            5,
+            1
+          ],
+          "position": [
+            0.0,
+            -4.65,
+            18.8
+          ],
+          "color": "#24343c"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            2.5,
+            3.4,
+            1.2
+          ],
+          "position": [
+            4.3,
+            3.25,
+            18.9
+          ],
+          "color": "#d2bda0"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            2.54,
+            20.32,
+            2.5
+          ],
+          "position": [
+            -7.62,
+            -4.65,
+            15.45
+          ],
+          "color": "#27343c"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -13.54,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -11.0,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -8.46,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -5.92,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -3.38,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            -0.84,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            1.7,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            -7.62,
+            4.24,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            2.54,
+            20.32,
+            2.5
+          ],
+          "position": [
+            7.62,
+            -4.65,
+            15.45
+          ],
+          "color": "#27343c"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -13.54,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -11.0,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -8.46,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -5.92,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -3.38,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            7.62,
+            -0.84,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            7.62,
+            1.7,
+            13.95
+          ],
+          "color": "#c99b49"
+        },
+        {
+          "primitive": "box",
+          "size": [
+            0.64,
+            0.64,
+            11.5
+          ],
+          "position": [
+            7.62,
+            4.24,
+            13.95
+          ],
+          "color": "#c99b49"
+        }
+      ]
+    }
+  ],
+  "measurements": [
+    {
+      "id": "case",
+      "label": "Vỏ module",
+      "kind": "case",
+      "followPart": "shell",
+      "color": "#efb96e",
+      "labelWidth": 32,
+      "lines": [
+        {
+          "a": [
+            -19.9,
+            -25.9,
+            0
+          ],
+          "b": [
+            19.9,
+            -25.9,
+            0
+          ],
+          "anchorA": [
+            -19.9,
+            -19.9,
+            0
+          ],
+          "anchorB": [
+            19.9,
+            -19.9,
+            0
+          ],
+          "label": "39.8 mm · Rộng",
+          "labelOffset": [
+            0,
+            -4.8,
+            0
+          ]
+        },
+        {
+          "a": [
+            25.9,
+            -19.9,
+            0
+          ],
+          "b": [
+            25.9,
+            19.9,
+            0
+          ],
+          "anchorA": [
+            19.9,
+            -19.9,
+            0
+          ],
+          "anchorB": [
+            19.9,
+            19.9,
+            0
+          ],
+          "label": "39.8 mm · Dài",
+          "labelOffset": [
+            7.6,
+            0,
+            0
+          ]
+        },
+        {
+          "a": [
+            -25.9,
+            -19.9,
+            0
+          ],
+          "b": [
+            -25.9,
+            -19.9,
+            39.8
+          ],
+          "anchorA": [
+            -19.9,
+            -19.9,
+            0
+          ],
+          "anchorB": [
+            -19.9,
+            -19.9,
+            39.8
+          ],
+          "label": "39.8 mm · Cao",
+          "labelOffset": [
+            -9,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "id": "open",
+      "label": "Mở nắp",
+      "duration": 8,
+      "openPose": {
+        "lid": [
+          0.0,
+          50.0,
+          0.0
+        ],
+        "lidMagnets": [
+          0.0,
+          50.0,
+          0.0
+        ]
+      },
+      "tracks": [
+        {
+          "part": "lid",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0.0,
+                50.0,
+                0.0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0.0,
+                50.0,
+                0.0
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part": "lidMagnets",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.08,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0.0,
+                50.0,
+                0.0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0.0,
+                50.0,
+                0.0
+              ]
+            },
+            {
+              "time": 0.97,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.08,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.4,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.72,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.97,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "value": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "measureReveal": [
+        0.34,
+        0.64
+      ]
+    }
+  ],
+  "downloads": {
+    "bundle": "kit-esp32.zip",
+    "step": "assembly.step"
+  }
+}
