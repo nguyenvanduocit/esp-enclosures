@@ -172,18 +172,23 @@ def cavity(spec):
     return lo_c, hi_c
 
 
+def rounded_block(size):
+    """A box with every edge rounded by EDGE_R, as the intersection of three prisms rounded along x, y and z.
+
+    `edges().fillet()` blends the corners with sphere patches whose pole is a degenerate edge, and the STL of
+    those patches is never watertight. Cylinder-only corners tessellate closed."""
+    prisms = [
+        cq.Workplane("XY").box(*size, centered=False).edges(f"|{axis}").fillet(EDGE_R)
+        for axis in "XYZ"
+    ]
+    return prisms[0].intersect(prisms[1]).intersect(prisms[2])
+
+
 def shell_and_lid(spec):
     lo, hi = bounds(spec)
     axis, sign = FACES[spec.lid]
     t = lid_thickness(spec)
-    body = (
-        cq.Workplane("XY")
-        .box(*(hi - lo), centered=False)
-        .edges()
-        .fillet(EDGE_R)
-        .val()
-        .translate(vec(lo))
-    )
+    body = rounded_block(hi - lo).val().translate(vec(lo))
     slab_lo, slab_hi = lo - 1, hi + 1
     if sign > 0:
         slab_lo[axis] = hi[axis] - t
@@ -478,7 +483,7 @@ def declare(model, spec, *, color, refs=()):
     @model.check('Reference parts clear shell and lid')
     def reference_parts():
         shell, lid = wp(shapes()[0]), wp(shapes()[1])
-        for ref_id, _, pieces in refs:
+        for _, _, pieces in refs:
             for piece in pieces:
                 clear(reference_solid(piece), shell=shell, lid=lid)
 

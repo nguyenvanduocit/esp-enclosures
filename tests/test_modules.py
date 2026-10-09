@@ -1,9 +1,11 @@
 import cadquery as cq
 import numpy as np
 import pytest
+import trimesh
 from pytest import approx
 
-from printkit.export import ModelError, built as build_part, run_checks
+from printkit.cli import placeholder_png
+from printkit.export import ModelError, built as build_part, export, run_checks
 from printkit.manifest import Box, PrintPart
 from printkit.modules import (
     cyl,
@@ -151,6 +153,11 @@ def test_pocket_probes_are_clean_on_other_lids_and_posts(spec):
     assert pocket_problems(spec, *shell_and_lid(spec)) == 0
 
 
+CHECK_NAMES = ['Outer size equals units x 20 - 0.2 mm', 'Lid clears shell', 'Magnets and washers sit in their pockets',
+               'Connectors: pockets void, floors solid, interior flat, ports open', 'Plain faces are solid wall',
+               'Cut-outs clear every pocket', 'Reference parts clear shell and lid']
+
+
 def small_model(**changes):
     options = dict(title='T', description='d', spec=SPEC, color='#367c85')
     options.update(changes)
@@ -161,8 +168,7 @@ def test_kit_model_registers_parts_references_and_checks():
     model = small_model()
     ids = [part.id for part in model.parts]
     assert ids == ['shell', 'lid', 'magnets', 'washers', 'lidMagnets']
-    assert [name for name, _ in model.checks][:3] == ['Outer size equals units x 20 - 0.2 mm', 'Lid clears shell',
-                                                        'Magnets and washers sit in their pockets']
+    assert [name for name, _ in model.checks] == CHECK_NAMES
     assert [a['id'] for a in model.animations] == ['open']
     assert model.info['dimensions'] == approx([19.8, 19.8, 19.8])
 
@@ -186,3 +192,26 @@ def test_cut_into_pocket_fails():
     spec = ModuleSpec(cells=(1, 1, 1), lid='+y', cuts=(box((8, 0, 8), (12, 3, 12)),))
     with pytest.raises(ModelError, match='Cut-outs clear every pocket'):
         run_checks(small_model(spec=spec))
+
+
+def test_plain_lid_registers_no_lid_fasteners_and_moves_only_the_lid():
+    model = small_model(spec=ModuleSpec(cells=(1, 1, 1), lid='+y', plain=('+y',)))
+    ids = [part.id for part in model.parts]
+    assert 'lidMagnets' not in ids and 'lidWashers' not in ids
+    assert ids == ['shell', 'lid', 'magnets', 'washers']
+    assert list(model.animations[0]['openPose']) == ['lid']
+    assert [track['part'] for track in model.animations[0]['tracks']] == ['lid']
+
+
+@pytest.mark.parametrize('spec', [
+    ModuleSpec(cells=(1, 1, 1), lid='+y'),
+    ModuleSpec(cells=(1, 1, 1), lid='-z', plain=('+x',), cuts=(box((17, 6, 6), (21, 14, 14)),)),
+], ids=['lid +y', 'lid -z with a plain face and a cut-out'])
+def test_exported_meshes_are_watertight_single_bodies(tmp_path, spec):
+    folder = tmp_path / 'models' / 'kit-test'
+    folder.mkdir(parents=True)
+    (folder / 'thumbnail.png').write_bytes(placeholder_png())
+    export(small_model(spec=spec), folder, '../../model.schema.json')
+    for name in ('shell', 'lid'):
+        mesh = trimesh.load_mesh(folder / f'{name}.stl')
+        assert mesh.is_watertight and mesh.is_winding_consistent and len(mesh.split()) == 1, name
